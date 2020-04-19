@@ -1,4 +1,4 @@
-const { LocalImage } = require('../_sequelize')
+const { LocalImage } = require('../sequelize')
 
 module.exports = {
   getAllLocalImages: (req, res) => {

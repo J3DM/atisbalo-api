@@ -1,5 +1,14 @@
 const express = require('express')
 const app = express()
+/*
+ Import Middlewares
+ */
+
+// const { verifyToken, verifyTokenEmail } = require('./middlewares/auth')
+
+/*
+ Import Controllers
+ */
 
 const AddressesController = require('./controllers/addressesController')
 const CommentsController = require('./controllers/commentsController')
@@ -22,21 +31,25 @@ const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLoca
 /*
  Addresses
  */
+
 app.get('/addresses', AddressesController.getAllAddresses)
 
 /*
  Comments
  */
+
 app.get('/comments', CommentsController.getAllComments)
 
 /*
  Documents
  */
+
 app.get('/documents', DocumentsController.getAllDocuments)
 
 /*
  LocalDocuments
  */
+
 app.get('/localdocuments', LocalDocumentsController.getAllLocalDocuments)
 
 /*
@@ -47,11 +60,13 @@ app.get('/localimages', LocalImagesController.getAllLocalImages)
 /*
  LocalOwns
  */
+
 app.get('/localowns', LocalOwnsController.getAllLocalOwns)
 
 /*
  LocalsAsociated
  */
+
 app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
 
 /*
@@ -74,11 +89,13 @@ app.get('/localtypes', LocalTypeController.getAllLocalTypes)
 /*
  OfferImages
  */
+
 app.get('/offerimages', OfferImagesController.getAllOfferImages)
 
 /*
  Offers
  */
+
 app.get('/offers', OffersController.getAllOffers)
 
 /*
@@ -89,21 +106,25 @@ app.get('/ratings', RatingsController.getAllRatings)
 /*
  Roles
  */
+
 app.get('/roles', RolesController.getAllRoles)
 
 /*
  Tags
  */
+
 app.get('/tags', TagsController.getAllTags)
 
 /*
  Users
  */
+
 app.get('/users', UsersController.getAllUsers)
 
 /*
  UsersFauvoriteLocals
  */
+
 app.get('/userfauvoritelocals', UsersFauvoriteLocalsController.getAllUserFauvoriteLocals)
 
 module.exports = app

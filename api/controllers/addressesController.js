@@ -1,4 +1,4 @@
-const { Address } = require('../_sequelize')
+const { Address } = require('../sequelize')
 
 module.exports = {
   getAllAddresses: (req, res) => {

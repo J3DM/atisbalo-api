@@ -1,4 +1,4 @@
-const { LocalTag } = require('../_sequelize')
+const { LocalTag } = require('../sequelize')
 
 module.exports = {
   getAllLocalTags: (req, res) => {

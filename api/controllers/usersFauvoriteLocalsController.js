@@ -1,4 +1,4 @@
-const { UserFauvoriteLocal } = require('../_sequelize')
+const { UserFauvoriteLocal } = require('../sequelize')
 
 module.exports = {
   getAllUserFauvoriteLocals: (req, res) => {

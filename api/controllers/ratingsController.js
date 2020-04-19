@@ -1,4 +1,4 @@
-const { Rating } = require('../_sequelize')
+const { Rating } = require('../sequelize')
 
 module.exports = {
   getAllRatings: (req, res) => {

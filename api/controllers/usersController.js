@@ -1,4 +1,4 @@
-const { User } = require('../_sequelize')
+const { User } = require('../sequelize')
 
 module.exports = {
   getAllUsers: (req, res) => {

@@ -1,4 +1,4 @@
-const { LocalOwn } = require('../_sequelize')
+const { LocalOwn } = require('../sequelize')
 
 module.exports = {
   getAllLocalOwns: (req, res) => {

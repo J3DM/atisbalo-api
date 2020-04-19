@@ -1,4 +1,4 @@
-const { Local, LocalType } = require('../_sequelize')
+const { Local, LocalType } = require('../sequelize')
 
 module.exports = {
   createLocal: (req, res) => {

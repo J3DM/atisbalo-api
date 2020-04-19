@@ -1,4 +1,4 @@
-const { Rol } = require('../_sequelize')
+const { Rol } = require('../sequelize')
 
 module.exports = {
   getAllRoles: (req, res) => {

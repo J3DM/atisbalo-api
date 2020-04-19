@@ -1,4 +1,4 @@
-const { Comment } = require('../_sequelize')
+const { Comment } = require('../sequelize')
 
 module.exports = {
   getAllComments: (req, res) => {

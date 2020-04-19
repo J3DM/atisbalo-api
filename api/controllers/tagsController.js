@@ -1,4 +1,4 @@
-const { Tag } = require('../_sequelize')
+const { Tag } = require('../sequelize')
 
 module.exports = {
   getAllTags: (req, res) => {

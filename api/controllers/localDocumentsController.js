@@ -1,4 +1,4 @@
-const { LocalDocument } = require('../_sequelize')
+const { LocalDocument } = require('../sequelize')
 
 module.exports = {
   getAllLocalDocuments: (req, res) => {
