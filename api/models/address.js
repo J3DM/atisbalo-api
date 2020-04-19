@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     province: DataTypes.STRING,
     complete: DataTypes.STRING,
     local_id: DataTypes.UUID,
-    deleted: DataTypes.BOOLEAN
+    deleted: DataTypes.BOOLEAN,
+    location: DataTypes.GEOMETRY('POINT')
   }, {})
   Address.associate = function (models) {
     // associations can be defined here

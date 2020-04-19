@@ -7,6 +7,10 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4
       },
+      location: {
+        type: Sequelize.GEOMETRY('POINT', 4326),
+        allowNull: false
+      },
       street: {
         type: Sequelize.STRING
       },
