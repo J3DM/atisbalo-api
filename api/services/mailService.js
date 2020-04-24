@@ -12,7 +12,12 @@ const sendMailVerification = function (mail, token) {
     from: 'atisbalo.noreply@gmail.com',
     to: mail.toLowerCase(),
     subject: 'Email Confirmation',
-    html: '<p>Click <a href="' + process.env.URL + '/v1/acounts/' + token + '">here</a> to verify your account</p>'
+    html:
+      '<p>Click <a href="' +
+      process.env.URL +
+      '/v1/acounts/' +
+      token +
+      '">here</a> to verify your account</p>'
   }
   return transporter.sendMail(mailOptions)
 }

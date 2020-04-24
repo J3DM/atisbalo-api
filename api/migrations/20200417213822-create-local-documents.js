@@ -11,7 +11,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       local_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        unique: true
       },
       deleted: {
         allowNull: false,

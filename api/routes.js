@@ -33,6 +33,7 @@ const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLoca
  */
 
 app.get('/addresses', AddressesController.getAllAddresses)
+app.post('/addresses', AddressesController.createAddress)
 
 /*
  Comments
@@ -72,7 +73,7 @@ app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
 /*
  LocalController
  */
-app.post('/local', LocalController.createLocal)
+app.post('/locals', LocalController.createLocal)
 app.get('/locals', LocalController.getLocals)
 
 /*
@@ -125,6 +126,9 @@ app.get('/users', UsersController.getAllUsers)
  UsersFauvoriteLocals
  */
 
-app.get('/userfauvoritelocals', UsersFauvoriteLocalsController.getAllUserFauvoriteLocals)
+app.get(
+  '/userfauvoritelocals',
+  UsersFauvoriteLocalsController.getAllUserFauvoriteLocals
+)
 
 module.exports = app

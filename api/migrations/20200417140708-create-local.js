@@ -40,6 +40,12 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      lat: {
+        type: Sequelize.FLOAT
+      },
+      lng: {
+        type: Sequelize.FLOAT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

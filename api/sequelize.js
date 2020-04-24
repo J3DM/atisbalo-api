@@ -1,5 +1,11 @@
 const Sequelize = require('sequelize')
-const { DATABASE_NAME, USERNAME, PASSWORD, HOST, DIALECT } = require('../config/constants')
+const {
+  DATABASE_NAME,
+  USERNAME,
+  PASSWORD,
+  HOST,
+  DIALECT
+} = require('../config/constants')
 
 const UserModel = require('./models/user')
 const LocalModel = require('./models/local')
@@ -58,7 +64,10 @@ ASSOCIATIONS
 
 // Local
 Local.hasMany(Comment, { foreignKey: 'local_id', onDelete: 'cascade' })
-Local.hasMany(UserFauvoriteLocal, { foreignKey: 'local_id', onDelete: 'cascade' })
+Local.hasMany(UserFauvoriteLocal, {
+  foreignKey: 'local_id',
+  onDelete: 'cascade'
+})
 Local.hasMany(LocalAsociated, { foreignKey: 'local_id', onDelete: 'cascade' })
 Local.hasOne(LocalOwn, { foreignKey: 'local_id', onDelete: 'cascade' })
 Local.hasOne(LocalDocuments, { foreignKey: 'local_id', onDelete: 'cascade' })
@@ -106,7 +115,10 @@ UserFauvoriteLocal.belongsTo(Local, { foreignKey: 'local_id' })
 UserFauvoriteLocal.belongsTo(User, { foreignKey: 'user_id' })
 
 // LocalDocuments
-LocalDocuments.hasMany(Document, { foreignKey: 'localDocument_id', onDelete: 'cascade' })
+LocalDocuments.hasMany(Document, {
+  foreignKey: 'localDocument_id',
+  onDelete: 'cascade'
+})
 LocalDocuments.belongsTo(Local, { foreignKey: 'local_id' })
 
 // Document
@@ -141,5 +153,6 @@ module.exports = {
   LocalImage,
   Offer,
   OfferImage,
-  Rating
+  Rating,
+  sequelize
 }
