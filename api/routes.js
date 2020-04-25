@@ -74,7 +74,8 @@ app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
  LocalController
  */
 app.post('/locals', LocalController.createLocal)
-app.get('/locals', LocalController.getLocals)
+app.get('/locals', LocalController.getAllLocals)
+app.get('/locals/geo', LocalController.getLocalsGeo)
 
 /*
  LocalTags
@@ -125,6 +126,8 @@ app.get('/users', UsersController.getAllUsers)
 /*
  UsersFauvoriteLocals
  */
+// const gController = require('./controllers/gController')
+// app.get('/g', gController.generate)
 
 app.get(
   '/userfauvoritelocals',

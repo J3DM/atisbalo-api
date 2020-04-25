@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       attention: DataTypes.STRING,
       veracity: DataTypes.STRING,
       local_id: DataTypes.UUID,
-      unique: true,
       deleted: DataTypes.BOOLEAN
     },
     {}
