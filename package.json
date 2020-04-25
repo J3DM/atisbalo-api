@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "nodemon ./api/server.js",
     "start": "node ./api/server.js",
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "migrate:aws": "NODE_ENV=aws sequelize db:migrate",
+    "migrate": "sequelize db:migrate",
+    "db:init": "sequelize db:drop && sequelize db:create && sequelize db:migrate && nodemon ./api/server.js"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
@@ -22,6 +25,7 @@
     "sequelize": "^5.21.7"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "eslint": "^6.8.0",

@@ -9,7 +9,12 @@ module.exports = {
         res.json(err)
       })
   },
-  getLocals: (req, res) => {
+  getAllLocals: (req, res) => {
+    Local.findAll().then((locals) => {
+      res.status(200).json(locals)
+    })
+  },
+  getLocalsGeo: (req, res) => {
     let offset
     let limit
     const lat = req.query.lat

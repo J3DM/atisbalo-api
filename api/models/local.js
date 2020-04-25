@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       telephone: DataTypes.STRING,
       description: DataTypes.STRING,
       capacity: DataTypes.INTEGER,
+      occupation: DataTypes.INTEGER,
       identifier: DataTypes.STRING,
       localtype_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN,

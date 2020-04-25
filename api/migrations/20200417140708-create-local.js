@@ -23,6 +23,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
+      occupation: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       identifier: {
         allowNull: false,
         type: Sequelize.STRING
