@@ -1,10 +1,9 @@
 const express = require('express')
 const compression = require('compression')
 const helmet = require('helmet')
-const logger = require('morgan')
+const { morganChalk } = require('./api/services/logService')
 var cookieParser = require('cookie-parser')
 const routes = require('./api/routes')
-
 const app = express()
 
 const cors = function (req, res, next) {
@@ -23,7 +22,7 @@ app
   .use(cookieParser())
   .use(compression())
   .use(helmet())
-  .use(logger('combined'))
+  .use(morganChalk)
   .use(helmet.hidePoweredBy({ setTo: 'Atisbalo Api' }))
   .use(cors)
   .use('/api', routes)

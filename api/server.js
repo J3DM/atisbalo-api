@@ -3,9 +3,9 @@
 /**
  * Module dependencies.
  */
+const { Log } = require('./services/logService')
 
 var app = require('../app')
-var debug = require('debug')('api:server')
 var http = require('http')
 
 /**
@@ -59,7 +59,7 @@ const onError = (error) => {
 const onListening = () => {
   var addr = server.address()
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
-  debug('Listening on ' + bind)
+  Log.trace('Listening on ' + bind)
 }
 
 /**

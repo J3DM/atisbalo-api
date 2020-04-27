@@ -1,4 +1,5 @@
 const { LocalType } = require('../sequelize')
+const { Log } = require('../services/logService')
 
 module.exports = {
   createLocalType: (req, res) => {
@@ -10,8 +11,8 @@ module.exports = {
     LocalType.findAll()
       .then((objects) => res.status(200).send(objects))
       .catch((err) => {
-        console.log(err)
-        res.status(500).send(err.messaje)
+        Log.error(err)
+        res.status(500).send(err)
       })
   }
 }
