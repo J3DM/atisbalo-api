@@ -34,7 +34,8 @@ const sequelize = new Sequelize(DATABASE_NAME, USERNAME, PASSWORD, {
     min: 0,
     acquire: 30000,
     idle: 10000
-  }
+  },
+  logging: false
 })
 
 // MODELS
@@ -56,11 +57,7 @@ const Offer = OfferModel(sequelize, Sequelize)
 const OfferImage = OfferImageModel(sequelize, Sequelize)
 const Rating = RatingModel(sequelize, Sequelize)
 
-/*
-
-ASSOCIATIONS
-
-*/
+// ASSOCIATIONS
 
 // Local
 Local.hasMany(Comment, { foreignKey: 'local_id', onDelete: 'cascade' })
@@ -136,6 +133,85 @@ Address.belongsTo(Local, { foreignKey: 'local_id' })
 // LocalTag
 LocalTag.belongsTo(Local, { foreignKey: 'local_id' })
 
+const Populate = {
+  Local: {
+    All: [
+      {
+        model: Offer,
+        required: false,
+        attributes: [
+          'id',
+          'title',
+          'description',
+          'promotion',
+          'endDate',
+          'startDate'
+        ],
+        where: { active: true, deleted: false }
+      },
+      {
+        model: Address,
+        attributes: ['id', 'street', 'number', 'city', 'province', 'complete'],
+        where: { deleted: false }
+      },
+      {
+        model: LocalImage,
+        required: false,
+        attributes: ['id', 'url'],
+        where: { deleted: false }
+      },
+      {
+        model: LocalTag,
+        required: false,
+        attributes: ['id', 'tag_id'],
+        where: { deleted: false }
+      },
+      {
+        model: Rating,
+        attributes: ['id', 'veracity', 'attention', 'service'],
+        where: { deleted: false }
+      }
+    ],
+    Owner: [
+      {
+        model: Offer,
+        required: false,
+        attributes: [
+          'id',
+          'title',
+          'description',
+          'promotion',
+          'endDate',
+          'startDate'
+        ],
+        where: { active: true, deleted: false }
+      },
+      {
+        model: Address,
+        attributes: ['id', 'street', 'number', 'city', 'province', 'complete'],
+        where: { deleted: false }
+      },
+      {
+        model: LocalImage,
+        required: false,
+        attributes: ['id', 'url'],
+        where: { deleted: false }
+      },
+      {
+        model: LocalTag,
+        required: false,
+        attributes: ['id', 'tag_id'],
+        where: { deleted: false }
+      },
+      {
+        model: Rating,
+        attributes: ['id', 'veracity', 'attention', 'service'],
+        where: { deleted: false }
+      }
+    ]
+  }
+}
+
 module.exports = {
   User,
   Local,
@@ -154,5 +230,6 @@ module.exports = {
   Offer,
   OfferImage,
   Rating,
-  sequelize
+  sequelize,
+  Populate
 }
