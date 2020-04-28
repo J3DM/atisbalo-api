@@ -3,7 +3,7 @@ const { Log } = require('../services/logService')
 
 module.exports = {
   getAllTags: (req, res) => {
-    Tag.findAll()
+    Tag.findAll({ where: { deleted: false } })
       .then((objects) => res.status(200).send(objects))
       .catch((err) => {
         Log.error(err)

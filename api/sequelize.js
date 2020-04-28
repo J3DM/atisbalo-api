@@ -135,43 +135,57 @@ LocalTag.belongsTo(Local, { foreignKey: 'local_id' })
 
 const Populate = {
   Local: {
-    All: [
-      {
-        model: Offer,
-        required: false,
-        attributes: [
-          'id',
-          'title',
-          'description',
-          'promotion',
-          'endDate',
-          'startDate'
-        ],
-        where: { active: true, deleted: false }
-      },
-      {
-        model: Address,
-        attributes: ['id', 'street', 'number', 'city', 'province', 'complete'],
-        where: { deleted: false }
-      },
-      {
-        model: LocalImage,
-        required: false,
-        attributes: ['id', 'url'],
-        where: { deleted: false }
-      },
-      {
-        model: LocalTag,
-        required: false,
-        attributes: ['id', 'tag_id'],
-        where: { deleted: false }
-      },
-      {
-        model: Rating,
-        attributes: ['id', 'veracity', 'attention', 'service'],
-        where: { deleted: false }
-      }
-    ],
+    AllByType: (type) => {
+      return [
+        {
+          model: Offer,
+          required: false,
+          attributes: [
+            'id',
+            'title',
+            'description',
+            'promotion',
+            'endDate',
+            'startDate'
+          ],
+          where: { active: true, deleted: false }
+        },
+        {
+          model: LocalType,
+          attributes: ['id'],
+          where: { deleted: false, name: type }
+        },
+        {
+          model: Address,
+          attributes: [
+            'id',
+            'street',
+            'number',
+            'city',
+            'province',
+            'complete'
+          ],
+          where: { deleted: false }
+        },
+        {
+          model: LocalImage,
+          required: false,
+          attributes: ['id', 'url'],
+          where: { deleted: false }
+        },
+        {
+          model: LocalTag,
+          required: false,
+          attributes: ['id', 'tag_id'],
+          where: { deleted: false }
+        },
+        {
+          model: Rating,
+          attributes: ['id', 'veracity', 'attention', 'service'],
+          where: { deleted: false }
+        }
+      ]
+    },
     Owner: [
       {
         model: Offer,
