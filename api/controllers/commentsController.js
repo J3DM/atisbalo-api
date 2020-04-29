@@ -1,5 +1,5 @@
 const { Comment } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllComments: (req, res) => {

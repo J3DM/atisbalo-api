@@ -1,5 +1,5 @@
 const { Rating } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllRatings: (req, res) => {

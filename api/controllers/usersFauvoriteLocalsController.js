@@ -1,5 +1,5 @@
 const { UserFauvoriteLocal } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllUserFauvoriteLocals: (req, res) => {

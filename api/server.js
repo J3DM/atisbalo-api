@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const { Log } = require('./services/logService')
+const { Log } = require('./helpers/log')
 
 var app = require('../app')
 var http = require('http')

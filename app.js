@@ -1,7 +1,7 @@
 const express = require('express')
 const compression = require('compression')
 const helmet = require('helmet')
-const { morganChalk } = require('./api/services/logService')
+const { morganChalk } = require('./api/helpers/log')
 var cookieParser = require('cookie-parser')
 const routes = require('./api/routes')
 const app = express()

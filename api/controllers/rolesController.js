@@ -1,5 +1,5 @@
 const { Rol } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllRoles: (req, res) => {

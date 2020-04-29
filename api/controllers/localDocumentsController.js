@@ -1,5 +1,5 @@
 const { LocalDocument } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllLocalDocuments: (req, res) => {

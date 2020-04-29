@@ -1,5 +1,5 @@
 const { LocalOwn } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllLocalOwns: (req, res) => {

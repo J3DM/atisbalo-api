@@ -1,5 +1,5 @@
 const { Local, Populate } = require('../sequelize')
-const { Log } = require('../services/logService')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   createLocal: async (req, res) => {
