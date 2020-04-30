@@ -1,9 +1,13 @@
-const { LocalTag } = require('../_sequelize')
+const { LocalTag } = require('../sequelize')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllLocalTags: (req, res) => {
-    LocalTag.findAll().then(objects => res.status(200).send(objects)).catch(err => {
-      res.status(500).send(err.messaje)
-    })
+    LocalTag.findAll()
+      .then((objects) => res.status(200).send(objects))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).send(err)
+      })
   }
 }

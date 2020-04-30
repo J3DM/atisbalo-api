@@ -23,6 +23,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
+      occupation: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       identifier: {
         allowNull: false,
         type: Sequelize.STRING
@@ -39,6 +44,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false
+      },
+      lat: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+        defaultValue: 0
+      },
+      lng: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,

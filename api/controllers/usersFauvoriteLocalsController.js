@@ -1,9 +1,13 @@
-const { UserFauvoriteLocal } = require('../_sequelize')
+const { UserFauvoriteLocal } = require('../sequelize')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllUserFauvoriteLocals: (req, res) => {
-    UserFauvoriteLocal.findAll().then(objects => res.status(200).send(objects)).catch(err => {
-      res.status(500).send(err.messaje)
-    })
+    UserFauvoriteLocal.findAll()
+      .then((objects) => res.status(200).send(objects))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).send(err)
+      })
   }
 }

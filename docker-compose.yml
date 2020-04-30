@@ -1,12 +1,12 @@
 version: '3.7'
-services: 
+services:
   api:
     build: .
-    container_name: api
+    container_name: atisbalo-api
     command: sh -c "npx sequelize db:migrate && npm run dev"
-    ports: 
+    ports:
       - 3000:3000
-    environment: 
+    environment:
       - ORIGIN=*
       - NODE_ENV=docker
       - DATABASE_HOST=mysql
@@ -15,16 +15,16 @@ services:
       - DATABASE_PASSWORD=admin
       - DATABASE_DIALECT=mysql
       - PORT=3000
-    volumes: 
+    volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     links:
       - mysql
-    depends_on: 
+    depends_on:
       - mysql
   mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: atisbalo-db
     environment:
       MYSQL_DATABASE: 'atisbalo'
       MYSQL_USER: 'admin'

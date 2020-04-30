@@ -1,5 +1,14 @@
 const express = require('express')
 const app = express()
+/*
+ Import Middlewares
+ */
+
+// const { verifyToken, verifyTokenEmail } = require('./middlewares/auth')
+
+/*
+ Import Controllers
+ */
 
 const AddressesController = require('./controllers/addressesController')
 const CommentsController = require('./controllers/commentsController')
@@ -22,21 +31,26 @@ const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLoca
 /*
  Addresses
  */
+
 app.get('/addresses', AddressesController.getAllAddresses)
+app.post('/addresses', AddressesController.createAddress)
 
 /*
  Comments
  */
+
 app.get('/comments', CommentsController.getAllComments)
 
 /*
  Documents
  */
+
 app.get('/documents', DocumentsController.getAllDocuments)
 
 /*
  LocalDocuments
  */
+
 app.get('/localdocuments', LocalDocumentsController.getAllLocalDocuments)
 
 /*
@@ -47,18 +61,21 @@ app.get('/localimages', LocalImagesController.getAllLocalImages)
 /*
  LocalOwns
  */
+
 app.get('/localowns', LocalOwnsController.getAllLocalOwns)
 
 /*
  LocalsAsociated
  */
+
 app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
 
 /*
  LocalController
  */
-app.post('/local', LocalController.createLocal)
-app.get('/locals', LocalController.getLocals)
+app.post('/locals', LocalController.createLocal)
+app.get('/locals', LocalController.getAllLocals)
+app.get('/locals/geo', LocalController.getLocalsGeo)
 
 /*
  LocalTags
@@ -74,11 +91,13 @@ app.get('/localtypes', LocalTypeController.getAllLocalTypes)
 /*
  OfferImages
  */
+
 app.get('/offerimages', OfferImagesController.getAllOfferImages)
 
 /*
  Offers
  */
+
 app.get('/offers', OffersController.getAllOffers)
 
 /*
@@ -89,21 +108,30 @@ app.get('/ratings', RatingsController.getAllRatings)
 /*
  Roles
  */
+
 app.get('/roles', RolesController.getAllRoles)
 
 /*
  Tags
  */
+
 app.get('/tags', TagsController.getAllTags)
 
 /*
  Users
  */
+
 app.get('/users', UsersController.getAllUsers)
 
 /*
  UsersFauvoriteLocals
  */
-app.get('/userfauvoritelocals', UsersFauvoriteLocalsController.getAllUserFauvoriteLocals)
+// const gController = require('./controllers/gController')
+// app.get('/g', gController.generate)
+
+app.get(
+  '/userfauvoritelocals',
+  UsersFauvoriteLocalsController.getAllUserFauvoriteLocals
+)
 
 module.exports = app

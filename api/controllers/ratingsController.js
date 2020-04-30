@@ -1,9 +1,13 @@
-const { Rating } = require('../_sequelize')
+const { Rating } = require('../sequelize')
+const { Log } = require('../helpers/log')
 
 module.exports = {
   getAllRatings: (req, res) => {
-    Rating.findAll().then(objects => res.status(200).send(objects)).catch(err => {
-      res.status(500).send(err.messaje)
-    })
+    Rating.findAll()
+      .then((objects) => res.status(200).send(objects))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).send(err)
+      })
   }
 }

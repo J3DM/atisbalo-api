@@ -1,5 +1,11 @@
 const Sequelize = require('sequelize')
-const { DATABASE_NAME, USERNAME, PASSWORD, HOST, DIALECT } = require('../config/constants')
+const {
+  DATABASE_NAME,
+  USERNAME,
+  PASSWORD,
+  HOST,
+  DIALECT
+} = require('../config/constants')
 
 const UserModel = require('./models/user')
 const LocalModel = require('./models/local')
@@ -28,7 +34,8 @@ const sequelize = new Sequelize(DATABASE_NAME, USERNAME, PASSWORD, {
     min: 0,
     acquire: 30000,
     idle: 10000
-  }
+  },
+  logging: false
 })
 
 // MODELS
@@ -50,15 +57,14 @@ const Offer = OfferModel(sequelize, Sequelize)
 const OfferImage = OfferImageModel(sequelize, Sequelize)
 const Rating = RatingModel(sequelize, Sequelize)
 
-/*
-
-ASSOCIATIONS
-
-*/
+// ASSOCIATIONS
 
 // Local
 Local.hasMany(Comment, { foreignKey: 'local_id', onDelete: 'cascade' })
-Local.hasMany(UserFauvoriteLocal, { foreignKey: 'local_id', onDelete: 'cascade' })
+Local.hasMany(UserFauvoriteLocal, {
+  foreignKey: 'local_id',
+  onDelete: 'cascade'
+})
 Local.hasMany(LocalAsociated, { foreignKey: 'local_id', onDelete: 'cascade' })
 Local.hasOne(LocalOwn, { foreignKey: 'local_id', onDelete: 'cascade' })
 Local.hasOne(LocalDocuments, { foreignKey: 'local_id', onDelete: 'cascade' })
@@ -106,7 +112,10 @@ UserFauvoriteLocal.belongsTo(Local, { foreignKey: 'local_id' })
 UserFauvoriteLocal.belongsTo(User, { foreignKey: 'user_id' })
 
 // LocalDocuments
-LocalDocuments.hasMany(Document, { foreignKey: 'localDocument_id', onDelete: 'cascade' })
+LocalDocuments.hasMany(Document, {
+  foreignKey: 'localDocument_id',
+  onDelete: 'cascade'
+})
 LocalDocuments.belongsTo(Local, { foreignKey: 'local_id' })
 
 // Document
@@ -123,6 +132,99 @@ Address.belongsTo(Local, { foreignKey: 'local_id' })
 
 // LocalTag
 LocalTag.belongsTo(Local, { foreignKey: 'local_id' })
+
+const Populate = {
+  Local: {
+    AllByType: (type) => {
+      return [
+        {
+          model: Offer,
+          required: false,
+          attributes: [
+            'id',
+            'title',
+            'description',
+            'promotion',
+            'endDate',
+            'startDate'
+          ],
+          where: { active: true, deleted: false }
+        },
+        {
+          model: LocalType,
+          attributes: ['id'],
+          where: { deleted: false, name: type }
+        },
+        {
+          model: Address,
+          attributes: [
+            'id',
+            'street',
+            'number',
+            'city',
+            'province',
+            'complete'
+          ],
+          where: { deleted: false }
+        },
+        {
+          model: LocalImage,
+          required: false,
+          attributes: ['id', 'url'],
+          where: { deleted: false }
+        },
+        {
+          model: LocalTag,
+          required: false,
+          attributes: ['id', 'tag_id'],
+          where: { deleted: false }
+        },
+        {
+          model: Rating,
+          attributes: ['id', 'veracity', 'attention', 'service'],
+          where: { deleted: false }
+        }
+      ]
+    },
+    Owner: [
+      {
+        model: Offer,
+        required: false,
+        attributes: [
+          'id',
+          'title',
+          'description',
+          'promotion',
+          'endDate',
+          'startDate'
+        ],
+        where: { active: true, deleted: false }
+      },
+      {
+        model: Address,
+        attributes: ['id', 'street', 'number', 'city', 'province', 'complete'],
+        where: { deleted: false }
+      },
+      {
+        model: LocalImage,
+        required: false,
+        attributes: ['id', 'url'],
+        where: { deleted: false }
+      },
+      {
+        model: LocalTag,
+        required: false,
+        attributes: ['id', 'tag_id'],
+        where: { deleted: false }
+      },
+      {
+        model: Rating,
+        attributes: ['id', 'veracity', 'attention', 'service'],
+        where: { deleted: false }
+      }
+    ]
+  }
+}
 
 module.exports = {
   User,
@@ -141,5 +243,7 @@ module.exports = {
   LocalImage,
   Offer,
   OfferImage,
-  Rating
+  Rating,
+  sequelize,
+  Populate
 }
