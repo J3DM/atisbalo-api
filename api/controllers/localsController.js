@@ -40,51 +40,44 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  getAllLocals: async (req, res) => {
-    let query
-    query = req.query.query ? (query = req.query.query) : 'All'
-
-    Local.findAll({ include: Populate.Local[query] }).then((locals) => {
-      res.status(200).json(locals)
-    })
-  },
   getLocalsGeo: async (req, res) => {
-    let offset, limit, lat, lng, type, query, max
+    let offset, limit, max
 
-    lat = req.query.lat
-      ? (lat = req.query.lat)
-      : res.status(500).send('lat is required')
-    lng = req.query.lng
-      ? (lng = req.query.lng)
-      : res.status(500).send('lng is required')
-    type = req.query.type
-      ? (type = req.query.type)
-      : res.status(500).send('type is required')
+    const lat = req.query.lat
+    const lng = req.query.lng
+
+    const localType = req.query.type
 
     max = req.query.max ? (max = req.query.max) : 10000
-    query = req.query.query ? (query = req.query.query) : 'AllByType'
     offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
     limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
 
-    const locals = await Local.findLocalGeo(
-      lat,
-      lng,
-      Populate.Local[query](type),
-      {
-        deleted: false
-      },
-      max,
-      offset,
-      limit
-    ).catch((err) => {
-      Log.error(err)
-      res.status(500).json(err)
-    })
+    let locals
 
-    if (locals.length < 1) {
-      res.status(204).json(locals)
+    if (!lat || !lng) {
+      locals = await Local.findAll({
+        include: Populate.Local.All(localType)
+      }).catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
     } else {
-      res.status(200).json(locals)
+      locals = await Local.findLocalGeo(
+        lat,
+        lng,
+        Populate.Local.All(localType),
+        {
+          deleted: false
+        },
+        max,
+        offset,
+        limit
+      ).catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
     }
+
+    res.status(200).json(locals)
   }
 }
