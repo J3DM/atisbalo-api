@@ -74,8 +74,7 @@ app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
  LocalController
  */
 app.post('/locals', LocalController.createLocal)
-app.get('/locals', LocalController.getAllLocals)
-app.get('/locals/geo', LocalController.getLocalsGeo)
+app.get('/locals', LocalController.getLocalsGeo)
 
 /*
  LocalTags
