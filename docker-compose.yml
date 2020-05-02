@@ -36,5 +36,10 @@ services:
       - '3306'
     volumes:
       - data:/var/lib/mysql
+  redis:
+    image: 'redis:4-alpine'
+    command: redis-server --requirepass c45eb22ce-be92-490e-ab79-9be241e9f4c9
+    ports:
+      - '6379:6379'
 volumes:
   data:

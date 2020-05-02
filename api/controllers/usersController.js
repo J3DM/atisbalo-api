@@ -9,5 +9,17 @@ module.exports = {
         Log.error(err)
         res.status(500).send(err)
       })
+  },
+  getUserById: (req, res) => {
+    User.findAll({
+      where: {
+        id: req.params.id
+      }
+    })
+      .then((objects) => res.status(200).send(objects))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).send(err)
+      })
   }
 }

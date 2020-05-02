@@ -27,6 +27,16 @@ const RolesController = require('./controllers/rolesController')
 const TagsController = require('./controllers/tagsController')
 const UsersController = require('./controllers/usersController')
 const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLocalsController')
+const AuthController = require('./controllers/authController')
+
+/*
+Auth
+*/
+
+app.post('/signin', AuthController.signin)
+app.post('/login', AuthController.login)
+app.post('/logout', AuthController.logout)
+app.post('/token', AuthController.refresh)
 
 /*
  Addresses
