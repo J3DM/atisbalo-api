@@ -275,6 +275,21 @@ const Populate = {
         where: { deleted: false }
       }
     ]
+  },
+  User: {
+    All: [
+      {
+        model: UserFauvoriteLocal,
+        required: false,
+        where: { deleted: false }
+      },
+      {
+        model: LocalAsociated,
+        include: [{ model: Local }],
+        required: false,
+        where: { deleted: false }
+      }
+    ]
   }
 }
 
