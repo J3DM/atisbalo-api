@@ -60,7 +60,7 @@ module.exports = {
 
   existsRefreshToken: function (refreshToken) {
     return new Promise((resolve, reject) => {
-      redisClient.get(refreshToken, (err, exist) => {
+      redisClient.exists(refreshToken, (err, exist) => {
         if (err) {
           reject(err)
         }

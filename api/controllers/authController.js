@@ -59,5 +59,32 @@ module.exports = {
       })
   },
   logout: (req, res) => {},
-  refresh: (req, res) => {}
+  refresh: (req, res) => {
+    const refreshToken = req.body.refreshToken
+
+    Redis.existsRefreshToken(refreshToken)
+      .then((exists) => {
+        if (exists) {
+          AuthService.verifyRefreshToken(refreshToken)
+            .then((decoded) => {
+              const accessToken = AuthService.generateAccessToken(decoded)
+              Redis.updateRefreshToken(refreshToken, accessToken).then((r) => {
+                res.status(200).json({
+                  access_token: accessToken,
+                  refresh_token: refreshToken
+                })
+              })
+            })
+            .catch((err) => {
+              Log.error(err)
+              res.status(500).json(err)
+            })
+        }
+      })
+      .catch((err) => {
+        Log.error(err)
+
+        res.status(500).json(err)
+      })
+  }
 }

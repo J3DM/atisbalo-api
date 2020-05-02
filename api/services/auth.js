@@ -8,21 +8,18 @@ const {
 } = require('../../config/constants')
 
 module.exports = {
-  verifyToken: (req, res, next) => {
-    jwt.verify(
-      req.get('Authorization'),
-      process.env.SEED_TOKEN,
-      (err, decoded) => {
+  verifyRefreshToken: (token) => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, REFRESH_TOKEN, (err, decoded) => {
         if (err) {
-          throw new Error('Invalid Token')
+          reject(err)
         }
         if (!decoded) {
-          throw new Error('Error when decoded the token')
+          reject(new Error('Error when decoded the token'))
         }
-        req.user = decoded.user
-        next()
-      }
-    )
+        resolve(decoded)
+      })
+    })
   },
   validatePassword: (hash, password) => {
     return bcrypt.compareSync(password, hash)
