@@ -49,14 +49,14 @@ module.exports = {
     const localType = req.query.type
 
     max = req.query.max ? (max = req.query.max) : 10000
-    offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
-    limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
-
+    offset = req.query.offset ? parseInt(req.query.offset) : 0
+    limit = req.query.limit ? parseInt(req.query.limit) : 5
     let locals
-
     if (!lat || !lng) {
-      locals = await Local.findAll({
-        include: Populate.Local.All(localType)
+      locals = await Local.findAndCountAll({
+        include: Populate.Local.All(localType),
+        offset: offset,
+        limit: limit
       }).catch((err) => {
         Log.error(err)
         res.status(500).json(err)

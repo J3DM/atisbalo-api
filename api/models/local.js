@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     offset,
     limit
   ) => {
-    return Local.findAll({
+    return Local.findAndCountAll({
       attributes: [
         'id',
         'name',
