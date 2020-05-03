@@ -8,22 +8,47 @@ const moment = require('moment')
 const Log = {
   debug: (msg) => {
     if (LOG_LEVEL === 'D' || LOG_LEVEL === 'A') {
-      log(chalk.magenta.bold(timestamp()), chalk.green('DEBUG'), msg)
+      log(
+        chalk.magenta.bold(timestamp()),
+        chalk.bgBlack.blue.bold('DEBUG'),
+        msg
+      )
     }
   },
   error: (msg) => {
     if (LOG_LEVEL === 'E' || LOG_LEVEL === 'A') {
-      log(chalk.magenta.bold(timestamp()), chalk.red('ERROR'), msg)
+      log(
+        chalk.magenta.bold(timestamp()),
+        chalk.bgBlack.redBright.bold('ERROR'),
+        msg
+      )
     }
   },
   trace: (msg) => {
     if (LOG_LEVEL === 'T' || LOG_LEVEL === 'A') {
-      log(chalk.magenta.bold(timestamp()), chalk.cyan('TRACE'), msg)
+      log(
+        chalk.magenta.bold(timestamp()),
+        chalk.bgBlack.cyan.bold('TRACE'),
+        msg
+      )
     }
   },
   warning: (msg) => {
     if (LOG_LEVEL === 'W' || LOG_LEVEL === 'A') {
-      log(chalk.magenta.bold(timestamp()), chalk.yellowBright('TRACE'), msg)
+      log(
+        chalk.magenta.bold(timestamp()),
+        chalk.bgBlack.yellowBright.bold('TRACE'),
+        msg
+      )
+    }
+  },
+  info: (msg) => {
+    if (LOG_LEVEL === 'W' || LOG_LEVEL === 'A') {
+      log(
+        chalk.magenta.bold(timestamp()),
+        chalk.bgBlack.green.bold('INFO'),
+        msg
+      )
     }
   }
 }
@@ -39,7 +64,7 @@ const morganChalk = morgan(function (tokens, req, res) {
 })
 
 const timestamp = () => {
-  return '[' + moment().locale('en').format('LLLL') + ']'
+  return '[' + moment().format('MMMM Do YYYY, h:mm:ss a') + ']'
 }
 
 module.exports = {

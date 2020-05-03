@@ -1,4 +1,5 @@
-const { Address } = require('../sequelize')
+const Address = require('../models').Address
+
 const { Log } = require('../helpers/log')
 
 module.exports = {

@@ -1,4 +1,4 @@
-const { Rating } = require('../sequelize')
+const Rating = require('../models').Rating
 const { Log } = require('../helpers/log')
 
 module.exports = {

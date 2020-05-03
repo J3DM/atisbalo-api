@@ -1,4 +1,5 @@
-const { Comment } = require('../sequelize')
+const Comment = require('../models').Comment
+
 const { Log } = require('../helpers/log')
 
 module.exports = {

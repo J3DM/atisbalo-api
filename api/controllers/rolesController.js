@@ -1,4 +1,4 @@
-const { Rol } = require('../sequelize')
+const Rol = require('../models').Rol
 const { Log } = require('../helpers/log')
 
 module.exports = {

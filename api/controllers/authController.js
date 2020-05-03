@@ -1,6 +1,7 @@
 const Redis = require('../helpers/redis')
 const AuthService = require('../services/auth')
-const { User, Populate } = require('../sequelize')
+const User = require('../models').User
+
 const { Log } = require('../helpers/log')
 module.exports = {
   signin: (req, res) => {
@@ -30,7 +31,7 @@ module.exports = {
     if (!password || !email) {
       return res.status(500).json('Email and password required')
     }
-    User.findOne({ where: { email: email }, include: Populate.User.All })
+    User.findOneByEmail(email)
       .then((user) => {
         if (!user) {
           return res.status(401).json('User not found')

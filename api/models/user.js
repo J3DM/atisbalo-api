@@ -27,7 +27,37 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
   User.associate = function (models) {
-    // associations can be defined here
+    User.hasMany(models.Comment, {
+      foreignKey: 'user_id',
+      onDelete: 'cascade',
+      as: 'comments'
+    })
+    User.hasMany(models.UserFauvoriteLocal, {
+      foreignKey: 'user_id',
+      onDelete: 'cascade',
+      as: 'fauvoriteLocals'
+    })
+    User.hasMany(models.LocalAsociated, {
+      foreignKey: 'user_id',
+      onDelete: 'cascade',
+      as: 'localsAsociated'
+    })
+  }
+  User.findOneByEmail = (email) => {
+    return User.findOne({
+      where: { email: email },
+      include: ['fauvoriteLocals', 'localsAsociated']
+    })
+  }
+  User.getAllUsers = () => {
+    return User.findAll({
+      include: ['fauvoriteLocals', 'localsAsociated']
+    })
+  }
+  User.getUserById = (id) => {
+    return User.findByPk(id, {
+      include: ['fauvoriteLocals', 'localsAsociated']
+    })
   }
   return User
 }

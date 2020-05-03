@@ -6,14 +6,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-      },
-      user_id: DataTypes.UUID,
-      local_id: DataTypes.UUID
+      }
     },
     {}
   )
   UserFauvoriteLocal.associate = function (models) {
-    // associations can be defined here
+    UserFauvoriteLocal.belongsTo(models.Local, {
+      foreignKey: 'local_id',
+      as: 'local'
+    })
+    UserFauvoriteLocal.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      as: 'user'
+    })
   }
   return UserFauvoriteLocal
 }

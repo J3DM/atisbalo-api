@@ -7,14 +7,13 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
       },
-      tag_id: DataTypes.UUID,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   LocalTag.associate = function (models) {
-    // associations can be defined here
+    LocalTag.belongsTo(models.Tag, { foreignKey: 'tag_id', as: 'tag' })
+    LocalTag.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   return LocalTag
 }

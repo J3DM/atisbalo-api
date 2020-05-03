@@ -131,6 +131,7 @@ app.get('/tags', TagsController.getAllTags)
  */
 
 app.get('/users', UsersController.getAllUsers)
+app.get('/users/:id', UsersController.getUserById)
 
 /*
  UsersFauvoriteLocals

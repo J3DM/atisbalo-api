@@ -1,6 +1,5 @@
-const { Local, Populate } = require('../sequelize')
+const Local = require('../models').Local
 const { Log } = require('../helpers/log')
-
 module.exports = {
   createLocal: async (req, res) => {
     const newLocal = {
@@ -52,32 +51,41 @@ module.exports = {
     offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
     limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
 
-    let locals
-
     if (!lat || !lng) {
-      locals = await Local.findAll({
-        include: Populate.Local.All(localType)
-      }).catch((err) => {
-        Log.error(err)
-        res.status(500).json(err)
-      })
+      Local.findAllLocalsByType(
+        localType,
+        {
+          deleted: false
+        },
+        offset,
+        limit
+      )
+        .then((locals) => {
+          res.status(200).json(locals)
+        })
+        .catch((err) => {
+          Log.error(err)
+          return res.status(500).json(err)
+        })
     } else {
-      locals = await Local.findLocalGeo(
+      Local.findLocalGeo(
         lat,
         lng,
-        Populate.Local.All(localType),
+        localType,
         {
           deleted: false
         },
         max,
         offset,
         limit
-      ).catch((err) => {
-        Log.error(err)
-        res.status(500).json(err)
-      })
+      )
+        .then((locals) => {
+          res.status(200).json(locals)
+        })
+        .catch((err) => {
+          Log.error(err)
+          return res.status(500).json(err)
+        })
     }
-
-    res.status(200).json(locals)
   }
 }

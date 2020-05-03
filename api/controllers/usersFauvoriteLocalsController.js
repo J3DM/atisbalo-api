@@ -1,4 +1,4 @@
-const { UserFauvoriteLocal } = require('../sequelize')
+const UserFauvoriteLocal = require('../models').UserFauvoriteLocal
 const { Log } = require('../helpers/log')
 
 module.exports = {

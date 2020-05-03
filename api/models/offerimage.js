@@ -8,13 +8,12 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       url: DataTypes.STRING,
-      offer_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   OfferImage.associate = function (models) {
-    // associations can be defined here
+    OfferImage.belongsTo(models.Offer, { foreignKey: 'offer_id', as: 'offer' })
   }
   return OfferImage
 }

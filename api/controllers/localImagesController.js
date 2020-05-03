@@ -1,4 +1,4 @@
-const { LocalImage } = require('../sequelize')
+const LocalImage = require('../models').LocalImage
 const { Log } = require('../helpers/log')
 
 module.exports = {
