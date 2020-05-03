@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       capacity: DataTypes.INTEGER,
       occupation: DataTypes.INTEGER,
       identifier: DataTypes.STRING,
-      localtype_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN,
       lng: DataTypes.FLOAT,
       lat: DataTypes.FLOAT
@@ -21,18 +20,120 @@ module.exports = (sequelize, DataTypes) => {
     {}
   )
   Local.associate = function (models) {
-    // associations can be defined here
+    Local.hasMany(models.Comment, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'comments'
+    })
+    Local.hasMany(models.UserFauvoriteLocal, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'userFauvoriteLocal'
+    })
+    Local.hasMany(models.LocalAsociated, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'localAsociated'
+    })
+    Local.hasOne(models.LocalOwn, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'localOwn'
+    })
+    Local.hasOne(models.LocalDocuments, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'documents'
+    })
+    Local.hasOne(models.Rating, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'rating'
+    })
+    Local.hasOne(models.Address, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'address'
+    })
+    Local.hasMany(models.Offer, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'offers'
+    })
+    Local.hasMany(models.LocalImage, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'images'
+    })
+    Local.hasMany(models.LocalTag, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'tags'
+    })
+    Local.belongsTo(models.LocalType, {
+      foreignKey: 'localType_id',
+      as: 'localType'
+    })
   }
-  Local.findLocalGeo = (
-    lat,
-    lng,
-    includes,
-    where,
-    maxDistance,
-    offset,
-    limit
-  ) => {
-    return Local.findAll({
+  Local.findAllLocalsByType = (type, offset, limit) => {
+    let includes
+    if (type) {
+      includes = [
+        {
+          model: sequelize.models.LocalType,
+          as: 'localType',
+          where: { deleted: false, name: type }
+        },
+        'offers',
+        'address',
+        'images',
+        'tags',
+        'rating'
+      ]
+    } else {
+      includes = ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+    }
+
+    return Local.findAndCountAll({
+      include: includes,
+      where: { deleted: false },
+      offset: offset,
+      limit: limit
+    })
+  }
+  Local.findLocalById = (id) => {
+    return Local.findByPk(id, {
+      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+    })
+  }
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
+    const includes = [
+      'offers',
+      'localType',
+      'address',
+      'images',
+      'tags',
+      'rating'
+    ]
+    if (type) {
+      includes.push({
+        model: sequelize.models.LocalType,
+        as: 'localType',
+        where: { deleted: false, name: type }
+      })
+    }
+    if (city) {
+      includes.push({
+        model: sequelize.models.Address,
+        as: 'address',
+        where: {
+          deleted: false,
+          city: city
+        }
+      })
+    }
+    console.log(includes)
+    return Local.findAndCountAll({
       attributes: [
         'id',
         'name',
@@ -41,6 +142,9 @@ module.exports = (sequelize, DataTypes) => {
         'description',
         'capacity',
         'identifier',
+        'deleted',
+        'createdAt',
+        'updatedAt',
         [
           sequelize.literal(
             '6371 * acos(cos(radians(' +
@@ -55,11 +159,11 @@ module.exports = (sequelize, DataTypes) => {
         ]
       ],
       include: includes,
-      where: where,
-      having: sequelize.literal('distance < ' + maxDistance),
+      where: { deleted: false },
       order: sequelize.col('distance'),
       offset: offset,
-      limit: limit
+      limit: limit,
+      distinct: true
     })
   }
   return Local

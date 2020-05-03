@@ -1,4 +1,4 @@
-const { LocalType } = require('../sequelize')
+const LocalType = require('../models').LocalType
 const { Log } = require('../helpers/log')
 
 module.exports = {

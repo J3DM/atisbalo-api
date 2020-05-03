@@ -27,6 +27,16 @@ const RolesController = require('./controllers/rolesController')
 const TagsController = require('./controllers/tagsController')
 const UsersController = require('./controllers/usersController')
 const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLocalsController')
+const AuthController = require('./controllers/authController')
+
+/*
+Auth
+*/
+
+app.post('/register', AuthController.register)
+app.post('/login', AuthController.login)
+app.post('/logout', AuthController.logout)
+app.post('/token', AuthController.refresh)
 
 /*
  Addresses
@@ -75,6 +85,7 @@ app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
  */
 app.post('/locals', LocalController.createLocal)
 app.get('/locals', LocalController.getLocalsGeo)
+app.get('/locals/:id', LocalController.getLocalByID)
 
 /*
  LocalTags
@@ -121,6 +132,7 @@ app.get('/tags', TagsController.getAllTags)
  */
 
 app.get('/users', UsersController.getAllUsers)
+app.get('/users/:id', UsersController.getUserById)
 
 /*
  UsersFauvoriteLocals

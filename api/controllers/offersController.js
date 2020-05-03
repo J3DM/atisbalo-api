@@ -1,4 +1,4 @@
-const { Offer } = require('../sequelize')
+const Offer = require('../models').Offer
 const { Log } = require('../helpers/log')
 
 module.exports = {

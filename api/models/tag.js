@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
     {}
   )
   Tag.associate = function (models) {
-    // associations can be defined here
+    Tag.hasMany(models.LocalTag, {
+      foreignKey: 'tag_id',
+      onDelete: 'cascade',
+      as: 'localTag'
+    })
   }
   return Tag
 }

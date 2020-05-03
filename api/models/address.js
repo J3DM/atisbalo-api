@@ -13,13 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       city: DataTypes.STRING,
       province: DataTypes.STRING,
       complete: DataTypes.STRING,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   Address.associate = function (models) {
-    // associations can be defined here
+    Address.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   return Address
 }

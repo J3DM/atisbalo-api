@@ -1,4 +1,4 @@
-const { LocalTag } = require('../sequelize')
+const LocalTag = require('../models').LocalTag
 const { Log } = require('../helpers/log')
 
 module.exports = {

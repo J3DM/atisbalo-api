@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
     {}
   )
   Rol.associate = function (models) {
-    // associations can be defined here
+    Rol.hasMany(models.LocalAsociated, {
+      foreignKey: 'rol_id',
+      onDelete: 'cascade',
+      as: 'localAsociated'
+    })
   }
   return Rol
 }

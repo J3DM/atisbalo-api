@@ -1,4 +1,3 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
   const LocalAsociated = sequelize.define(
     'LocalAsociated',
@@ -8,15 +7,17 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
       },
-      user_id: DataTypes.UUID,
-      local_id: DataTypes.UUID,
-      rol_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   LocalAsociated.associate = function (models) {
-    // associations can be defined here
+    LocalAsociated.belongsTo(models.Local, {
+      foreignKey: 'local_id',
+      as: 'local'
+    })
+    LocalAsociated.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
+    LocalAsociated.belongsTo(models.Rol, { foreignKey: 'rol_id', as: 'rol' })
   }
   return LocalAsociated
 }

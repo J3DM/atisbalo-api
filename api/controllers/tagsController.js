@@ -1,4 +1,4 @@
-const { Tag } = require('../sequelize')
+const Tag = require('../models').Tag
 const { Log } = require('../helpers/log')
 
 module.exports = {

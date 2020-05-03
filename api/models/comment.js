@@ -9,14 +9,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       comment: DataTypes.STRING,
       rating: DataTypes.INTEGER,
-      user_id: DataTypes.UUID,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   Comment.associate = function (models) {
-    // associations can be defined here
+    Comment.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
+    Comment.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   return Comment
 }

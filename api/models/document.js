@@ -8,13 +8,15 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       url: DataTypes.STRING,
-      localDocument_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   Document.associate = function (models) {
-    // associations can be defined here
+    Document.belongsTo(models.LocalDocuments, {
+      foreignKey: 'localDocument_id',
+      as: 'localDocument'
+    })
   }
   return Document
 }

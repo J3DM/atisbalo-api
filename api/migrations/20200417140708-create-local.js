@@ -34,11 +34,7 @@ module.exports = {
       },
       localtype_id: {
         allowNull: false,
-        type: Sequelize.UUID,
-        references: {
-          model: 'LocalTypes',
-          key: 'id'
-        }
+        type: Sequelize.UUID
       },
       deleted: {
         allowNull: false,
