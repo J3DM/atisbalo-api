@@ -70,5 +70,20 @@ module.exports = {
           return res.status(500).json(err)
         })
     }
+  },
+  getLocalByID: (req, res) => {
+    Local.findLocalById(req.params.id)
+      .then((local) => {
+        if (!local) {
+          return res
+            .status(404)
+            .json(`Local whit id ${req.params.id} not found`)
+        }
+        res.status(200).json(local)
+      })
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
   }
 }

@@ -101,6 +101,11 @@ module.exports = (sequelize, DataTypes) => {
       limit: limit
     })
   }
+  Local.findLocalById = (id) => {
+    return Local.findByPk(id, {
+      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+    })
+  }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
     const includes = [
       'offers',

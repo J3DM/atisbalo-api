@@ -33,7 +33,7 @@ const AuthController = require('./controllers/authController')
 Auth
 */
 
-app.post('/signin', AuthController.signin)
+app.post('/register', AuthController.register)
 app.post('/login', AuthController.login)
 app.post('/logout', AuthController.logout)
 app.post('/token', AuthController.refresh)
@@ -85,6 +85,7 @@ app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
  */
 app.post('/locals', LocalController.createLocal)
 app.get('/locals', LocalController.getLocalsGeo)
+app.get('/locals/:id', LocalController.getLocalByID)
 
 /*
  LocalTags

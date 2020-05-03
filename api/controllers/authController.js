@@ -4,7 +4,7 @@ const User = require('../models').User
 
 const { Log } = require('../helpers/log')
 module.exports = {
-  signin: (req, res) => {
+  register: (req, res) => {
     const newUser = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
