@@ -22,6 +22,7 @@ module.exports = {
         { username: username, accessToken: accessToken },
         (err, reply) => {
           if (err) {
+            Log.error(err)
             reject(err)
           }
           redisClient.expire(refreshToken, 21600)
@@ -39,6 +40,7 @@ module.exports = {
         accessToken,
         (err, reply) => {
           if (err) {
+            Log.error(err)
             reject(err)
           }
           resolve(reply)
@@ -51,6 +53,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       redisClient.del(refreshToken, (err, reply) => {
         if (err) {
+          Log.error(err)
           reject(err)
         }
         resolve(reply)
@@ -62,6 +65,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       redisClient.exists(refreshToken, (err, exist) => {
         if (err) {
+          Log.error(err)
           reject(err)
         }
         resolve(exist)

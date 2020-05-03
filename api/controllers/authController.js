@@ -51,6 +51,7 @@ module.exports = {
               })
             })
             .catch((err) => {
+              Log.error(err)
               res.status(500).json(err)
             })
         } else {
