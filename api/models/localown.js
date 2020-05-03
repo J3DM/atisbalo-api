@@ -8,13 +8,12 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       credits: DataTypes.INTEGER,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   LocalOwn.associate = function (models) {
-    // associations can be defined here
+    LocalOwn.belongsTo(models.Local, { foreignKey: 'local_id', as: 'Local' })
   }
   return LocalOwn
 }

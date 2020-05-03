@@ -1,4 +1,3 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
   const LocalDocuments = sequelize.define(
     'LocalDocuments',
@@ -9,13 +8,19 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       CIF: DataTypes.STRING,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   LocalDocuments.associate = function (models) {
-    // associations can be defined here
+    LocalDocuments.hasMany(models.Document, {
+      foreignKey: 'localDocument_id',
+      onDelete: 'cascade'
+    })
+    LocalDocuments.belongsTo(models.Local, {
+      foreignKey: 'local_id',
+      as: 'local'
+    })
   }
   return LocalDocuments
 }

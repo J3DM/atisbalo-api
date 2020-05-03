@@ -1,6 +1,5 @@
-const { Local, Populate } = require('../sequelize')
+const Local = require('../models').Local
 const { Log } = require('../helpers/log')
-
 module.exports = {
   createLocal: async (req, res) => {
     const newLocal = {
@@ -41,43 +40,50 @@ module.exports = {
       })
   },
   getLocalsGeo: async (req, res) => {
-    let offset, limit, max
+    let offset, limit, city
 
     const lat = req.query.lat
     const lng = req.query.lng
 
     const localType = req.query.type
 
-    max = req.query.max ? (max = req.query.max) : 10000
+    city = req.query.city ? (city = req.query.city) : ''
     offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
     limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
 
-    let locals
-
     if (!lat || !lng) {
-      locals = await Local.findAll({
-        include: Populate.Local.All(localType)
-      }).catch((err) => {
-        Log.error(err)
-        res.status(500).json(err)
-      })
+      Local.findAllLocalsByType(localType, offset, limit)
+        .then((locals) => {
+          res.status(200).json(locals)
+        })
+        .catch((err) => {
+          Log.error(err)
+          return res.status(500).json(err)
+        })
     } else {
-      locals = await Local.findLocalGeo(
-        lat,
-        lng,
-        Populate.Local.All(localType),
-        {
-          deleted: false
-        },
-        max,
-        offset,
-        limit
-      ).catch((err) => {
+      Local.findLocalGeo(lat, lng, localType, city, offset, limit)
+        .then((locals) => {
+          res.status(200).json(locals)
+        })
+        .catch((err) => {
+          Log.error(err)
+          return res.status(500).json(err)
+        })
+    }
+  },
+  getLocalByID: (req, res) => {
+    Local.findLocalById(req.params.id)
+      .then((local) => {
+        if (!local) {
+          return res
+            .status(404)
+            .json(`Local whit id ${req.params.id} not found`)
+        }
+        res.status(200).json(local)
+      })
+      .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
-    }
-
-    res.status(200).json(locals)
   }
 }

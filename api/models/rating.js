@@ -10,13 +10,12 @@ module.exports = (sequelize, DataTypes) => {
       service: DataTypes.STRING,
       attention: DataTypes.STRING,
       veracity: DataTypes.STRING,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   Rating.associate = function (models) {
-    // associations can be defined here
+    Rating.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   return Rating
 }

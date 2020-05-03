@@ -1,4 +1,4 @@
-const { LocalOwn } = require('../sequelize')
+const LocalOwn = require('../models').LocalOwn
 const { Log } = require('../helpers/log')
 
 module.exports = {

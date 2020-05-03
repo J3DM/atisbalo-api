@@ -1,4 +1,4 @@
-const { OfferImage } = require('../sequelize')
+const OfferImage = require('../models').OfferImage
 const { Log } = require('../helpers/log')
 
 module.exports = {

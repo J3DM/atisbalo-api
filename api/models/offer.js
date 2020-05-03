@@ -13,13 +13,17 @@ module.exports = (sequelize, DataTypes) => {
       promotion: DataTypes.INTEGER,
       endDate: DataTypes.DATE,
       startDate: DataTypes.DATE,
-      local_id: DataTypes.UUID,
       deleted: DataTypes.BOOLEAN
     },
     {}
   )
   Offer.associate = function (models) {
-    // associations can be defined here
+    Offer.hasMany(models.OfferImage, {
+      foreignKey: 'offer_id',
+      onDelete: 'cascade',
+      as: 'images'
+    })
+    Offer.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   return Offer
 }

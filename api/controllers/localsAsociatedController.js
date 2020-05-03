@@ -1,4 +1,4 @@
-const { LocalAsociated } = require('../sequelize')
+const LocalAsociated = require('../models').LocalAsociated
 const { Log } = require('../helpers/log')
 
 module.exports = {

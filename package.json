@@ -10,7 +10,7 @@
     "migrate:aws": "NODE_ENV=aws sequelize db:migrate",
     "migrate": "sequelize db:migrate",
     "db:init": "sequelize db:drop && sequelize db:create && sequelize db:migrate && nodemon ./api/server.js",
-    "db:init:aws": "NORDE_ENV=aws sequelize db:drop && NORDE_ENV=aws sequelize db:create && NORDE_ENV=aws sequelize db:migrate && nodemon ./api/server.js"
+    "db:init:aws": "sequelize db:drop --env aws && sequelize db:create --env aws && sequelize db:migrate --env aws && nodemon ./api/server.js"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
@@ -25,6 +25,7 @@
     "multer": "^1.4.2",
     "mysql2": "^2.1.0",
     "nodemailer": "^6.4.6",
+    "redis": "^3.0.2",
     "sequelize": "^5.21.7"
   },
   "devDependencies": {
