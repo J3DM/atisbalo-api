@@ -40,14 +40,14 @@ module.exports = {
       })
   },
   getLocalsGeo: async (req, res) => {
-    let offset, limit, max
+    let offset, limit, city
 
     const lat = req.query.lat
     const lng = req.query.lng
 
     const localType = req.query.type
 
-    max = req.query.max ? (max = req.query.max) : 10000
+    city = req.query.city ? (city = req.query.city) : ''
     offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
     limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
 
@@ -61,7 +61,7 @@ module.exports = {
           return res.status(500).json(err)
         })
     } else {
-      Local.findLocalGeo(lat, lng, localType, max, offset, limit)
+      Local.findLocalGeo(lat, lng, localType, city, offset, limit)
         .then((locals) => {
           res.status(200).json(locals)
         })

@@ -94,33 +94,41 @@ module.exports = (sequelize, DataTypes) => {
       includes = ['offers', 'localType', 'address', 'images', 'tags', 'rating']
     }
 
-    return Local.findAll({
+    return Local.findAndCountAll({
       include: includes,
       where: { deleted: false },
       offset: offset,
       limit: limit
     })
   }
-  Local.findLocalGeo = (lat, lng, type, maxDistance, offset, limit) => {
-    let includes
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
+    const includes = [
+      'offers',
+      'localType',
+      'address',
+      'images',
+      'tags',
+      'rating'
+    ]
     if (type) {
-      includes = [
-        {
-          model: sequelize.models.LocalType,
-          as: 'localType',
-          where: { deleted: false, name: type }
-        },
-        'offers',
-        'address',
-        'images',
-        'tags',
-        'rating'
-      ]
-    } else {
-      includes = ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+      includes.push({
+        model: sequelize.models.LocalType,
+        as: 'localType',
+        where: { deleted: false, name: type }
+      })
     }
-
-    return Local.findAll({
+    if (city) {
+      includes.push({
+        model: sequelize.models.Address,
+        as: 'address',
+        where: {
+          deleted: false,
+          city: city
+        }
+      })
+    }
+    console.log(includes)
+    return Local.findAndCountAll({
       attributes: [
         'id',
         'name',
@@ -147,10 +155,10 @@ module.exports = (sequelize, DataTypes) => {
       ],
       include: includes,
       where: { deleted: false },
-      having: sequelize.literal('distance < ' + maxDistance),
       order: sequelize.col('distance'),
       offset: offset,
-      limit: limit
+      limit: limit,
+      distinct: true
     })
   }
   return Local
