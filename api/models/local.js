@@ -17,7 +17,15 @@ module.exports = (sequelize, DataTypes) => {
       lng: DataTypes.FLOAT,
       lat: DataTypes.FLOAT
     },
-    {}
+    {
+      hooks: {
+        beforeCreate: (local) => {
+          local.identifier = `${local.name.replace(/[\W_]+/g, '')}#${Math.floor(
+            Math.random() * 1000
+          )}`
+        }
+      }
+    }
   )
   Local.associate = function (models) {
     Local.hasMany(models.Comment, {
