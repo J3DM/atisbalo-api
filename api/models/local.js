@@ -79,7 +79,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'tags'
     })
     Local.belongsTo(models.LocalType, {
-      foreignKey: 'localType_id',
+      foreignKey: 'localtype_id',
       as: 'localType'
     })
   }

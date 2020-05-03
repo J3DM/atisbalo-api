@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   )
   Document.associate = function (models) {
     Document.belongsTo(models.LocalDocuments, {
-      foreignKey: 'localDocument_id',
+      foreignKey: 'localdocument_id',
       as: 'localDocument'
     })
   }
