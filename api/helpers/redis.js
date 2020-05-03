@@ -3,8 +3,7 @@ const { REDIS_URL } = require('../../config/constants')
 const { Log } = require('../helpers/log')
 const redisClient = redis.createClient({
   host: REDIS_URL,
-  port: 6379,
-  no_ready_check: true
+  port: 6379
 })
 redisClient.on('connect', function () {
   Log.debug(`Redis client connected ${REDIS_URL}`)
