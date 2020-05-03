@@ -14,10 +14,11 @@ module.exports = {
     }
     const localStored = await Local.findAll({
       where: {
-        name: newLocal.telephone
+        telephone: newLocal.telephone
       }
     })
-    if (localStored) {
+    Log.error(localStored)
+    if (localStored.length !== 0) {
       Log.error(
         `The place with the telephone ${newLocal.telephone} already exists`
       )
