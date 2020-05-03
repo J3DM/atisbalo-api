@@ -52,14 +52,7 @@ module.exports = {
     limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
 
     if (!lat || !lng) {
-      Local.findAllLocalsByType(
-        localType,
-        {
-          deleted: false
-        },
-        offset,
-        limit
-      )
+      Local.findAllLocalsByType(localType, offset, limit)
         .then((locals) => {
           res.status(200).json(locals)
         })
@@ -68,17 +61,7 @@ module.exports = {
           return res.status(500).json(err)
         })
     } else {
-      Local.findLocalGeo(
-        lat,
-        lng,
-        localType,
-        {
-          deleted: false
-        },
-        max,
-        offset,
-        limit
-      )
+      Local.findLocalGeo(lat, lng, localType, max, offset, limit)
         .then((locals) => {
           res.status(200).json(locals)
         })

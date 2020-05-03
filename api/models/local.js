@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'localType'
     })
   }
-  Local.findAllLocalsByType = (type, where, offset, limit) => {
+  Local.findAllLocalsByType = (type, offset, limit) => {
     let includes
     if (type) {
       includes = [
@@ -96,12 +96,12 @@ module.exports = (sequelize, DataTypes) => {
 
     return Local.findAll({
       include: includes,
-      where: where,
+      where: { deleted: false },
       offset: offset,
       limit: limit
     })
   }
-  Local.findLocalGeo = (lat, lng, type, where, maxDistance, offset, limit) => {
+  Local.findLocalGeo = (lat, lng, type, maxDistance, offset, limit) => {
     let includes
     if (type) {
       includes = [
@@ -129,6 +129,9 @@ module.exports = (sequelize, DataTypes) => {
         'description',
         'capacity',
         'identifier',
+        'deleted',
+        'createdAt',
+        'updatedAt',
         [
           sequelize.literal(
             '6371 * acos(cos(radians(' +
@@ -143,7 +146,7 @@ module.exports = (sequelize, DataTypes) => {
         ]
       ],
       include: includes,
-      where: where,
+      where: { deleted: false },
       having: sequelize.literal('distance < ' + maxDistance),
       order: sequelize.col('distance'),
       offset: offset,
