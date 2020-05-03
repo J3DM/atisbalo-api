@@ -8,7 +8,7 @@ const redisClient = redis.createClient({
   no_ready_check: true
 })
 redisClient.on('connect', function () {
-  Log.debug('Redis client connected')
+  Log.debug(`Redis client connected ${REDIS_URL}`)
 })
 redisClient.on('error', function (err) {
   Log.error('Redis - ' + err)
