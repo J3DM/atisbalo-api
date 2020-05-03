@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   )
   LocalDocuments.associate = function (models) {
     LocalDocuments.hasMany(models.Document, {
-      foreignKey: 'localDocument_id',
+      foreignKey: 'localdocument_id',
       onDelete: 'cascade'
     })
     LocalDocuments.belongsTo(models.Local, {

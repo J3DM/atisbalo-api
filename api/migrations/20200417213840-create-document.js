@@ -10,7 +10,7 @@ module.exports = {
       url: {
         type: Sequelize.STRING
       },
-      localDocument_id: {
+      localdocument_id: {
         type: Sequelize.UUID
       },
       deleted: {

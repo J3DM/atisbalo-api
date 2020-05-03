@@ -44,7 +44,83 @@ module.exports = {
         .catch((err) => Log.info(err))
       Log.info('Generados typos y tags ' + i)
     }
-
+    const localtypes = await LocalType.findAll()
+    for (let i = 0; i < 1; i++) {
+      const o = localtypes[i]
+      await Local.build({
+        name: faker.company.companyName() + faker.random.number(1000),
+        telephone: faker.phone.phoneNumber(),
+        description: faker.lorem.sentence(),
+        capacity: faker.random.number(100),
+        occupation: faker.random.number(100),
+        localtype_id: o.id,
+        lat: faker.address.latitude(),
+        lng: faker.address.longitude()
+      })
+        .save()
+        .catch((err) => Log.info(err))
+      await Local.build({
+        name: faker.company.companyName() + faker.random.number(1000),
+        telephone: faker.phone.phoneNumber(),
+        description: faker.lorem.sentence(),
+        capacity: faker.random.number(100),
+        occupation: faker.random.number(100),
+        localtype_id: o.id,
+        lat: faker.address.latitude(),
+        lng: faker.address.longitude()
+      })
+        .save()
+        .catch((err) => Log.info(err))
+      await Local.build({
+        name: faker.company.companyName() + faker.random.number(1000),
+        telephone: faker.phone.phoneNumber(),
+        description: faker.lorem.sentence(),
+        capacity: faker.random.number(100),
+        occupation: faker.random.number(100),
+        localtype_id: o.id,
+        lat: faker.address.latitude(),
+        lng: faker.address.longitude()
+      })
+        .save()
+        .catch((err) => Log.info(err))
+      await Local.build({
+        name: faker.company.companyName() + faker.random.number(1000),
+        telephone: faker.phone.phoneNumber(),
+        description: faker.lorem.sentence(),
+        capacity: faker.random.number(100),
+        occupation: faker.random.number(100),
+        localtype_id: o.id,
+        lat: faker.address.latitude(),
+        lng: faker.address.longitude()
+      })
+        .save()
+        .catch((err) => Log.info(err))
+      await Local.build({
+        name: faker.company.companyName() + faker.random.number(1000),
+        telephone: faker.phone.phoneNumber(),
+        description: faker.lorem.sentence(),
+        capacity: faker.random.number(100),
+        occupation: faker.random.number(100),
+        localtype_id: o.id,
+        lat: faker.address.latitude(),
+        lng: faker.address.longitude()
+      })
+        .save()
+        .catch((err) => Log.info(err))
+      await Local.build({
+        name: faker.company.companyName() + faker.random.number(1000),
+        telephone: faker.phone.phoneNumber(),
+        description: faker.lorem.sentence(),
+        capacity: faker.random.number(100),
+        occupation: faker.random.number(100),
+        localtype_id: o.id,
+        lat: faker.address.latitude(),
+        lng: faker.address.longitude()
+      })
+        .save()
+        .catch((err) => Log.info(err))
+      Log.info('Generados Locales ' + i)
+    }
     for (let i = 0; i < 100; i++) {
       await User.build({
         firstName: faker.name.firstName() + faker.random.number(1000),
@@ -121,91 +197,6 @@ module.exports = {
         password: await bcrypt.hashSync(faker.internet.userName(), 10)
       })
       Log.info('Generados usuarios ' + i)
-    }
-
-    const localtypes = await LocalType.findAll()
-
-    for (let i = 0; i < localtypes.length; i++) {
-      const o = localtypes[i]
-      await Local.build({
-        name: faker.company.companyName() + faker.random.number(1000),
-        telephone: faker.phone.phoneNumber(),
-        description: faker.lorem.sentence(),
-        capacity: faker.random.number(100),
-        occupation: faker.random.number(100),
-        identifier: faker.name.findName() + faker.random.number(1000),
-        localtype_id: o.id,
-        lat: faker.address.latitude(),
-        lng: faker.address.longitude()
-      })
-        .save()
-        .catch((err) => Log.info(err))
-      await Local.build({
-        name: faker.company.companyName() + faker.random.number(1000),
-        telephone: faker.phone.phoneNumber(),
-        description: faker.lorem.sentence(),
-        capacity: faker.random.number(100),
-        occupation: faker.random.number(100),
-        identifier: faker.name.findName() + faker.random.number(1000),
-        localtype_id: o.id,
-        lat: faker.address.latitude(),
-        lng: faker.address.longitude()
-      })
-        .save()
-        .catch((err) => Log.info(err))
-      await Local.build({
-        name: faker.company.companyName() + faker.random.number(1000),
-        telephone: faker.phone.phoneNumber(),
-        description: faker.lorem.sentence(),
-        capacity: faker.random.number(100),
-        occupation: faker.random.number(100),
-        identifier: faker.name.findName() + faker.random.number(1000),
-        localtype_id: o.id,
-        lat: faker.address.latitude(),
-        lng: faker.address.longitude()
-      })
-        .save()
-        .catch((err) => Log.info(err))
-      await Local.build({
-        name: faker.company.companyName() + faker.random.number(1000),
-        telephone: faker.phone.phoneNumber(),
-        description: faker.lorem.sentence(),
-        capacity: faker.random.number(100),
-        occupation: faker.random.number(100),
-        identifier: faker.name.findName() + faker.random.number(1000),
-        localtype_id: o.id,
-        lat: faker.address.latitude(),
-        lng: faker.address.longitude()
-      })
-        .save()
-        .catch((err) => Log.info(err))
-      await Local.build({
-        name: faker.company.companyName() + faker.random.number(1000),
-        telephone: faker.phone.phoneNumber(),
-        description: faker.lorem.sentence(),
-        capacity: faker.random.number(100),
-        occupation: faker.random.number(100),
-        identifier: faker.name.findName() + faker.random.number(1000),
-        localtype_id: o.id,
-        lat: faker.address.latitude(),
-        lng: faker.address.longitude()
-      })
-        .save()
-        .catch((err) => Log.info(err))
-      await Local.build({
-        name: faker.company.companyName() + faker.random.number(1000),
-        telephone: faker.phone.phoneNumber(),
-        description: faker.lorem.sentence(),
-        capacity: faker.random.number(100),
-        occupation: faker.random.number(100),
-        identifier: faker.name.findName() + faker.random.number(1000),
-        localtype_id: o.id,
-        lat: faker.address.latitude(),
-        lng: faker.address.longitude()
-      })
-        .save()
-        .catch((err) => Log.info(err))
-      Log.info('Generados Locales ' + i)
     }
 
     const locals = await Local.findAll()
@@ -335,13 +326,13 @@ module.exports = {
     for (let i = 0; i < localsDocuments.length; i++) {
       const ld = localsDocuments[i]
       await Document.build({
-        localDocument_id: ld.id,
+        localdocument_id: ld.id,
         url: faker.internet.url()
       })
         .save()
         .catch((err) => Log.info(err))
       await Document.build({
-        localDocument_id: ld.id,
+        localdocument_id: ld.id,
         url: faker.internet.url()
       })
         .save()

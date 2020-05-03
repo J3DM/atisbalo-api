@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   )
   LocalType.associate = function (models) {
-    LocalType.hasMany(models.Local, { foreignKey: 'localType_id', as: 'local' })
+    LocalType.hasMany(models.Local, { foreignKey: 'localtype_id', as: 'local' })
   }
   return LocalType
 }
