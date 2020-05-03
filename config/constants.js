@@ -13,8 +13,6 @@ const EXPIRATION_TOKEN = process.env.EXPIRATION_TOKEN || '48h'
 const NODE_ENV = process.env.NODE_ENV
 
 const REDIS_URL = process.env.REDIS_URL || 'localhost'
-const REDIS_TOKEN =
-  process.env.REDIS_TOKEN || 'c45eb22ce-be92-490e-ab79-9be241e9f4c9'
 
 if (NODE_ENV === 'docker') {
   process.env.NODE_ENV = 'development'
@@ -30,7 +28,6 @@ module.exports = {
   REFRESH_TOKEN,
   ACCESS_TOKEN,
   EXPIRATION_TOKEN,
-  REDIS_TOKEN,
   REDIS_URL,
   LOG_LEVEL
 }
