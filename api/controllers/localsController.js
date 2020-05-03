@@ -10,18 +10,15 @@ module.exports = {
       occupation: req.body.occupation,
       // Añadir midelware para normalizar el identificador
       // lat y lng no son obligatorias, actualizar al crear su direccion
-      identifier: req.body.name,
       localtype_id: req.body.localtype_id
     }
     const localStored = await Local.findAll({
       where: {
-        name: newLocal.telephone,
-        $or: {
-          identifier: newLocal.identifier
-        }
+        telephone: newLocal.telephone
       }
     })
-    if (localStored) {
+    Log.error(localStored)
+    if (localStored.length !== 0) {
       Log.error(
         `The place with the telephone ${newLocal.telephone} already exists`
       )

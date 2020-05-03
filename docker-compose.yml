@@ -15,13 +15,16 @@ services:
       - DATABASE_PASSWORD=admin
       - DATABASE_DIALECT=mysql
       - PORT=3000
+      - REDIS_URL=redis
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     links:
       - mysql
+      - redis
     depends_on:
       - mysql
+      - redis
   mysql:
     image: mysql:5.7
     container_name: atisbalo-db
@@ -42,5 +45,7 @@ services:
     command: redis-server
     ports:
       - '6379:6379'
+
 volumes:
   data:
+  redisdata:

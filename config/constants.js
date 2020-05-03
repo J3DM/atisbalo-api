@@ -12,7 +12,7 @@ const EXPIRATION_TOKEN = process.env.EXPIRATION_TOKEN || '48h'
 
 const NODE_ENV = process.env.NODE_ENV
 
-const REDIS_URL = process.env.REDIS_URL || 'localhost'
+const REDIS_URL = process.env.REDIS_URL || 'redis'
 
 if (NODE_ENV === 'docker') {
   process.env.NODE_ENV = 'development'
