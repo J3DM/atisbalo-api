@@ -1,10 +1,9 @@
 const redis = require('redis')
-const { REDIS_TOKEN, REDIS_URL } = require('../../config/constants')
+const { REDIS_URL } = require('../../config/constants')
 const { Log } = require('../helpers/log')
 const redisClient = redis.createClient({
   host: REDIS_URL,
   port: 6379,
-  password: REDIS_TOKEN,
   no_ready_check: true
 })
 redisClient.on('connect', function () {
