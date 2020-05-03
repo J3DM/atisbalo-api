@@ -10,15 +10,11 @@ module.exports = {
       occupation: req.body.occupation,
       // Añadir midelware para normalizar el identificador
       // lat y lng no son obligatorias, actualizar al crear su direccion
-      identifier: req.body.name,
       localtype_id: req.body.localtype_id
     }
     const localStored = await Local.findAll({
       where: {
-        name: newLocal.telephone,
-        $or: {
-          identifier: newLocal.identifier
-        }
+        name: newLocal.telephone
       }
     })
     if (localStored) {
