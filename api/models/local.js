@@ -1,3 +1,6 @@
+const pattern = new RegExp(
+  '/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+)
 module.exports = (sequelize, DataTypes) => {
   const Local = sequelize.define(
     'Local',
@@ -110,9 +113,18 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
   Local.findLocalById = (id) => {
-    return Local.findByPk(id, {
-      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
-    })
+    if (pattern.test(id)) {
+      return Local.findByPk(id, {
+        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+      })
+    } else {
+      return Local.findOne({
+        where: {
+          identifier: id
+        },
+        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+      })
+    }
   }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
     const includes = [
@@ -140,7 +152,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
-    console.log(includes)
     return Local.findAndCountAll({
       attributes: [
         'id',
