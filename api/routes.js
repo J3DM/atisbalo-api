@@ -132,7 +132,14 @@ app.get('/tags', TagsController.getAllTags)
  */
 
 app.get('/users', UsersController.getAllUsers)
-app.get('/users/:id', UsersController.getUserById)
+app.get('/user/:id', UsersController.getUserById)
+app.post('/user', UsersController.createUser)
+app.put('/user/:id', UsersController.updateUser)
+app.put('/user/:id/email', UsersController.changeEmailUser)
+app.put('/user/:id/password', UsersController.changePasswordUser)
+app.get('/user/:id/validate', UsersController.verifyUser)
+app.delete('/user/:id', UsersController.deleteUser)
+app.delete('/user/:id/erase', UsersController.eraseUser)
 
 /*
  UsersFauvoriteLocals

@@ -11,17 +11,20 @@ module.exports = (sequelize, DataTypes) => {
       },
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
-      email: DataTypes.STRING,
+      email: {type:DataTypes.STRING, unique:true},
       password: DataTypes.STRING,
-      verified: DataTypes.BOOLEAN,
+      verified: {type:DataTypes.BOOLEAN, defaultValue:false},
       provider: DataTypes.STRING,
-      deleted: DataTypes.BOOLEAN
+      deleted: {type:DataTypes.BOOLEAN, defaultValue:false}
     },
     {
       hooks: {
-        beforeCreate: (user) => {
+        beforeCreate: async (user) => {
           const salt = bcrypt.genSaltSync()
           user.password = bcrypt.hashSync(user.password, salt)
+        },
+        afterCreate: (user) => {
+          //TODO send email for verification
         }
       }
     }
@@ -58,6 +61,36 @@ module.exports = (sequelize, DataTypes) => {
     return User.findByPk(id, {
       include: ['fauvoriteLocals', 'localsAsociated']
     })
+  }
+  User.create = (newUser) => {
+    return User.build(newUser).save()
+  }
+  User.erase = (id) => {
+    return User.destroy({
+      where: {
+        id: id
+      }
+    })
+  }
+  User.remove = (id) => {
+    return User.update(
+      { deleted: true },
+      { where: { id: id } }
+    )
+  }
+  User.updateProfile = (userData, id) => {
+    return User.update(
+      userData,
+      { where: { id: id } }
+    )
+  }
+  User.changePassword = (userData, id) => {
+    const salt = bcrypt.genSaltSync()
+    userData.password = bcrypt.hashSync(userData.password, salt)
+    return User.update(
+      userData,
+      { where: { id: id } }
+    )
   }
   return User
 }
