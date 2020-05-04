@@ -54,9 +54,15 @@ module.exports = (sequelize, DataTypes) => {
       include: ['fauvoriteLocals', 'localsAsociated']
     })
   }
-  User.getUserById = (id) => {
+  User.findUserById = (id) => {
     return User.findByPk(id, {
       include: ['fauvoriteLocals', 'localsAsociated']
+    })
+  }
+  User.updateUserById = (id, update) => {
+    return User.update(update, {
+      returning: true,
+      where: { id: id }
     })
   }
   return User

@@ -7,6 +7,7 @@ const transporter = nodemailer.createTransport({
     pass: 'atisbalo13'
   }
 })
+
 const sendMailVerification = function (mail, token) {
   const mailOptions = {
     from: 'atisbalo.noreply@gmail.com',
@@ -21,6 +22,7 @@ const sendMailVerification = function (mail, token) {
   }
   return transporter.sendMail(mailOptions)
 }
+
 module.exports = {
   sendMailVerification
 }
