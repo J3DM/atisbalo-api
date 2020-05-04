@@ -61,7 +61,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.updateUserById = (id, update) => {
     return User.update(update, {
-      returning: true,
       where: { id: id }
     })
   }

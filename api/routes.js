@@ -28,11 +28,16 @@ const TagsController = require('./controllers/tagsController')
 const UsersController = require('./controllers/usersController')
 const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLocalsController')
 const AuthController = require('./controllers/authController')
-
+const AuthMiddlewares = require('./middlewares/auth')
 /*
 Auth
 */
-
+app.get(
+  '/verify/:token',
+  AuthMiddlewares.verifyTokenParam,
+  AuthController.verifyUserEmail
+)
+app.post('/recovery/password', AuthController.recoveryPassword)
 app.post('/register', AuthController.register)
 app.post('/login', AuthController.login)
 app.post('/logout', AuthController.logout)

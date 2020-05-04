@@ -1,39 +1,15 @@
 const Redis = require('../helpers/redis')
 const AuthService = require('../services/auth')
 const User = require('../models').User
-const { sendMailVerification } = require('../services/mailService')
+const {
+  sendMailVerification,
+  sendMailRecoveryPassword
+} = require('../services/mailService')
 const { Log } = require('../helpers/log')
 
 module.exports = {
-  verifyToken: (req, res, next) => {
-    AuthService.verifyToken(req.get('Authorization'))
-      .then((decoded) => {
-        if (!decoded) {
-          return res.status(401).json('Error when decoded the token')
-        }
-        req.user = decoded.user
-      })
-      .catch((err) => {
-        return res.status(401).json(err)
-      })
-  },
-  verifyTokenAdmin: (req, res, next) => {
-    AuthService.verifyToken(req.get('Authorization'))
-      .then((decoded) => {
-        if (!decoded) {
-          return res.status(401).json('Error when decoded the token')
-        }
-        if (!decoded.user.provider.name === 'admin') {
-          return res.status(401).json('')
-        }
-        req.user = decoded.user
-      })
-      .catch((err) => {
-        return res.status(401).json(err)
-      })
-  },
-  verifyEmail: function (req, res) {
-    User.findUserById(req.user.id, { verified: true })
+  verifyUserEmail: function (req, res) {
+    User.updateUserById(req.user.id, { verified: true })
       .then((user) => {
         if (!user) {
           return res.status(500).json(`Cant find user with id ${req.user.id}`)
@@ -44,42 +20,22 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  changePassword: (req, res) => {
-    let email, password, newPassword
 
-    email = req.body.email ? (email = req.body.email) : (email = false)
+  recoveryPassword: (req, res) => {
+    let email
 
-    newPassword = req.body.newPassword
-      ? (newPassword = req.body.newPassword)
-      : (newPassword = false)
-
-    password = req.body.password
-      ? (password = req.body.password)
-      : (password = false)
-
-    if (!password || !email || !newPassword) {
-      return res.status(500).json('Email ,password and newPassword required')
+    if (!email) {
+      return res.status(500).json('Email required')
     }
     User.findOneByEmail(email)
       .then((user) => {
         if (!user) {
-          return res.status(401).json('User not found')
+          return res.status(500).json(`Cant find user whit email ${email}`)
         }
-        if (!AuthService.validatePassword(password, user.password)) {
-          return res.status(500).json('Oldpassword is wrong')
-        }
-        const encryptedNewPassword = AuthService.encrypt(newPassword)
-        // console.log("USER CHANGE PASSWORD -> changing the password")
-        return User.updateUserById(user.id, {
-          password: encryptedNewPassword
+        const accessToken = AuthService.generateAccessToken(user)
+        sendMailRecoveryPassword(user.email, accessToken).then((mail) => {
+          res.status(200).json('sent email to recover password')
         })
-      })
-      .then((updatedUser) => {
-        if (!updatedUser) {
-          return res.status(500).json('Cant update user')
-        }
-        // console.log("USER CHANGE PASSWORD -> password change successfull")
-        res.status(200).json(updatedUser)
       })
       .catch((err) => {
         res.status(500).json(err)
@@ -108,6 +64,7 @@ module.exports = {
         res.status(500).json(err)
       })
   },
+
   login: (req, res) => {
     let email, password
 
@@ -150,6 +107,7 @@ module.exports = {
         res.status(500).json(err)
       })
   },
+
   logout: (req, res) => {
     const refreshToken = req.body.refreshToken
     Redis.existsRefreshToken(refreshToken).then((exists) => {
@@ -166,9 +124,9 @@ module.exports = {
       }
     })
   },
+
   refresh: (req, res) => {
     const refreshToken = req.body.refreshToken
-
     Redis.existsRefreshToken(refreshToken)
       .then((exists) => {
         if (exists) {
