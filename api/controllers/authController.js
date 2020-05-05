@@ -91,7 +91,8 @@ module.exports = {
             .then((response) => {
               res.status(200).json({
                 access_token: accessToken,
-                refresh_token: refreshToken
+                refresh_token: refreshToken,
+                user: user.id
               })
             })
             .catch((err) => {

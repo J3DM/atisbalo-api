@@ -25,5 +25,14 @@ module.exports = (sequelize, DataTypes) => {
     })
     Offer.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
+  Offer.findAllAndOrder = function (order, by) {
+    return Offer.findAll({
+      order: [[by, order]],
+      where: {
+        active: true,
+        deleted: false
+      }
+    })
+  }
   return Offer
 }
