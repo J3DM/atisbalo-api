@@ -92,7 +92,7 @@ module.exports = {
               res.status(200).json({
                 access_token: accessToken,
                 refresh_token: refreshToken,
-                user: user.id
+                id: user.id
               })
             })
             .catch((err) => {
