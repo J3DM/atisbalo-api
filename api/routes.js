@@ -137,7 +137,7 @@ app.get('/tags', TagsController.getAllTags)
  */
 
 app.get('/users', UsersController.getAllUsers)
-app.get('/users/:id', UsersController.findUserById)
+app.get('/users/:id', AuthMiddlewares.verifyToken, UsersController.findUserById)
 
 /*
  UsersFauvoriteLocals
