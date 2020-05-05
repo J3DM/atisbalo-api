@@ -45,7 +45,7 @@ module.exports = {
       Log.info('Generados typos y tags ' + i)
     }
     const localtypes = await LocalType.findAll()
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < localtypes.length; i++) {
       const o = localtypes[i]
       await Local.build({
         name: faker.company.companyName() + faker.random.number(1000),
