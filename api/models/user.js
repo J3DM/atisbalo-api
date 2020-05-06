@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       include: ['fauvoriteLocals', 'localsAsociated']
     })
   }
-  User.getUserById = (id) => {
+  User.findUserById = (id) => {
     return User.findByPk(id, {
       include: ['fauvoriteLocals', 'localsAsociated']
     })
@@ -81,12 +81,6 @@ module.exports = (sequelize, DataTypes) => {
       { where: { id: id } }
     )
   }
-  User.updateProfile = (userData, id) => {
-    return User.update(
-      userData,
-      { where: { id: id } }
-    )
-  }
   User.changePassword = (userData, id) => {
     const salt = bcrypt.genSaltSync()
     userData.password = bcrypt.hashSync(userData.password, salt)
@@ -94,6 +88,11 @@ module.exports = (sequelize, DataTypes) => {
       userData,
       { where: { id: id } }
     )
+  }
+  User.updateUserById = (id, update) => {
+    return User.update(update, {
+      where: { id: id }
+    })
   }
   return User
 }

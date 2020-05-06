@@ -3,11 +3,10 @@ const log = console.log
 const { LOG_LEVEL } = require('../../config/constants')
 const morgan = require('morgan')
 const moment = require('moment')
-
-// TODO: console.log sync?
+const level = LOG_LEVEL.toUpperCase()
 const Log = {
   debug: (msg) => {
-    if (LOG_LEVEL === 'D' || LOG_LEVEL === 'A') {
+    if (level === 'D' || level === 'A') {
       log(
         chalk.magenta.bold(timestamp()),
         chalk.bgBlack.blue.bold('DEBUG'),
@@ -16,7 +15,7 @@ const Log = {
     }
   },
   error: (msg) => {
-    if (LOG_LEVEL === 'E' || LOG_LEVEL === 'A') {
+    if (level === 'E' || level === 'A') {
       log(
         chalk.magenta.bold(timestamp()),
         chalk.bgBlack.redBright.bold('ERROR'),
@@ -25,7 +24,7 @@ const Log = {
     }
   },
   trace: (msg) => {
-    if (LOG_LEVEL === 'T' || LOG_LEVEL === 'A') {
+    if (level === 'T' || level === 'A') {
       log(
         chalk.magenta.bold(timestamp()),
         chalk.bgBlack.cyan.bold('TRACE'),
@@ -34,7 +33,7 @@ const Log = {
     }
   },
   warning: (msg) => {
-    if (LOG_LEVEL === 'W' || LOG_LEVEL === 'A') {
+    if (level === 'W' || level === 'A') {
       log(
         chalk.magenta.bold(timestamp()),
         chalk.bgBlack.yellowBright.bold('TRACE'),
@@ -43,7 +42,7 @@ const Log = {
     }
   },
   info: (msg) => {
-    if (LOG_LEVEL === 'W' || LOG_LEVEL === 'A') {
+    if (level === 'W' || level === 'A') {
       log(
         chalk.magenta.bold(timestamp()),
         chalk.bgBlack.green.bold('INFO'),
@@ -52,7 +51,6 @@ const Log = {
     }
   }
 }
-
 const morganChalk = morgan(function (tokens, req, res) {
   return [
     chalk.magenta.bold(timestamp()),
@@ -62,10 +60,10 @@ const morganChalk = morgan(function (tokens, req, res) {
     chalk.yellow(tokens['response-time'](req, res) + ' ms')
   ].join(' ')
 })
-
 const timestamp = () => {
   return '[' + moment().format('MMMM Do YYYY, h:mm:ss a') + ']'
 }
+Log.info(`Loggger started with level ${level}`)
 
 module.exports = {
   morganChalk,

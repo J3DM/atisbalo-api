@@ -28,11 +28,16 @@ const TagsController = require('./controllers/tagsController')
 const UsersController = require('./controllers/usersController')
 const UsersFavouriteLocalsController = require('./controllers/usersFauvoriteLocalsController')
 const AuthController = require('./controllers/authController')
-
+const AuthMiddlewares = require('./middlewares/auth')
 /*
 Auth
 */
-
+app.get(
+  '/verify/:token',
+  AuthMiddlewares.verifyTokenParam,
+  AuthController.verifyUserEmail
+)
+app.post('/recovery/password', AuthController.recoveryPassword)
 app.post('/register', AuthController.register)
 app.post('/login', AuthController.login)
 app.post('/logout', AuthController.logout)
@@ -131,7 +136,6 @@ app.get('/tags', TagsController.getAllTags)
  Users
  */
 app.get('/users', UsersController.getAllUsers)
-app.get('/user/:id', UsersController.getUserById)
 app.post('/user', UsersController.createUser)
 app.put('/user/:id', UsersController.updateUser)
 app.put('/user/:id/email', UsersController.changeEmailUser)
@@ -139,6 +143,7 @@ app.put('/user/:id/password', UsersController.changePasswordUser)
 app.get('/user/:id/validate', UsersController.verifyUser)
 app.delete('/user/:id', UsersController.deleteUser)
 app.delete('/user/:id/erase', UsersController.eraseUser)
+app.get('/user/:id', AuthMiddlewares.verifyToken, UsersController.findUserById)
 
 /*
  UsersFauvoriteLocals

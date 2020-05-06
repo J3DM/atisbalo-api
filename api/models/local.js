@@ -1,3 +1,6 @@
+const pattern = new RegExp(
+  '^({{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}}{0,1})$'
+)
 module.exports = (sequelize, DataTypes) => {
   const Local = sequelize.define(
     'Local',
@@ -28,6 +31,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
   Local.associate = function (models) {
+    Local.hasMany(models.Offer, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'offers'
+    })
+
+    Local.belongsTo(models.LocalType, {
+      foreignKey: 'localtype_id',
+      as: 'localType'
+    })
+
     Local.hasMany(models.Comment, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
@@ -63,11 +77,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
       as: 'address'
     })
-    Local.hasMany(models.Offer, {
-      foreignKey: 'local_id',
-      onDelete: 'cascade',
-      as: 'offers'
-    })
     Local.hasMany(models.LocalImage, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
@@ -77,10 +86,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'local_id',
       onDelete: 'cascade',
       as: 'tags'
-    })
-    Local.belongsTo(models.LocalType, {
-      foreignKey: 'localtype_id',
-      as: 'localType'
     })
   }
   Local.findAllLocalsByType = (type, offset, limit) => {
@@ -110,9 +115,18 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
   Local.findLocalById = (id) => {
-    return Local.findByPk(id, {
-      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
-    })
+    if (pattern.test(id)) {
+      return Local.findByPk(id, {
+        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+      })
+    } else {
+      return Local.findOne({
+        where: {
+          identifier: id
+        },
+        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+      })
+    }
   }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
     const includes = [
@@ -140,7 +154,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
-    console.log(includes)
     return Local.findAndCountAll({
       attributes: [
         'id',
