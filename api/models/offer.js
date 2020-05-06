@@ -23,15 +23,41 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
       as: 'images'
     })
+
     Offer.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
-  Offer.findAllAndOrder = function (order, by) {
+  Offer.findAllAndOrder = function (order, by, offset, limit, city) {
+    let includes = ['local', 'images']
+    if (city) {
+      includes = [
+        {
+          model: sequelize.models.Local,
+          as: 'local',
+          required: true,
+          include: [
+            {
+              model: sequelize.models.Address,
+              as: 'address',
+              required: true,
+              attributes: [],
+              where: {
+                deleted: false,
+                city: city
+              }
+            }
+          ]
+        }
+      ]
+    }
     return Offer.findAll({
       order: [[by, order]],
       where: {
         active: true,
         deleted: false
-      }
+      },
+      include: includes,
+      offset: offset,
+      limit: limit
     })
   }
   return Offer
