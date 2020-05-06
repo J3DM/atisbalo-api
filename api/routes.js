@@ -26,7 +26,7 @@ const RatingsController = require('./controllers/ratingsController')
 const RolesController = require('./controllers/rolesController')
 const TagsController = require('./controllers/tagsController')
 const UsersController = require('./controllers/usersController')
-const UsersFauvoriteLocalsController = require('./controllers/usersFauvoriteLocalsController')
+const UsersFavouriteLocalsController = require('./controllers/usersFauvoriteLocalsController')
 const AuthController = require('./controllers/authController')
 const AuthMiddlewares = require('./middlewares/auth')
 /*
@@ -135,19 +135,25 @@ app.get('/tags', TagsController.getAllTags)
 /*
  Users
  */
-
 app.get('/users', UsersController.getAllUsers)
-app.get('/users/:id', AuthMiddlewares.verifyToken, UsersController.findUserById)
+app.post('/user', UsersController.createUser)
+app.put('/user/:id', UsersController.updateUser)
+app.put('/user/:id/email', UsersController.changeEmailUser)
+app.put('/user/:id/password', UsersController.changePasswordUser)
+app.get('/user/:id/validate', UsersController.verifyUser)
+app.delete('/user/:id', UsersController.deleteUser)
+app.delete('/user/:id/erase', UsersController.eraseUser)
+app.get('/user/:id', AuthMiddlewares.verifyToken, UsersController.findUserById)
 
 /*
  UsersFauvoriteLocals
  */
+app.get('/userfavouritelocals',UsersFavouriteLocalsController.getAllUserFavouriteLocals)
+app.get('/user/:id/favouriteLocals',UsersFavouriteLocalsController.getUserFavouriteLocals)
+app.post('/user/:id/favouriteLocals/:localId', UsersFavouriteLocalsController.addToFavouriteLocal)
+app.delete('/user/:id/favouriteLocals/:localId', UsersFavouriteLocalsController.removeFromFavouriteLocal)
 // const gController = require('./controllers/gController')
 // app.get('/g', gController.generate)
 
-app.get(
-  '/userfauvoritelocals',
-  UsersFauvoriteLocalsController.getAllUserFauvoriteLocals
-)
 
 module.exports = app

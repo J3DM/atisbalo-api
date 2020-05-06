@@ -26,6 +26,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    },
+    { 
+      indexes: [{ name: 'comboLocalIdUserId', unique: true, fields: ['user_id', 'local_id']}]
     })
   },
   down: (queryInterface, Sequelize) => {
