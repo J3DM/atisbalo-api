@@ -1,5 +1,8 @@
 var bcrypt = require('bcrypt')
 
+const UserFavouriteLocal = require('./userfauvoritelocal').UserFavouriteLocal
+const Local = require('./local').Local
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -11,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
-      email: {type:DataTypes.STRING, unique:true},
+      email: DataTypes.STRING,
       password: DataTypes.STRING,
       verified: {type:DataTypes.BOOLEAN, defaultValue:false},
       provider: DataTypes.STRING,
