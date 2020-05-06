@@ -19,5 +19,40 @@ module.exports = (sequelize, DataTypes) => {
       as: 'localTag'
     })
   }
+  Tag.List = () => {
+    return Tag.findAll({
+      where: { deleted: false}
+    })
+  }
+  Tag.create = (newTag) => {
+    return Tag.build(newTag).save()
+  }
+  Tag.updateData = (id, updateDoc) => {
+    return Tag.update(
+      updateDoc,
+      { where: { id: id } }
+    )
+  }
+  Tag.remove = (id) => {
+    return Tag.update(
+      { deleted: true },
+      { where: { id: id } }
+    )
+  }
+  Tag.erase = (id) => {
+    return Tag.destroy({
+      where: { id: id }
+    })
+  }
+  Tag.findById = (id) => {
+    return Tag.findOne(
+      { where: { id: id } }
+    )
+  }
+  Tag.findByName = (name) => {
+    return Tag.findOne(
+      { where: { name: name } }
+    )
+  }
   return Tag
 }
