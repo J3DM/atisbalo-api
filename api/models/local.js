@@ -1,5 +1,5 @@
 const pattern = new RegExp(
-  '/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+  '^({{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}}{0,1})$'
 )
 module.exports = (sequelize, DataTypes) => {
   const Local = sequelize.define(
@@ -31,6 +31,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
   Local.associate = function (models) {
+    Local.hasMany(models.Offer, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      as: 'offers'
+    })
+
+    Local.belongsTo(models.LocalType, {
+      foreignKey: 'localtype_id',
+      as: 'localType'
+    })
+
     Local.hasMany(models.Comment, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
@@ -66,11 +77,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
       as: 'address'
     })
-    Local.hasMany(models.Offer, {
-      foreignKey: 'local_id',
-      onDelete: 'cascade',
-      as: 'offers'
-    })
     Local.hasMany(models.LocalImage, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
@@ -80,10 +86,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'local_id',
       onDelete: 'cascade',
       as: 'tags'
-    })
-    Local.belongsTo(models.LocalType, {
-      foreignKey: 'localtype_id',
-      as: 'localType'
     })
   }
   Local.findAllLocalsByType = (type, offset, limit) => {
