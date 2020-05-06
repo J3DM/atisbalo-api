@@ -25,13 +25,26 @@ module.exports = {
     return bcrypt.compareSync(password, hash)
   },
   generateAccessToken: (payLoad) => {
+    if (payLoad.password) delete payLoad.password
     return jwt.sign({ user: payLoad }, ACCESS_TOKEN, {
       expiresIn: EXPIRATION_TOKEN
+    })
+  },
+  verifyToken: (token) => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, ACCESS_TOKEN, function (err, decoded) {
+        if (err) reject(err)
+        resolve(decoded)
+      })
     })
   },
   generateRefreshToken: (payLoad) => {
     return jwt.sign({ user: payLoad }, REFRESH_TOKEN, {
       expiresIn: EXPIRATION_TOKEN
     })
+  },
+  encrypt: (password) => {
+    const salt = bcrypt.genSaltSync()
+    return bcrypt.hashSync(password, salt)
   }
 }

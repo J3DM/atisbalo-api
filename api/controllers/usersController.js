@@ -10,8 +10,11 @@ module.exports = {
         res.status(500).send(err)
       })
   },
-  getUserById: (req, res) => {
-    User.getUserById(req.params.id)
+  findUserById: (req, res) => {
+    if (req.user.id !== req.params.id) {
+      return res.status(500).json('Cant get this user')
+    }
+    User.findUserById(req.params.id)
       .then((objects) => res.status(200).send(objects))
       .catch((err) => {
         Log.error(err)

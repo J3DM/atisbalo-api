@@ -1,9 +1,47 @@
 const Redis = require('../helpers/redis')
 const AuthService = require('../services/auth')
 const User = require('../models').User
-
+const {
+  sendMailVerification,
+  sendMailRecoveryPassword
+} = require('../services/mailService')
 const { Log } = require('../helpers/log')
+
 module.exports = {
+  verifyUserEmail: function (req, res) {
+    User.updateUserById(req.user.id, { verified: true })
+      .then((user) => {
+        if (!user) {
+          return res.status(500).json(`Cant find user with id ${req.user.id}`)
+        }
+        res.status(200).json(user)
+      })
+      .catch((err) => {
+        res.status(500).json(err)
+      })
+  },
+
+  recoveryPassword: (req, res) => {
+    let email
+
+    if (!email) {
+      return res.status(500).json('Email required')
+    }
+    User.findOneByEmail(email)
+      .then((user) => {
+        if (!user) {
+          return res.status(500).json(`Cant find user whit email ${email}`)
+        }
+        const accessToken = AuthService.generateAccessToken(user)
+        sendMailRecoveryPassword(user.email, accessToken).then((mail) => {
+          res.status(200).json('sent email to recover password')
+        })
+      })
+      .catch((err) => {
+        res.status(500).json(err)
+      })
+  },
+
   register: (req, res) => {
     const newUser = {
       firstName: req.body.firstName,
@@ -13,12 +51,20 @@ module.exports = {
     }
     User.build(newUser)
       .save()
-      .then((user) => res.status(200).json(user))
+      .then((user) => {
+        const accessToken = AuthService.generateAccessToken(user)
+        sendMailVerification(user.email, accessToken).then((mail) => {
+          res.status(200).json({
+            token: accessToken
+          })
+        })
+      })
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
   },
+
   login: (req, res) => {
     let email, password
 
@@ -38,8 +84,6 @@ module.exports = {
         }
         user = user.dataValues
         if (AuthService.validatePassword(user.password, password)) {
-          delete user.password
-
           const accessToken = AuthService.generateAccessToken(user)
           const refreshToken = AuthService.generateRefreshToken(user.email)
 
@@ -47,7 +91,8 @@ module.exports = {
             .then((response) => {
               res.status(200).json({
                 access_token: accessToken,
-                refresh_token: refreshToken
+                refresh_token: refreshToken,
+                id: user.id
               })
             })
             .catch((err) => {
@@ -63,6 +108,7 @@ module.exports = {
         res.status(500).json(err)
       })
   },
+
   logout: (req, res) => {
     const refreshToken = req.body.refreshToken
     Redis.existsRefreshToken(refreshToken).then((exists) => {
@@ -79,9 +125,9 @@ module.exports = {
       }
     })
   },
+
   refresh: (req, res) => {
     const refreshToken = req.body.refreshToken
-
     Redis.existsRefreshToken(refreshToken)
       .then((exists) => {
         if (exists) {
