@@ -126,6 +126,12 @@ app.get('/roles', RolesController.getAllRoles)
  */
 
 app.get('/tags', TagsController.getAllTags)
+app.get('/tag/:id', TagsController.getTag)
+app.post('/tag', TagsController.createTag)
+app.put('/tag/:id', TagsController.updateTag)
+app.delete('/tag/:id/erase', TagsController.eraseTag)
+app.delete('/tag/:id', TagsController.deleteTag)
+app.put('/tag/:id/reactivate', TagsController.activateTag)
 
 /*
  Users
