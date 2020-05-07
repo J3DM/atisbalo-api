@@ -21,23 +21,17 @@ module.exports = (sequelize, DataTypes) => {
   }
   Tag.List = () => {
     return Tag.findAll({
-      where: { deleted: false}
+      where: { deleted: false }
     })
   }
   Tag.create = (newTag) => {
     return Tag.build(newTag).save()
   }
   Tag.updateData = (id, updateDoc) => {
-    return Tag.update(
-      updateDoc,
-      { where: { id: id } }
-    )
+    return Tag.update(updateDoc, { where: { id: id } })
   }
   Tag.remove = (id) => {
-    return Tag.update(
-      { deleted: true },
-      { where: { id: id } }
-    )
+    return Tag.update({ deleted: true }, { where: { id: id } })
   }
   Tag.erase = (id) => {
     return Tag.destroy({
@@ -45,14 +39,10 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
   Tag.findById = (id) => {
-    return Tag.findOne(
-      { where: { id: id } }
-    )
+    return Tag.findOne({ where: { id: id } })
   }
   Tag.findByName = (name) => {
-    return Tag.findOne(
-      { where: { name: name } }
-    )
+    return Tag.findOne({ where: { name: name } })
   }
   return Tag
 }

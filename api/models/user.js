@@ -1,8 +1,4 @@
-var bcrypt = require('bcrypt')
-
-const UserFavouriteLocal = require('./userfauvoritelocal').UserFavouriteLocal
-const Local = require('./local').Local
-
+const AuthService = require('../services/auth')
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -16,18 +12,17 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      verified: {type:DataTypes.BOOLEAN, defaultValue:false},
+      verified: { type: DataTypes.BOOLEAN, defaultValue: false },
       provider: DataTypes.STRING,
-      deleted: {type:DataTypes.BOOLEAN, defaultValue:false}
+      deleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {
       hooks: {
         beforeCreate: async (user) => {
-          const salt = bcrypt.genSaltSync()
-          user.password = bcrypt.hashSync(user.password, salt)
+          user.password = AuthService.encrypt(user.password)
         },
         afterCreate: (user) => {
-          //TODO send email for verification
+          // TODO send email for verification
         }
       }
     }
@@ -76,18 +71,11 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
   User.remove = (id) => {
-    return User.update(
-      { deleted: true },
-      { where: { id: id } }
-    )
+    return User.update({ deleted: true }, { where: { id: id } })
   }
   User.changePassword = (userData, id) => {
-    const salt = bcrypt.genSaltSync()
-    userData.password = bcrypt.hashSync(userData.password, salt)
-    return User.update(
-      userData,
-      { where: { id: id } }
-    )
+    userData.password = AuthService.encrypt(userData.password)
+    return User.update(userData, { where: { id: id } })
   }
   User.updateUserById = (id, update) => {
     return User.update(update, {
