@@ -19,5 +19,24 @@ module.exports = (sequelize, DataTypes) => {
       as: 'localAsociated'
     })
   }
+  Rol.findById = (id) => {
+    return Rol.findOne(
+      { where: { id: id } }
+    )
+  }
+  Rol.create = (newRol) => {
+    return Rol.build(newRol).save()
+  }
+  Rol.updateData = (id, updateData) => {
+    return Rol.update(
+      updateData,
+      { where: { id: id } }
+    )
+  }
+  Rol.erase = (id) => {
+    return Rol.destroy({
+      where: { id: id }
+    })
+  }
   return Rol
 }

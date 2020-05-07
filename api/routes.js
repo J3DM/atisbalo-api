@@ -125,6 +125,12 @@ app.get('/ratings', RatingsController.getAllRatings)
  */
 
 app.get('/roles', RolesController.getAllRoles)
+app.get('/role/:id', RolesController.getRole)
+app.post('/role', RolesController.createRole)
+app.put('/role/:id', RolesController.updateRole)
+app.put('/role/:id/reactivate', RolesController.activateRole)
+app.delete('/role/:id', RolesController.removeRole)
+app.delete('/role/:id/erase', RolesController.eraseRole)
 
 /*
  Tags
