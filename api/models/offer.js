@@ -60,5 +60,42 @@ module.exports = (sequelize, DataTypes) => {
       limit: limit
     })
   }
+  Offer.getFromLocalId = (idLocal, offset, limit) => {
+    return Offer.findAndCountAll(
+      {
+        where: { local_id: idLocal },
+        offset: offset,
+        limit: limit
+      }
+    )
+  }
+  Offer.getActiveLocalId = (activeFilterDoc, offset, limit) => {
+    return Offer.findAndCountAll(
+      {
+        where: activeFilterDoc,
+        offset: offset,
+        limit: limit
+      }
+    )
+  }
+  Offer.create = (newOffer) => {
+    return Offer.build(newOffer).save()
+  }
+  Offer.udpateData = (idOffer, offerDoc) => {
+    return Offer.update(
+      offerDoc,
+      { where: { id: idOffer } }
+    )
+  }
+  Offer.erase = (idOffer) => {
+    return Offer.destroy(
+      { where: { id: idOffer } }
+    )
+  }
+  Offer.findById = (id) => {
+    return Offer.findOne(
+      { where: { id: id } }
+    )
+  }
   return Offer
 }
