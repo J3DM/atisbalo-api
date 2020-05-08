@@ -114,6 +114,14 @@ app.get('/offerimages', OfferImagesController.getAllOfferImages)
  */
 
 app.get('/offers', OffersController.getAllOffers)
+app.get('/offers/:id', OffersController.getLocalOffers)
+app.get('/offers/active/:id', OffersController.getActiveLocalOffers)
+app.get('/offer/:id', OffersController.getOffer)
+app.post('/offer', OffersController.createLocalOffer)
+app.put('/offer/:id/reactivate', OffersController.reactivateLocalOffer)
+app.put('/offer/:id', OffersController.updateLocalOffer)
+app.delete('/offer/:id', OffersController.removeLocalOffer)
+app.delete('/offer/:id/erase', OffersController.eraseLocalOffer)
 
 /*
  Ratings
@@ -160,12 +168,11 @@ app.get('/user/:id', AuthMiddlewares.verifyToken, UsersController.findUserById)
 /*
  UsersFauvoriteLocals
  */
-app.get('/userfavouritelocals',UsersFavouriteLocalsController.getAllUserFavouriteLocals)
-app.get('/user/:id/favouriteLocals',UsersFavouriteLocalsController.getUserFavouriteLocals)
+app.get('/userfavouritelocals', UsersFavouriteLocalsController.getAllUserFavouriteLocals)
+app.get('/user/:id/favouriteLocals', UsersFavouriteLocalsController.getUserFavouriteLocals)
 app.post('/user/:id/favouriteLocals/:localId', UsersFavouriteLocalsController.addToFavouriteLocal)
 app.delete('/user/:id/favouriteLocals/:localId', UsersFavouriteLocalsController.removeFromFavouriteLocal)
 // const gController = require('./controllers/gController')
 // app.get('/g', gController.generate)
-
 
 module.exports = app
