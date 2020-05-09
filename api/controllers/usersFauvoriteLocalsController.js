@@ -13,7 +13,7 @@ module.exports = {
   addToFavouriteLocal: (req, res) => {
     const addFavouriteLocal = {
       local_id: req.params.localId,
-      user_id: req.params.id
+      user_id: req.user.id
     }
     UserFavouriteLocal.add(addFavouriteLocal)
       .then((result) => res.status(200).json(result))
@@ -25,7 +25,7 @@ module.exports = {
   removeFromFavouriteLocal: (req, res) => {
     const removeFavouriteLocal = {
       local_id: req.params.localId,
-      user_id: req.params.id
+      user_id: req.user.id
     }
     UserFavouriteLocal.remove(removeFavouriteLocal)
       .then((result) => res.status(200).json(result))
@@ -35,7 +35,7 @@ module.exports = {
       })
   },
   getUserFavouriteLocals: (req, res) => {
-    UserFavouriteLocal.getUsers(req.params.id)
+    UserFavouriteLocal.getUsers(req.user.id)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)

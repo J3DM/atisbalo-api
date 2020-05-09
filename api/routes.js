@@ -49,6 +49,7 @@ app.post('/token', AuthController.refresh)
 
 app.get('/addresses', AddressesController.getAllAddresses)
 app.post('/addresses', AddressesController.createAddress)
+app.put('/address/:id', AddressesController.updateAddress)
 
 /*
  Comments
@@ -167,21 +168,21 @@ app.put('/tag/:id/reactivate', TagsController.activateTag)
  */
 app.get('/users', UsersController.getAllUsers)
 app.post('/user', UsersController.createUser)
-app.put('/user/:id', UsersController.updateUser)
-app.put('/user/:id/email', UsersController.changeEmailUser)
-app.put('/user/:id/password', UsersController.changePasswordUser)
-app.get('/user/:id/validate', UsersController.verifyUser)
-app.delete('/user/:id', UsersController.deleteUser)
-app.delete('/user/:id/erase', UsersController.eraseUser)
-app.get('/user/:id', AuthMiddlewares.verifyToken, UsersController.findUserById)
+app.put('/user', AuthMiddlewares.verifyToken, UsersController.updateUser)
+app.put('/user/email', AuthMiddlewares.verifyToken, UsersController.changeEmailUser)
+app.put('/user/password', AuthMiddlewares.verifyToken, UsersController.changePasswordUser)
+app.get('/user/validate', AuthMiddlewares.verifyToken, UsersController.verifyUser)
+app.delete('/user', AuthMiddlewares.verifyToken, UsersController.deleteUser)
+app.delete('/user/erase', AuthMiddlewares.verifyToken, UsersController.eraseUser)
+app.get('/user', AuthMiddlewares.verifyToken, UsersController.findUserById)
 
 /*
  UsersFauvoriteLocals
  */
 app.get('/userfavouritelocals', UsersFavouriteLocalsController.getAllUserFavouriteLocals)
-app.get('/user/:id/favouriteLocals', UsersFavouriteLocalsController.getUserFavouriteLocals)
-app.post('/user/:id/favouriteLocals/:localId', UsersFavouriteLocalsController.addToFavouriteLocal)
-app.delete('/user/:id/favouriteLocals/:localId', UsersFavouriteLocalsController.removeFromFavouriteLocal)
+app.get('/user/favouriteLocals', AuthMiddlewares.verifyToken, UsersFavouriteLocalsController.getUserFavouriteLocals)
+app.post('/user/favouriteLocals/:localId', AuthMiddlewares.verifyToken, UsersFavouriteLocalsController.addToFavouriteLocal)
+app.delete('/user/favouriteLocals/:localId', AuthMiddlewares.verifyToken, UsersFavouriteLocalsController.removeFromFavouriteLocal)
 // const gController = require('./controllers/gController')
 // app.get('/g', gController.generate)
 

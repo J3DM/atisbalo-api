@@ -16,7 +16,7 @@ module.exports = {
       })
   },
   getLocalType: (req, res) => {
-    LocalType.findById(req.params.id)
+    LocalType.findById(req.user.id)
       .then((localType) => res.status(200).json(localType))
       .catch((err) => {
         Log.error(err)
@@ -27,7 +27,7 @@ module.exports = {
     const updateData = {
       name: req.body.name
     }
-    LocalType.updateData(req.params.id, updateData)
+    LocalType.updateData(req.user.id, updateData)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
@@ -35,7 +35,7 @@ module.exports = {
       })
   },
   reactivateLocalType: (req, res) => {
-    LocalType.updateData(req.params.id, { deleted: false })
+    LocalType.updateData(req.user.id, { deleted: false })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
@@ -43,7 +43,7 @@ module.exports = {
       })
   },
   removeLocalType: (req, res) => {
-    LocalType.updateData(req.params.id, { deleted: true })
+    LocalType.updateData(req.user.id, { deleted: true })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
@@ -51,7 +51,7 @@ module.exports = {
       })
   },
   eraseLocalType: (req, res) => {
-    LocalType.erase(req.params.id)
+    LocalType.erase(req.user.id)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
