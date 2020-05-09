@@ -90,7 +90,11 @@ app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
  */
 app.post('/locals', LocalController.createLocal)
 app.get('/locals', LocalController.getLocalsGeo)
-app.get('/locals/:id', LocalController.getLocalByID)
+app.get('/local/:id', LocalController.getLocalByID)
+app.put('/local/:id', LocalController.updateLocal)
+app.put('/local/:id/reactivate', LocalController.reactivateLocal)
+app.delete('/local/:id', LocalController.removeLocal)
+app.delete('/local/:id/erase', LocalController.eraseLocal)
 
 /*
  LocalTags

@@ -116,7 +116,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Local.findLocalById = (id) => {
     if (pattern.test(id)) {
-      return Local.findByPk(id, {
+      return Local.findOne({
+        where: { id: id, deleted: false },
         include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
       })
     } else {
@@ -186,6 +187,12 @@ module.exports = (sequelize, DataTypes) => {
       limit: limit,
       distinct: true
     })
+  }
+  Local.updateData = (id, updateData) => {
+    return Local.update(updateData, { where: { id: id } })
+  }
+  Local.erase = (id) => {
+    return Local.destroy({ where: { id: id } })
   }
   return Local
 }
