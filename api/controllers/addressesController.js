@@ -36,7 +36,10 @@ module.exports = {
       local_id: req.body.local_id
     }
     Address.updateData(req.params.id, updateData)
-      .then((result) => res.status(200).send(result))
+      .then((result) => {
+        Local.updateData(req.body.local_id, { lat: req.body.lat, lng: req.body.lng })
+      })
+      .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).send(err)
