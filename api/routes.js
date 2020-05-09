@@ -102,6 +102,12 @@ app.get('/localtags', LocalTagsController.getAllLocalTags)
  */
 app.post('/localtype', LocalTypeController.createLocalType)
 app.get('/localtypes', LocalTypeController.getAllLocalTypes)
+app.get('/localtypes/active', LocalTypeController.getActiveLocalTypes)
+app.get('/localtype/:id', LocalTypeController.getLocalType)
+app.put('/localtype/:id', LocalTypeController.updateLocalType)
+app.put('/localtype/:id/reactivate', LocalTypeController.reactivateLocalType)
+app.delete('/localtype/:id', LocalTypeController.removeLocalType)
+app.delete('/localtype/:id/erase', LocalTypeController.eraseLocalType)
 
 /*
  OfferImages
