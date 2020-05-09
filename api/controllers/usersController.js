@@ -116,7 +116,7 @@ module.exports = {
     const updateUser = {
       verified: true
     }
-    User.updateProfile(updateUser, req.user.id)
+    User.updateUserById(req.user.id, updateUser)
       .then((user) => {
         res.status(200).json(user)
       })

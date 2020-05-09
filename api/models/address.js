@@ -20,5 +20,11 @@ module.exports = (sequelize, DataTypes) => {
   Address.associate = function (models) {
     Address.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
+  Address.updateData = (id, updateData) => {
+    return Address.update(
+      updateData,
+      { where: { id: id } }
+    )
+  }
   return Address
 }
