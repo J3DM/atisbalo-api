@@ -82,5 +82,47 @@ module.exports = {
         Log.error(err)
         res.status(500).json(err)
       })
+  },
+  updateLocal: (req, res) => {
+    const updateLocal = {
+      name: req.body.name,
+      telephone: req.body.telephone,
+      description: req.body.description,
+      capacity: req.body.capacity,
+      occupation: req.body.occupation,
+      // Añadir midelware para normalizar el identificador
+      // lat y lng no son obligatorias, actualizar al crear su direccion
+      localtype_id: req.body.localtype_id
+    }
+    Local.updateData(req.params.id, updateLocal)
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  reactivateLocal: (req, res) => {
+    Local.updateData(req.params.id, { deleted: false })
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  removeLocal: (req, res) => {
+    Local.updateData(req.params.id, { deleted: true })
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  eraseLocal: (req, res) => {
+    Local.erase(req.params.id)
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
   }
 }
