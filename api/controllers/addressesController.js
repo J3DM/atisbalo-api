@@ -1,4 +1,5 @@
 const Address = require('../models').Address
+const Local = require('../models').Local
 
 const { Log } = require('../helpers/log')
 
@@ -15,7 +16,10 @@ module.exports = {
   createAddress: (req, res) => {
     Address.build(req.body)
       .save()
-      .then((adress) => res.status(200).send(adress))
+      .then((result) => {
+        Local.updateData(req.body.local_id, { lat: req.body.lat, lng: req.body.lng })
+      })
+      .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).send(err)
