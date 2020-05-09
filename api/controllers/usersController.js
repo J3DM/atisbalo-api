@@ -11,9 +11,6 @@ module.exports = {
       })
   },
   findUserById: (req, res) => {
-    if (req.user.id !== req.params.id) {
-      return res.status(500).json('Cant get this user')
-    }
     User.findUserById(req.user.id)
       .then((objects) => res.status(200).send(objects))
       .catch((err) => {
@@ -119,7 +116,7 @@ module.exports = {
     const updateUser = {
       verified: true
     }
-    User.updateProfile(updateUser, req.user.id)
+    User.updateUserById(req.user.id, updateUser)
       .then((user) => {
         res.status(200).json(user)
       })
