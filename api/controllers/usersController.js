@@ -14,7 +14,7 @@ module.exports = {
     if (req.user.id !== req.params.id) {
       return res.status(500).json('Cant get this user')
     }
-    User.findUserById(req.params.id)
+    User.findUserById(req.user.id)
       .then((objects) => res.status(200).send(objects))
       .catch((err) => {
         Log.error(err)
@@ -42,7 +42,7 @@ module.exports = {
       })
   },
   eraseUser: (req, res) => {
-    User.erase(req.params.id)
+    User.erase(req.user.id)
       .then((res) => {
         res.status(200).json(res)
       })
@@ -52,7 +52,7 @@ module.exports = {
       })
   },
   deleteUser: (req, res) => {
-    User.remove(req.params.id)
+    User.remove(req.user.id)
       .then((user) => {
         res.status(200).json(user)
       })
@@ -67,7 +67,7 @@ module.exports = {
       lastName: req.body.lastName,
       provider: req.body.provider
     }
-    User.updateProfile(updateUser, req.params.id)
+    User.updateProfile(updateUser, req.user.id)
       .then((user) => {
         res.status(200).json(user)
       })
@@ -87,7 +87,7 @@ module.exports = {
         .status(409)
         .json(`An user already exists with the email ${updateUser.email}`)
     }
-    User.updateProfile(updateUser, req.params.id)
+    User.updateProfile(updateUser, req.user.id)
       .then((user) => {
         res.status(200).json(user)
       })
@@ -106,7 +106,7 @@ module.exports = {
         .status(404)
         .json('The provided verify password and password are not equal')
     }
-    User.changePassword(updateUser, req.params.id)
+    User.changePassword(updateUser, req.user.id)
       .then((user) => {
         res.status(200).json(user)
       })
@@ -119,7 +119,7 @@ module.exports = {
     const updateUser = {
       verified: true
     }
-    User.updateProfile(updateUser, req.params.id)
+    User.updateProfile(updateUser, req.user.id)
       .then((user) => {
         res.status(200).json(user)
       })

@@ -20,5 +20,22 @@ module.exports = {
         Log.error(err)
         res.status(500).send(err)
       })
+  },
+
+  updateAddress: (req, res) => {
+    const updateData = {
+      street: req.body.street,
+      number: req.body.number,
+      postalCode: req.body.postalCode,
+      city: req.body.city,
+      province: req.body.province,
+      local_id: req.body.local_id
+    }
+    Address.updateData(req.params.id, updateData)
+      .then((result) => res.status(200).send(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).send(err)
+      })
   }
 }
