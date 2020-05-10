@@ -101,6 +101,9 @@ app.delete('/local/:id/erase', LocalController.eraseLocal)
  LocalTags
  */
 app.get('/localtags', LocalTagsController.getAllLocalTags)
+app.get('/localtags/:id', LocalTagsController.getLocalTags)
+app.post('/localtags/:id', LocalTagsController.createLocalTags)
+app.put('/localtags/:id', LocalTagsController.updateLocalTags)
 
 /*
  LocalType
