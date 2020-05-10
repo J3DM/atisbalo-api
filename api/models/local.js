@@ -47,10 +47,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
       as: 'comments'
     })
-    Local.hasMany(models.UserFauvoriteLocal, {
+    Local.hasMany(models.UserFavoriteLocal, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
-      as: 'userFauvoriteLocal'
+      as: 'userFavoriteLocal'
     })
     Local.hasMany(models.LocalAsociated, {
       foreignKey: 'local_id',

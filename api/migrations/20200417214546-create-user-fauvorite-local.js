@@ -1,7 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(
-      'UserFauvoriteLocals',
+      'UserFavoriteLocals',
       {
         id: {
           allowNull: false,
@@ -41,6 +41,6 @@ module.exports = {
     )
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('UserFauvoriteLocals')
+    return queryInterface.dropTable('UserFavoriteLocals')
   }
 }

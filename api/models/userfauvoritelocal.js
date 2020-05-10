@@ -1,35 +1,35 @@
 module.exports = (sequelize, DataTypes) => {
-  const UserFavouriteLocal = sequelize.define('UserFauvoriteLocal', {
+  const UserFavoriteLocal = sequelize.define('UserFavoriteLocal', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     }
   })
-  UserFavouriteLocal.associate = function (models) {
-    UserFavouriteLocal.belongsTo(models.Local, {
+  UserFavoriteLocal.associate = function (models) {
+    UserFavoriteLocal.belongsTo(models.Local, {
       foreignKey: 'local_id',
       as: 'local'
     })
-    UserFavouriteLocal.belongsTo(models.User, {
+    UserFavoriteLocal.belongsTo(models.User, {
       foreignKey: 'user_id',
       as: 'user'
     })
   }
-  UserFavouriteLocal.getAll = () => {
-    return UserFavouriteLocal.findAll()
+  UserFavoriteLocal.getAll = () => {
+    return UserFavoriteLocal.findAll()
   }
-  UserFavouriteLocal.add = (newFavouriteLocal) => {
-    return UserFavouriteLocal.build(newFavouriteLocal).save()
+  UserFavoriteLocal.add = (newFavoriteLocal) => {
+    return UserFavoriteLocal.build(newFavoriteLocal).save()
   }
-  UserFavouriteLocal.remove = (deleteFavouriteLocal) => {
-    return UserFavouriteLocal.destroy({ where: deleteFavouriteLocal })
+  UserFavoriteLocal.remove = (deleteFavoriteLocal) => {
+    return UserFavoriteLocal.destroy({ where: deleteFavoriteLocal })
   }
-  UserFavouriteLocal.getUsers = (iuserId) => {
-    return UserFavouriteLocal.findAll({
+  UserFavoriteLocal.getUsers = (iuserId) => {
+    return UserFavoriteLocal.findAll({
       where: { user_id: iuserId },
       include: ['local']
     })
   }
-  return UserFavouriteLocal
+  return UserFavoriteLocal
 }
