@@ -39,7 +39,6 @@ module.exports = {
       .then((results) => {
         const result = []
         results.forEach(favouriteLocal => {
-          console.log(favouriteLocal.dataValues.local)
           result.push(favouriteLocal.dataValues.local)
         })
         res.status(200).json(result)
