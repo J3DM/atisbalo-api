@@ -34,12 +34,12 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  getUserFavouriteLocals: (req, res) => {
+  getUserFavoriteLocals: (req, res) => {
     UserFavoriteLocal.getUsers(req.user.id)
       .then((results) => {
         const result = []
-        results.forEach(favouriteLocal => {
-          result.push(favouriteLocal.dataValues.local)
+        results.forEach(favoriteLocal => {
+          result.push(favoriteLocal.dataValues.local)
         })
         res.status(200).json(result)
       })
