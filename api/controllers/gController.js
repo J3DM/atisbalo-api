@@ -3,7 +3,7 @@ const Tag = require('../models').Tag
 const Rol = require('../models').Rol
 const LocalTag = require('../models').LocalTag
 const LocalAsociated = require('../models').LocalAsociated
-const UserFauvoriteLocal = require('../models').UserFauvoriteLocal
+const UserFavoriteLocal = require('../models').UserFavoriteLocal
 const Comment = require('../models').Comment
 const LocalOwn = require('../models').LocalOwn
 const LocalDocuments = require('../models').LocalDocuments
@@ -210,28 +210,28 @@ module.exports = {
       const u2 = users[((users.length / 3) * 2 + i) | 0]
 
       if (faker.random.number(1)) {
-        await UserFauvoriteLocal.build({
+        await UserFavoriteLocal.build({
           user_id: u.id,
           local_id: l.id
         })
           .save()
           .catch((err) => Log.info(err))
 
-        await UserFauvoriteLocal.build({
+        await UserFavoriteLocal.build({
           user_id: u1.id,
           local_id: l.id
         })
           .save()
           .catch((err) => Log.info(err))
       } else {
-        await UserFauvoriteLocal.build({
+        await UserFavoriteLocal.build({
           user_id: u2.id,
           local_id: l.id
         })
           .save()
           .catch((err) => Log.info(err))
       }
-      Log.info('set fauvorites ' + i)
+      Log.info('set favorites ' + i)
     }
     for (let i = 0; i < locals.length; i++) {
       const l = locals[i]

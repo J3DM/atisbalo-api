@@ -1,33 +1,33 @@
-const UserFavouriteLocal = require('../models').UserFauvoriteLocal
+const UserFavoriteLocal = require('../models').UserFavoriteLocal
 const { Log } = require('../helpers/log')
 
 module.exports = {
-  getAllUserFavouriteLocals: (req, res) => {
-    UserFavouriteLocal.findAll()
+  getAllUserFavoriteLocals: (req, res) => {
+    UserFavoriteLocal.findAll()
       .then((objects) => res.status(200).send(objects))
       .catch((err) => {
         Log.error(err)
         res.status(500).send(err)
       })
   },
-  addToFavouriteLocal: (req, res) => {
-    const addFavouriteLocal = {
+  addToFavoriteLocal: (req, res) => {
+    const addFavoriteLocal = {
       local_id: req.params.localId,
       user_id: req.user.id
     }
-    UserFavouriteLocal.add(addFavouriteLocal)
+    UserFavoriteLocal.add(addFavoriteLocal)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
   },
-  removeFromFavouriteLocal: (req, res) => {
-    const removeFavouriteLocal = {
+  removeFromFavoriteLocal: (req, res) => {
+    const removeFavoriteLocal = {
       local_id: req.params.localId,
       user_id: req.user.id
     }
-    UserFavouriteLocal.remove(removeFavouriteLocal)
+    UserFavoriteLocal.remove(removeFavoriteLocal)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
@@ -35,7 +35,7 @@ module.exports = {
       })
   },
   getUserFavouriteLocals: (req, res) => {
-    UserFavouriteLocal.getUsers(req.user.id)
+    UserFavoriteLocal.getUsers(req.user.id)
       .then((results) => {
         const result = []
         results.forEach(favouriteLocal => {

@@ -33,10 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
       as: 'comments'
     })
-    User.hasMany(models.UserFauvoriteLocal, {
+    User.hasMany(models.UserFavoriteLocal, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
-      as: 'fauvoriteLocals'
+      as: 'favoriteLocals'
     })
     User.hasMany(models.LocalAsociated, {
       foreignKey: 'user_id',
@@ -47,17 +47,17 @@ module.exports = (sequelize, DataTypes) => {
   User.findOneByEmail = (email) => {
     return User.findOne({
       where: { email: email },
-      include: ['fauvoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated']
     })
   }
   User.getAllUsers = () => {
     return User.findAll({
-      include: ['fauvoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated']
     })
   }
   User.findUserById = (id) => {
     return User.findByPk(id, {
-      include: ['fauvoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated']
     })
   }
   User.create = (newUser) => {

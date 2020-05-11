@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   )
   LocalOwn.associate = function (models) {
-    LocalOwn.belongsTo(models.Local, { foreignKey: 'local_id', as: 'Local' })
+    LocalOwn.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   return LocalOwn
 }
