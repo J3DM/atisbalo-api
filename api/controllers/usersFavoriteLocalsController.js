@@ -34,9 +34,15 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  getUserFavoriteLocals: (req, res) => {
+  getUserFavouriteLocals: (req, res) => {
     UserFavoriteLocal.getUsers(req.user.id)
-      .then((result) => res.status(200).json(result))
+      .then((results) => {
+        const result = []
+        results.forEach(favouriteLocal => {
+          result.push(favouriteLocal.dataValues.local)
+        })
+        res.status(200).json(result)
+      })
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)

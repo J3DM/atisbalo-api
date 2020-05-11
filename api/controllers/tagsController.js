@@ -10,12 +10,13 @@ module.exports = {
         res.status(500).send(err)
       })
   },
-  createTag: (req, res) => {
+  createTag: async (req, res) => {
     const newTag = {
       name: req.body.name
     }
-    const foundTagWithName = Tag.findByName(newTag.name)
+    const foundTagWithName = await Tag.findByName(newTag.name)
     if (foundTagWithName != null) {
+      console.log(foundTagWithName)
       return res
         .status(409)
         .json(`A tag allready exists with the name ${newTag.name}`)
