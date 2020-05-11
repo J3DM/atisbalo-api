@@ -29,7 +29,12 @@ module.exports = (sequelize, DataTypes) => {
     return UserFavoriteLocal.findAll({
       where: { user_id: iuserId },
       include: [
-        { model: sequelize.models.Local, as: 'local', include: [{ model: sequelize.models.Address, as: 'address' }, { model: sequelize.models.Offer, as: 'offers' }] }
+        {
+          model: sequelize.models.Local,
+          as: 'local',
+          include: [{ model: sequelize.models.Address, as: 'address' }]
+        //, { model: sequelize.models.Offer, as: 'offers' }]
+        }
       ],
       // attributes: ['local']
       attributes: []
