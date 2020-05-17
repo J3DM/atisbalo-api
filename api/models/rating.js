@@ -1,3 +1,4 @@
+const updateRating = require('../services/ratingCalculations')
 module.exports = (sequelize, DataTypes) => {
   const Rating = sequelize.define(
     'Rating',
@@ -7,15 +8,32 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
       },
-      service: DataTypes.STRING,
-      attention: DataTypes.STRING,
-      veracity: DataTypes.STRING,
-      deleted: DataTypes.BOOLEAN
+      service: DataTypes.FLOAT,
+      attention: DataTypes.FLOAT,
+      veracity: DataTypes.FLOAT,
+      deleted: DataTypes.BOOLEAN,
+      number_comments: DataTypes.INTEGER
     },
     {}
   )
   Rating.associate = function (models) {
     Rating.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
+  }
+  Rating.create = (localId) => {
+    Rating.build({ service: 0, attention: 0, veracity: 0, local_id: localId, number_comments: 0 }).save()
+  }
+  Rating.findByLocalId = (id) => {
+    return Rating.findOne({ where: { local_id: id } })
+  }
+  Rating.calculateRating = async (localId, ratingDoc, add = true) => {
+    const storedRating = await Rating.findByLocalId(localId)
+    const updateRatingData = await updateRating.addRemoveComment(storedRating, ratingDoc, add)
+    return Rating.update(updateRatingData, { where: { local_id: localId } })
+  }
+  Rating.updateCommentRating = async (localId, ratingDoc, add = true) => {
+    const storedRating = await Rating.findByLocalId(localId)
+    const updateRatingData = await updateRating.updateComment(storedRating, ratingDoc, add)
+    return Rating.update(updateRatingData, { where: { local_id: localId } })
   }
   return Rating
 }
