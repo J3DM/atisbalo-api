@@ -60,8 +60,8 @@ app.get('/comments/local/:idLocal', CommentsController.getLocalComments)
 app.get('/comment/:id', CommentsController.getComment)
 app.post('/comment/:idLocal', AuthMiddlewares.verifyToken, CommentsController.createComment)
 app.put('/comment/:id', AuthMiddlewares.verifyToken, CommentsController.updateComment)
-// app.put('/comment/:id/reactivate', AuthMiddlewares.verifyToken, CommentsController.ractivateComment)
-// app.delete('/comment/:id', AuthMiddlewares.verifyToken, CommentsController.removeComment)
+app.put('/comment/:id/reactivate', AuthMiddlewares.verifyToken, CommentsController.ractivateComment)
+app.delete('/comment/:id', AuthMiddlewares.verifyToken, CommentsController.removeComment)
 app.delete('/comment/:id/erase', AuthMiddlewares.verifyToken, CommentsController.eraseComment)
 
 /*

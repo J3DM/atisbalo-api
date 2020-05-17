@@ -27,7 +27,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Rating.calculateRating = async (localId, ratingDoc, add = true) => {
     const storedRating = await Rating.findByLocalId(localId)
-    const updateRatingData = await updateRating.update(storedRating, ratingDoc, add)
+    const updateRatingData = await updateRating.addRemoveComment(storedRating, ratingDoc, add)
+    return Rating.update(updateRatingData, { where: { local_id: localId } })
+  }
+  Rating.updateCommentRating = async (localId, ratingDoc, add = true) => {
+    const storedRating = await Rating.findByLocalId(localId)
+    const updateRatingData = await updateRating.updateComment(storedRating, ratingDoc, add)
     return Rating.update(updateRatingData, { where: { local_id: localId } })
   }
   return Rating
