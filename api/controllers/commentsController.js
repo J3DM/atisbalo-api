@@ -45,20 +45,21 @@ module.exports = {
       })
   },
   updateComment: async (req, res) => {
-    const newComment = {
+    const updateComment = {
       comment: req.body.comment,
-      rating: req.body.rating,
+      rating: parseInt(req.body.rating),
       service: parseInt(req.body.service),
       attention: parseInt(req.body.attention),
-      veracity: parseInt(req.body.veracity)
+      veracity: parseInt(req.body.veracity),
+      local_id: req.body.local_id
     }
     const foundComent = await Comment.findById(req.params.id)
     if (foundComent != null) {
-      if (foundComent.user_id !== req.user.id || foundComent.local_id !== req.params.id) {
+      if (foundComent.user_id !== req.user.id || foundComent.local_id !== updateComment.local_id) {
         return res.status(409).json('You can not eddit a comment from a different user or assing it to a different local')
       }
     }
-    Comment.updateData(req.params.id, newComment)
+    Comment.updateData(req.params.id, updateComment)
       .then((comment) => res.status(200).json(comment))
       .catch((err) => {
         Log.error(err)

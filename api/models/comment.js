@@ -22,11 +22,11 @@ module.exports = (sequelize, DataTypes) => {
         beforeDestroy: (comment) => {
           return sequelize.models.Rating.calculateRating(comment.local_id, comment, false)
         },
-        beforeUpdate: (comment) => {
-          return sequelize.models.Rating.calculateRating(comment.local_id, comment, false)
+        beforeBulkUpdate: async (comment) => {
+          return sequelize.models.Rating.updateCommentRating(comment.attributes.local_id, comment, false)
         },
-        afterUpdate: (comment) => {
-          return sequelize.models.Rating.calculateRating(comment.local_id, comment, false)
+        afterBulkUpdate: async (comment) => {
+          return sequelize.models.Rating.updateCommentRating(comment.attributes.local_id, comment)
         }
       }
     }
