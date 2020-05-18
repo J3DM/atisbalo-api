@@ -55,8 +55,15 @@ module.exports = {
     }
     const foundComent = await Comment.findById(req.params.id)
     if (foundComent != null) {
-      if (foundComent.user_id !== req.user.id || foundComent.local_id !== updateComment.local_id) {
-        return res.status(409).json('You can not eddit a comment from a different user or assing it to a different local')
+      if (
+        foundComent.user_id !== req.user.id ||
+        foundComent.local_id !== updateComment.local_id
+      ) {
+        return res
+          .status(409)
+          .json(
+            'You can not eddit a comment from a different user or assing it to a different local'
+          )
       }
     }
     Comment.updateData(req.params.id, updateComment)
@@ -70,7 +77,9 @@ module.exports = {
     const foundComent = await Comment.findById(req.params.id)
     if (foundComent != null) {
       if (foundComent.user_id !== req.user.id) {
-        return res.status(409).json('You can not reactivate a comment from a different user')
+        return res
+          .status(409)
+          .json('You can not reactivate a comment from a different user')
       }
     }
     Comment.reactivate(req.params.id)
@@ -84,7 +93,9 @@ module.exports = {
     const foundComent = await Comment.findById(req.params.id)
     if (foundComent != null) {
       if (foundComent.user_id !== req.user.id) {
-        return res.status(409).json('You can not remove a comment from a different user')
+        return res
+          .status(409)
+          .json('You can not remove a comment from a different user')
       }
     }
     Comment.remove(req.params.id)
@@ -98,7 +109,9 @@ module.exports = {
     const foundComent = await Comment.findById(req.params.id)
     if (foundComent != null) {
       if (foundComent.user_id !== req.user.id) {
-        return res.status(409).json('You can not erase a comment from a different user')
+        return res
+          .status(409)
+          .json('You can not erase a comment from a different user')
       }
     }
     Comment.erase(req.params.id)

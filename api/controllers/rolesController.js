@@ -19,7 +19,7 @@ module.exports = {
       })
   },
   createRole: (req, res) => {
-    newRol = { name: req.body.name }
+    const newRol = { name: req.body.name }
     Rol.create(newRol)
       .then((rol) => res.status(200).json(rol))
       .catch((err) => {
@@ -28,7 +28,7 @@ module.exports = {
       })
   },
   updateRole: (req, res) => {
-    updateData = { name: req.body.name }
+    const updateData = { name: req.body.name }
     Rol.updateData(req.params.id, updateData)
       .then((rol) => res.status(200).json(rol))
       .catch((err) => {
@@ -59,5 +59,5 @@ module.exports = {
         Log.error(err)
         res.status(500).send(err)
       })
-  },
+  }
 }

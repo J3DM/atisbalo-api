@@ -1,7 +1,7 @@
 const DATABASE_NAME = process.env.DATABASE_NAME || 'atisbalo'
 const USERNAME = process.env.DATABASE_USERNAME || 'admin'
-const PASSWORD = process.env.DATABASE_PASSWORD || 'admin'
-const HOST = process.env.DATABASE_HOST || 'localhost'
+const PASSWORD = 'admin'
+const HOST = 'localhost'
 const DIALECT = process.env.DATABASE_DIALECT || 'mysql'
 const PORT = process.env.PORT || 3000
 const LOG_LEVEL = process.env.LOG_LEVEL || 'A'

@@ -1,4 +1,3 @@
-
 const addRemoveComment = (stored, posted, add = true) => {
   const serviceRating = posted.service
   const attentionRating = posted.attention
@@ -9,15 +8,28 @@ const addRemoveComment = (stored, posted, add = true) => {
       storedData.number_comments = 0
     }
     if (add === true) {
-      storedData.service = (serviceRating + storedData.service * storedData.number_comments) / (storedData.number_comments + 1)
-      storedData.attention = (attentionRating + storedData.attention * storedData.number_comments) / (storedData.number_comments + 1)
-      storedData.veracity = (veracityRating + storedData.veracity * storedData.number_comments) / (storedData.number_comments + 1)
+      storedData.service =
+        (serviceRating + storedData.service * storedData.number_comments) /
+        (storedData.number_comments + 1)
+      storedData.attention =
+        (attentionRating + storedData.attention * storedData.number_comments) /
+        (storedData.number_comments + 1)
+      storedData.veracity =
+        (veracityRating + storedData.veracity * storedData.number_comments) /
+        (storedData.number_comments + 1)
       storedData.number_comments += 1
     } else {
       if (storedData.number_comments - 1 > 0) {
-        storedData.service = (storedData.service * storedData.number_comments - serviceRating) / (storedData.number_comments - 1)
-        storedData.attention = (storedData.attention * storedData.number_comments - attentionRating) / (storedData.number_comments - 1)
-        storedData.veracity = (storedData.veracity * storedData.number_comments - veracityRating) / (storedData.number_comments - 1)
+        storedData.service =
+          (storedData.service * storedData.number_comments - serviceRating) /
+          (storedData.number_comments - 1)
+        storedData.attention =
+          (storedData.attention * storedData.number_comments -
+            attentionRating) /
+          (storedData.number_comments - 1)
+        storedData.veracity =
+          (storedData.veracity * storedData.number_comments - veracityRating) /
+          (storedData.number_comments - 1)
         storedData.number_comments -= 1
       } else {
         storedData.service = 0
@@ -45,15 +57,28 @@ const updateComment = (stored, posted, add = true) => {
       storedData.number_comments = 0
     }
     if (add === true) {
-      storedData.service = (serviceRating + storedData.service * storedData.number_comments) / (storedData.number_comments + 1)
-      storedData.attention = (attentionRating + storedData.attention * storedData.number_comments) / (storedData.number_comments + 1)
-      storedData.veracity = (veracityRating + storedData.veracity * storedData.number_comments) / (storedData.number_comments + 1)
+      storedData.service =
+        (serviceRating + storedData.service * storedData.number_comments) /
+        (storedData.number_comments + 1)
+      storedData.attention =
+        (attentionRating + storedData.attention * storedData.number_comments) /
+        (storedData.number_comments + 1)
+      storedData.veracity =
+        (veracityRating + storedData.veracity * storedData.number_comments) /
+        (storedData.number_comments + 1)
       storedData.number_comments += 1
     } else {
       if (storedData.number_comments - 1 > 0) {
-        storedData.service = (storedData.service * storedData.number_comments - serviceRating) / (storedData.number_comments - 1)
-        storedData.attention = (storedData.attention * storedData.number_comments - attentionRating) / (storedData.number_comments - 1)
-        storedData.veracity = (storedData.veracity * storedData.number_comments - veracityRating) / (storedData.number_comments - 1)
+        storedData.service =
+          (storedData.service * storedData.number_comments - serviceRating) /
+          (storedData.number_comments - 1)
+        storedData.attention =
+          (storedData.attention * storedData.number_comments -
+            attentionRating) /
+          (storedData.number_comments - 1)
+        storedData.veracity =
+          (storedData.veracity * storedData.number_comments - veracityRating) /
+          (storedData.number_comments - 1)
         storedData.number_comments -= 1
       } else {
         storedData.service = 0
