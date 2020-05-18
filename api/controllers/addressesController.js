@@ -17,7 +17,10 @@ module.exports = {
     Address.build(req.body)
       .save()
       .then((result) => {
-        Local.updateData(req.body.local_id, { lat: req.body.lat, lng: req.body.lng })
+        Local.updateData(req.body.local_id, {
+          lat: req.body.lat,
+          lng: req.body.lng
+        })
       })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
@@ -37,7 +40,10 @@ module.exports = {
     }
     Address.updateData(req.params.id, updateData)
       .then((result) => {
-        Local.updateData(req.body.local_id, { lat: req.body.lat, lng: req.body.lng })
+        Local.updateData(req.body.local_id, {
+          lat: req.body.lat,
+          lng: req.body.lng
+        })
       })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
