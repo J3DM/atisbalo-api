@@ -1,5 +1,13 @@
 const express = require('express')
 const app = express()
+const Multer = require('multer')
+const upload = Multer({
+  storage: Multer.MemoryStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
+})
+// const multer = require('./middlewares/multer')
 /*
  Import Middlewares
  */
