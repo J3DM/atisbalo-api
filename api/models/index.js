@@ -5,13 +5,13 @@ const basename = path.basename(__filename)
 const db = {}
 const {
   DATABASE_NAME,
+  DATABASE_HOST,
   USERNAME,
   PASSWORD,
-  HOST,
   DIALECT
 } = require('../../config/constants')
 const sequelize = new Sequelize(DATABASE_NAME, USERNAME, PASSWORD, {
-  host: HOST,
+  host: DATABASE_HOST,
   dialect: DIALECT,
   pool: {
     max: 10,

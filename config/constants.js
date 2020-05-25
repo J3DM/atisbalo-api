@@ -1,7 +1,7 @@
 const DATABASE_NAME = process.env.DATABASE_NAME || 'atisbalo'
+const DATABASE_HOST = process.env.DATABASE_HOST || '127.0.0.1'
 const USERNAME = process.env.DATABASE_USERNAME || 'admin'
 const PASSWORD = 'admin'
-const HOST = 'localhost'
 const DIALECT = process.env.DATABASE_DIALECT || 'mysql'
 const PORT = process.env.PORT || 3000
 const LOG_LEVEL = process.env.LOG_LEVEL || 'A'
@@ -29,10 +29,10 @@ if (NODE_ENV === 'docker') {
 }
 
 module.exports = {
+  DATABASE_HOST,
   DATABASE_NAME,
   USERNAME,
   PASSWORD,
-  HOST,
   DIALECT,
   PORT,
   REFRESH_TOKEN,
