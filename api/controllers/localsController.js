@@ -1,4 +1,6 @@
 const Local = require('../models').Local
+const LocalAsociated = require('../models').LocalAsociated
+
 const { Log } = require('../helpers/log')
 module.exports = {
   createLocal: async (req, res) => {
@@ -30,7 +32,10 @@ module.exports = {
     }
     Local.build(newLocal)
       .save()
-      .then((local) => res.status(200).json(local))
+      .then(async (local) => {
+        await LocalAsociated.create({ user_id: req.user.id, local_id: local.id, rol_id: 'owner' })
+        res.status(200).json(local)
+      })
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)

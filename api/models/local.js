@@ -30,6 +30,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         afterCreate: (local) => {
           sequelize.models.Rating.create(local.id)
+        },
+        afterBulkUpdate: async (local) => {
+          if (local.fields.includes('deleted')) {
+            if (local.attributes.deleted) {
+              sequelize.models.LocalAsociated.removeLocalqueAssociations(local.where.id)
+            } else {
+              sequelize.models.LocalAsociated.reactivateLocalAssociations(local.where.id)
+            }
+          }
         }
       }
     }
@@ -38,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     Local.hasMany(models.Offer, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'offers'
     })
 
@@ -49,46 +59,55 @@ module.exports = (sequelize, DataTypes) => {
     Local.hasMany(models.Comment, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'comments'
     })
     Local.hasMany(models.UserFavoriteLocal, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'userFavoriteLocal'
     })
     Local.hasMany(models.LocalAsociated, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'localAsociated'
     })
     Local.hasOne(models.LocalOwn, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'localOwn'
     })
     Local.hasOne(models.LocalDocuments, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'documents'
     })
     Local.hasOne(models.Rating, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'rating'
     })
     Local.hasOne(models.Address, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'address'
     })
     Local.hasMany(models.LocalImage, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'images'
     })
     Local.hasMany(models.LocalTag, {
       foreignKey: 'local_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'tags'
     })
   }
@@ -195,8 +214,11 @@ module.exports = (sequelize, DataTypes) => {
   Local.updateData = (id, updateData) => {
     return Local.update(updateData, { where: { id: id } })
   }
-  Local.erase = (id) => {
-    return Local.destroy({ where: { id: id } })
+  Local.erase = async (id) => {
+    const locals = await Local.findAll({ where: { id: id } })
+    for (const local of locals) {
+      local.destroy()
+    }
   }
   return Local
 }

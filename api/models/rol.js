@@ -3,9 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     'Rol',
     {
       id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        type: DataTypes.STRING,
+        primaryKey: true
       },
       name: DataTypes.STRING,
       deleted: DataTypes.BOOLEAN

@@ -26,5 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       { where: { id: id } }
     )
   }
+  Address.findByLocalId = (localId) => {
+    return Address.findOne({ where: { local_id: localId } })
+  }
   return Address
 }

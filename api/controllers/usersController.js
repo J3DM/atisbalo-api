@@ -40,8 +40,8 @@ module.exports = {
   },
   eraseUser: (req, res) => {
     User.erase(req.user.id)
-      .then((res) => {
-        res.status(200).json(res)
+      .then((result) => {
+        res.status(200).json(result)
       })
       .catch((err) => {
         Log.error(err)
@@ -119,6 +119,16 @@ module.exports = {
     User.updateUserById(req.user.id, updateUser)
       .then((user) => {
         res.status(200).json(user)
+      })
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  recoverUser: (req, res) => {
+    User.recover(req.user.id)
+      .then((result) => {
+        res.status(200).json(result)
       })
       .catch((err) => {
         Log.error(err)
