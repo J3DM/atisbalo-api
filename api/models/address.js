@@ -23,5 +23,8 @@ module.exports = (sequelize, DataTypes) => {
   Address.updateData = (id, updateData) => {
     return Address.update(updateData, { where: { id: id } })
   }
+  Address.findByLocalId = (localId) => {
+    return Address.findOne({ where: { local_id: localId } })
+  }
   return Address
 }

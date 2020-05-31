@@ -23,6 +23,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         afterCreate: (user) => {
           // TODO send email for verification
+        },
+        afterBulkUpdate: async (user) => {
+          if (user.fields.includes('deleted')) {
+            if (user.attributes.deleted) {
+              sequelize.models.LocalAsociated.removeUserAssociations(user.where.id)
+            } else {
+              sequelize.models.LocalAsociated.reactivateUserAssociations(user.where.id)
+            }
+          }
         }
       }
     }
@@ -31,16 +40,19 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Comment, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'comments'
     })
     User.hasMany(models.UserFavoriteLocal, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'favoriteLocals'
     })
     User.hasMany(models.LocalAsociated, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'localsAsociated'
     })
   }
@@ -63,12 +75,12 @@ module.exports = (sequelize, DataTypes) => {
   User.create = (newUser) => {
     return User.build(newUser).save()
   }
-  User.erase = (id) => {
-    return User.destroy({
-      where: {
-        id: id
-      }
-    })
+  User.erase = async (id) => {
+    const users = await User.findAll({ where: { id: id } })
+    for (const user of users) {
+      user.destroy()
+    }
+    return true
   }
   User.remove = (id) => {
     return User.update({ deleted: true }, { where: { id: id } })
@@ -81,6 +93,9 @@ module.exports = (sequelize, DataTypes) => {
     return User.update(update, {
       where: { id: id }
     })
+  }
+  User.recover = (id) => {
+    return User.update({ deleted: false }, { where: { id: id } })
   }
   return User
 }
