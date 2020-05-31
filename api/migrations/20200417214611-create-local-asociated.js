@@ -10,10 +10,12 @@ module.exports = {
           defaultValue: Sequelize.UUIDV4
         },
         user_id: {
-          type: Sequelize.UUID
+          type: Sequelize.UUID,
+          unique: 'actions_unique'
         },
         local_id: {
-          type: Sequelize.UUID
+          type: Sequelize.UUID,
+          unique: 'actions_unique'
         },
         rol_id: {
           type: Sequelize.UUID
@@ -33,13 +35,11 @@ module.exports = {
         }
       },
       {
-        indexes: [
-          {
-            name: 'comboLocalIdUserId',
-            unique: true,
+        uniqueKeys: {
+          actions_unique: {
             fields: ['user_id', 'local_id']
           }
-        ]
+        }
       }
     )
   },

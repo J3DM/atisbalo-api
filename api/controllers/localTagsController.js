@@ -21,7 +21,7 @@ module.exports = {
   createLocalTags: (req, res) => {
     const tagList = []
     const submittedTags = req.body.tags.split(',')
-    submittedTags.forEach(tag => {
+    submittedTags.forEach((tag) => {
       tagList.push({ tag_id: tag, local_id: req.params.id })
     })
     LocalTag.createLocals(tagList)
@@ -34,7 +34,7 @@ module.exports = {
   updateLocalTags: (req, res) => {
     const tagList = []
     const submittedTags = req.body.tags.split(',')
-    submittedTags.forEach(tag => {
+    submittedTags.forEach((tag) => {
       tagList.push({ tag_id: tag, local_id: req.params.id })
     })
     LocalTag.eraseLocals(req.params.id)

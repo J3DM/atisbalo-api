@@ -19,7 +19,7 @@ module.exports = {
       })
   },
   createRole: (req, res) => {
-    const newRol = { id: req.body.id, name: req.body.name }
+    const newRol = { id: req.body.name, name: req.body.name }
     Rol.create(newRol)
       .then((rol) => res.status(200).json(rol))
       .catch((err) => {

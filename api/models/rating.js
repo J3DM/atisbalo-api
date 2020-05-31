@@ -20,19 +20,33 @@ module.exports = (sequelize, DataTypes) => {
     Rating.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
   Rating.create = (localId) => {
-    Rating.build({ service: 0, attention: 0, veracity: 0, local_id: localId, number_comments: 0 }).save()
+    Rating.build({
+      service: 0,
+      attention: 0,
+      veracity: 0,
+      local_id: localId,
+      number_comments: 0
+    }).save()
   }
   Rating.findByLocalId = (id) => {
     return Rating.findOne({ where: { local_id: id } })
   }
   Rating.calculateRating = async (localId, ratingDoc, add = true) => {
     const storedRating = await Rating.findByLocalId(localId)
-    const updateRatingData = await updateRating.addRemoveComment(storedRating, ratingDoc, add)
+    const updateRatingData = await updateRating.addRemoveComment(
+      storedRating,
+      ratingDoc,
+      add
+    )
     return Rating.update(updateRatingData, { where: { local_id: localId } })
   }
   Rating.updateCommentRating = async (localId, ratingDoc, add = true) => {
     const storedRating = await Rating.findByLocalId(localId)
-    const updateRatingData = await updateRating.updateComment(storedRating, ratingDoc, add)
+    const updateRatingData = await updateRating.updateComment(
+      storedRating,
+      ratingDoc,
+      add
+    )
     return Rating.update(updateRatingData, { where: { local_id: localId } })
   }
   return Rating

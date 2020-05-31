@@ -38,7 +38,7 @@ module.exports = {
     UserFavoriteLocal.getUsers(req.user.id)
       .then((results) => {
         const result = []
-        results.forEach(favoriteLocal => {
+        results.forEach((favoriteLocal) => {
           result.push(favoriteLocal.dataValues.local)
         })
         res.status(200).json(result)

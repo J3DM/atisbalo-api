@@ -63,7 +63,9 @@ module.exports = {
       newOffer.active = true
     }
     if (newOffer.endDate < newOffer.startDate) {
-      return res.status(409).json('End date can not be earlier than the start date')
+      return res
+        .status(409)
+        .json('End date can not be earlier than the start date')
     }
     Offer.create(newOffer)
       .then((offer) => res.status(200).json(offer))
@@ -86,7 +88,9 @@ module.exports = {
       updateOffer.active = false
     }
     if (updateOffer.endDate < updateOffer.startDate) {
-      return res.status(409).json('End date can not be earlier than the start date')
+      return res
+        .status(409)
+        .json('End date can not be earlier than the start date')
     }
     Offer.udpateData(req.params.id, updateOffer)
       .then((offer) => res.status(200).json(offer))

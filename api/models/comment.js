@@ -17,16 +17,30 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         afterCreate: (comment) => {
-          return sequelize.models.Rating.calculateRating(comment.local_id, comment)
+          return sequelize.models.Rating.calculateRating(
+            comment.local_id,
+            comment
+          )
         },
         beforeDestroy: (comment) => {
-          return sequelize.models.Rating.calculateRating(comment.local_id, comment, false)
+          return sequelize.models.Rating.calculateRating(
+            comment.local_id,
+            comment,
+            false
+          )
         },
         beforeBulkUpdate: async (comment) => {
-          return sequelize.models.Rating.updateCommentRating(comment.attributes.local_id, comment, false)
+          return sequelize.models.Rating.updateCommentRating(
+            comment.attributes.local_id,
+            comment,
+            false
+          )
         },
         afterBulkUpdate: async (comment) => {
-          return sequelize.models.Rating.updateCommentRating(comment.attributes.local_id, comment)
+          return sequelize.models.Rating.updateCommentRating(
+            comment.attributes.local_id,
+            comment
+          )
         }
       }
     }

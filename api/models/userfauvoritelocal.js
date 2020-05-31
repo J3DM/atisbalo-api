@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
           model: sequelize.models.Local,
           as: 'local',
           include: [{ model: sequelize.models.Address, as: 'address' }]
-        //, { model: sequelize.models.Offer, as: 'offers' }]
+          //, { model: sequelize.models.Offer, as: 'offers' }]
         }
       ],
       // attributes: ['local']

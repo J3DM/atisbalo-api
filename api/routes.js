@@ -1,5 +1,13 @@
 const express = require('express')
 const app = express()
+const Multer = require('multer')
+const upload = Multer({
+  storage: Multer.MemoryStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
+})
+// const multer = require('./middlewares/multer')
 /*
  Import Middlewares
  */
@@ -59,11 +67,31 @@ app.put('/address/:id', AddressesController.updateAddress)
 app.get('/comments', CommentsController.getAllComments)
 app.get('/comments/local/:idLocal', CommentsController.getLocalComments)
 app.get('/comment/:id', CommentsController.getComment)
-app.post('/comment/:idLocal', AuthMiddlewares.verifyToken, CommentsController.createComment)
-app.put('/comment/:id', AuthMiddlewares.verifyToken, CommentsController.updateComment)
-app.put('/comment/:id/reactivate', AuthMiddlewares.verifyToken, CommentsController.ractivateComment)
-app.delete('/comment/:id', AuthMiddlewares.verifyToken, CommentsController.removeComment)
-app.delete('/comment/:id/erase', AuthMiddlewares.verifyToken, CommentsController.eraseComment)
+app.post(
+  '/comment/:idLocal',
+  AuthMiddlewares.verifyToken,
+  CommentsController.createComment
+)
+app.put(
+  '/comment/:id',
+  AuthMiddlewares.verifyToken,
+  CommentsController.updateComment
+)
+app.put(
+  '/comment/:id/reactivate',
+  AuthMiddlewares.verifyToken,
+  CommentsController.ractivateComment
+)
+app.delete(
+  '/comment/:id',
+  AuthMiddlewares.verifyToken,
+  CommentsController.removeComment
+)
+app.delete(
+  '/comment/:id/erase',
+  AuthMiddlewares.verifyToken,
+  CommentsController.eraseComment
+)
 
 /*
  Documents
@@ -231,7 +259,5 @@ app.delete(
   AuthMiddlewares.verifyToken,
   UsersFavoriteLocalsController.removeFromFavoriteLocal
 )
-// const gController = require('./controllers/gController')
-// app.get('/g', gController.generate)
 
 module.exports = app
