@@ -37,6 +37,7 @@ const UsersController = require('./controllers/usersController')
 const UsersFavoriteLocalsController = require('./controllers/usersFavoriteLocalsController')
 const AuthController = require('./controllers/authController')
 const AuthMiddlewares = require('./middlewares/auth')
+const LocalPermissionMiddlewares = require('./middlewares/permissions')
 /*
 Auth
 */
@@ -120,11 +121,16 @@ app.get('/localowns', LocalOwnsController.getAllLocalOwns)
  */
 
 app.get('/localasociateds', LocalsAsociatedController.getAllLocalsAsociated)
+app.get('/localassociateds/:idLocal', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalsAsociatedController.getLocalsAsociateds)
+app.get('/localsforassociated', AuthMiddlewares.verifyToken, LocalsAsociatedController.getLocalsForAsociated)
+app.post('/localsassociated', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalsAsociatedController.createLocalAsociated)
+app.put('/localsassociated/:idLocal/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalsAsociatedController.updateLocalAsociated)
+app.delete('/localsassociated/:idLocal/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalsAsociatedController.eraseLocalAsociated)
 
 /*
  LocalController
  */
-app.post('/locals', LocalController.createLocal)
+app.post('/locals', AuthMiddlewares.verifyToken, LocalController.createLocal)
 app.get('/locals', LocalController.getLocalsGeo)
 app.get('/local/:id', LocalController.getLocalByID)
 app.put('/local/:id', LocalController.updateLocal)
@@ -229,6 +235,7 @@ app.delete(
   UsersController.eraseUser
 )
 app.get('/user', AuthMiddlewares.verifyToken, UsersController.findUserById)
+app.put('/user/recover', AuthMiddlewares.verifyToken, UsersController.recoverUser)
 
 /*
  UsersFavoriteLocals
