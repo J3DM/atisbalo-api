@@ -42,36 +42,24 @@ module.exports = {
       })
   },
   getLocalsGeo: async (req, res) => {
-    let offset, limit, city
-
     const lat = req.query.lat
     const lng = req.query.lng
 
     const localType = req.query.type
 
-    city = req.query.city ? (city = req.query.city) : ''
-    offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
-    limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
+    const city = req.query.city ? req.query.city : ''
+    const limit = parseInt(req.query.limit) ? req.query.offset : 10
+    const offset = parseInt(req.query.pag) * limit ? req.query.offset : 0
+    const maxDistance = parseInt(req.query.maxdistance) ? req.query.maxDistance : null
 
-    if (!lat || !lng) {
-      Local.findAllLocalsByType(localType, offset, limit)
-        .then((locals) => {
-          res.status(200).json(locals)
-        })
-        .catch((err) => {
-          Log.error(err)
-          return res.status(500).json(err)
-        })
-    } else {
-      Local.findLocalGeo(lat, lng, localType, city, offset, limit)
-        .then((locals) => {
-          res.status(200).json(locals)
-        })
-        .catch((err) => {
-          Log.error(err)
-          return res.status(500).json(err)
-        })
-    }
+    Local.findLocalGeo(lat, lng, localType, city, offset, limit, maxDistance)
+      .then((locals) => {
+        res.status(200).json(locals)
+      })
+      .catch((err) => {
+        Log.error(err)
+        return res.status(500).json(err)
+      })
   },
   getLocalByID: (req, res) => {
     Local.findLocalById(req.params.id)
@@ -125,6 +113,14 @@ module.exports = {
   eraseLocal: (req, res) => {
     Local.erase(req.params.id)
       .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  listLocals: (req, res) => {
+    Local.list()
+      .then((locals) => res.status(200).json(locals))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
