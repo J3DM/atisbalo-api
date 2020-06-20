@@ -130,6 +130,7 @@ app.delete('/localsassociated/:idLocal/:id', AuthMiddlewares.verifyToken, LocalP
 /*
  LocalController
  */
+app.get('/listLocals', LocalController.listLocals)
 app.post('/locals', AuthMiddlewares.verifyToken, LocalController.createLocal)
 app.get('/locals', LocalController.getLocalsGeo)
 app.get('/local/:id', LocalController.getLocalByID)

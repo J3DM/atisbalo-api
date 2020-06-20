@@ -1,7 +1,6 @@
 const pattern = new RegExp(
   '^({{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}}{0,1})$'
 )
-
 module.exports = (sequelize, DataTypes) => {
   const Local = sequelize.define(
     'Local',
@@ -152,7 +151,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
-  Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
     const includes = [
       'offers',
       'localType',
@@ -177,6 +176,12 @@ module.exports = (sequelize, DataTypes) => {
           city: city
         }
       })
+    }
+    const whereClause = {
+      deleted: false
+    }
+    if (maxDistance != null) {
+      whereClause.distance = maxDistance
     }
     return Local.findAndCountAll({
       attributes: [
@@ -204,7 +209,7 @@ module.exports = (sequelize, DataTypes) => {
         ]
       ],
       include: includes,
-      where: { deleted: false },
+      where: whereClause,
       order: sequelize.col('distance'),
       offset: offset,
       limit: limit,
@@ -219,6 +224,16 @@ module.exports = (sequelize, DataTypes) => {
     for (const local of locals) {
       local.destroy()
     }
+  }
+  Local.list = () => {
+    return Local.findAll({
+      include: ['offers',
+        'localType',
+        'address',
+        'images',
+        'tags',
+        'rating']
+    })
   }
   return Local
 }
