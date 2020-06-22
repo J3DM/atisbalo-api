@@ -154,6 +154,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
+    console.log('maxDistance', maxDistance)
     const includes = [
       'localType',
       'address',
@@ -178,21 +179,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
-    /*
-    models.sequelize.and(
-      models.sequelize.where(
-        models.sequelize.fn(
-          'ST_Distance_Sphere', models.sequelize.fn('ST_MakePoint', lat, long), models.sequelize.col('location')
-        ), '>', fromRadius),
-      models.sequelize.where(
-        models.sequelize.fn(
-          'ST_Distance_Sphere', models.sequelize.fn('ST_MakePoint', lat, long), models.sequelize.col('location')
-        ), '<=', toRadius),
-      models.sequelize.where(
-        models.sequelize.col('Restaurant.is_online'), true
-      )
-    ),
-    */
     const whereClause = {
       deleted: false
     }
@@ -213,7 +199,7 @@ module.exports = (sequelize, DataTypes) => {
         'updatedAt',
         [
           sequelize.literal(
-            '6371 * acos(cos(radians(' +
+            '6371000 * acos(cos(radians(' +
               lat +
               ')) * cos(radians(lat)) * cos(radians(' +
               lng +
@@ -229,6 +215,7 @@ module.exports = (sequelize, DataTypes) => {
       offset: offset,
       limit: parseInt(limit),
       order: sequelize.col('distance'),
+      // having: [sequelize.where(sequelize.col("'distance'"), { [Op.lt]: parseInt(maxDistance) })],
       distinct: true
     })
   }
