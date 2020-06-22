@@ -154,7 +154,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
-    console.log('maxDistance', maxDistance)
     const includes = [
       'localType',
       'address',
