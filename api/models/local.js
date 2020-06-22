@@ -1,7 +1,9 @@
 const pattern = new RegExp(
   '^({{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}}{0,1})$'
 )
+const Sequelize = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
+  const Op = Sequelize.Op
   const Local = sequelize.define(
     'Local',
     {
@@ -153,7 +155,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
     const includes = [
-      'offers',
       'localType',
       'address',
       'images',
@@ -177,11 +178,26 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
+    /*
+    models.sequelize.and(
+      models.sequelize.where(
+        models.sequelize.fn(
+          'ST_Distance_Sphere', models.sequelize.fn('ST_MakePoint', lat, long), models.sequelize.col('location')
+        ), '>', fromRadius),
+      models.sequelize.where(
+        models.sequelize.fn(
+          'ST_Distance_Sphere', models.sequelize.fn('ST_MakePoint', lat, long), models.sequelize.col('location')
+        ), '<=', toRadius),
+      models.sequelize.where(
+        models.sequelize.col('Restaurant.is_online'), true
+      )
+    ),
+    */
     const whereClause = {
       deleted: false
     }
-    if (maxDistance != null) {
-      whereClause.distance = maxDistance
+    if (city != null) {
+      whereClause.city = city
     }
     return Local.findAndCountAll({
       attributes: [
@@ -210,9 +226,9 @@ module.exports = (sequelize, DataTypes) => {
       ],
       include: includes,
       where: whereClause,
-      order: sequelize.col('distance'),
       offset: offset,
-      limit: limit,
+      limit: parseInt(limit),
+      order: sequelize.col('distance'),
       distinct: true
     })
   }

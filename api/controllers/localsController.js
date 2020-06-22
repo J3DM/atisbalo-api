@@ -47,12 +47,11 @@ module.exports = {
 
     const localType = req.query.type
 
-    const city = req.query.city ? req.query.city : ''
-    const limit = parseInt(req.query.limit) ? req.query.offset : 10
-    const offset = parseInt(req.query.pag) * limit ? req.query.offset : 0
-    const maxDistance = parseInt(req.query.maxdistance) ? req.query.maxDistance : null
-
-    Local.findLocalGeo(lat, lng, localType, city, offset, limit, maxDistance)
+    const city = req.query.city ? req.query.city : null
+    const limit = parseInt(req.query.limit) ? req.query.limit : 10
+    const pagina = parseInt(req.query.pag) ? req.query.pag : 0
+    const maxDistance = parseInt(req.query.maxdistance) ? req.query.maxDistance : 100
+    Local.findLocalGeo(lat, lng, localType, city, pagina * limit, limit, maxDistance)
       .then((locals) => {
         res.status(200).json(locals)
       })
