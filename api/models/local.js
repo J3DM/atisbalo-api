@@ -154,12 +154,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
+    // TODO ADD LIMIT TO THE NUMBER OF LOCALS THAT WILL BE SELECTED FOR THE GEOLOCATION QUERY -> PASS LOCATIONS CITY
     const includes = [
       'localType',
       'address',
       'images',
       'tags',
-      'rating'
+      'rating',
+      {
+        model: sequelize.models.Offer,
+        as: 'offers',
+        where: { deleted: false },
+        attributes: ['id']
+      }
     ]
     if (type) {
       includes.push({
@@ -180,9 +187,6 @@ module.exports = (sequelize, DataTypes) => {
     }
     const whereClause = {
       deleted: false
-    }
-    if (city != null) {
-      whereClause.city = city
     }
     return Local.findAndCountAll({
       attributes: [
@@ -214,8 +218,8 @@ module.exports = (sequelize, DataTypes) => {
       offset: offset,
       limit: parseInt(limit),
       order: sequelize.col('distance'),
-      // having: [sequelize.where(sequelize.col("'distance'"), { [Op.lt]: parseInt(maxDistance) })],
       distinct: true
+      // subQuery: false
     })
   }
   Local.updateData = (id, updateData) => {
