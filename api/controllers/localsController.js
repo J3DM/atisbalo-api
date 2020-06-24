@@ -44,7 +44,9 @@ module.exports = {
   getLocalsGeo: async (req, res) => {
     const lat = req.query.lat
     const lng = req.query.lng
-
+    if (lat === undefined || lng === undefined) {
+      return res.status(404).send('GeoLocation is needed to search nearby locals')
+    }
     const localType = req.query.type
 
     const city = req.query.city ? req.query.city : null
