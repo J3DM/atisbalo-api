@@ -40,5 +40,19 @@ module.exports = (sequelize, DataTypes) => {
       attributes: []
     })
   }
+  UserFavoriteLocal.getOffers = (userId) => {
+    // TODO add filter only active offers = true
+    return UserFavoriteLocal.findAll({
+      where: { user_id: userId },
+      include: [
+        {
+          model: sequelize.models.Local,
+          as: 'local',
+          include: [{ model: sequelize.models.Address, as: 'address' },
+            { model: sequelize.models.Offer, as: 'offers' /*, where:{active:true} */ }]
+        }
+      ]
+    })
+  }
   return UserFavoriteLocal
 }
