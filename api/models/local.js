@@ -1,8 +1,9 @@
 const pattern = new RegExp(
   '^({{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}}{0,1})$'
 )
-
+const Sequelize = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
+  const Op = Sequelize.Op
   const Local = sequelize.define(
     'Local',
     {
@@ -152,14 +153,20 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
-  Local.findLocalGeo = (lat, lng, type, city, offset, limit) => {
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
+    // TODO ADD LIMIT TO THE NUMBER OF LOCALS THAT WILL BE SELECTED FOR THE GEOLOCATION QUERY -> PASS LOCATIONS CITY
     const includes = [
-      'offers',
       'localType',
       'address',
       'images',
       'tags',
-      'rating'
+      'rating',
+      {
+        model: sequelize.models.Offer,
+        as: 'offers',
+        where: { deleted: false },
+        attributes: ['id']
+      }
     ]
     if (type) {
       includes.push({
@@ -178,6 +185,9 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
+    const whereClause = {
+      deleted: false
+    }
     return Local.findAndCountAll({
       attributes: [
         'id',
@@ -192,7 +202,7 @@ module.exports = (sequelize, DataTypes) => {
         'updatedAt',
         [
           sequelize.literal(
-            '6371 * acos(cos(radians(' +
+            '6371000 * acos(cos(radians(' +
               lat +
               ')) * cos(radians(lat)) * cos(radians(' +
               lng +
@@ -204,11 +214,12 @@ module.exports = (sequelize, DataTypes) => {
         ]
       ],
       include: includes,
-      where: { deleted: false },
-      order: sequelize.col('distance'),
+      where: whereClause,
       offset: offset,
-      limit: limit,
+      limit: parseInt(limit),
+      order: sequelize.col('distance'),
       distinct: true
+      // subQuery: false
     })
   }
   Local.updateData = (id, updateData) => {
@@ -219,6 +230,16 @@ module.exports = (sequelize, DataTypes) => {
     for (const local of locals) {
       local.destroy()
     }
+  }
+  Local.list = () => {
+    return Local.findAll({
+      include: ['offers',
+        'localType',
+        'address',
+        'images',
+        'tags',
+        'rating']
+    })
   }
   return Local
 }

@@ -42,36 +42,25 @@ module.exports = {
       })
   },
   getLocalsGeo: async (req, res) => {
-    let offset, limit, city
-
     const lat = req.query.lat
     const lng = req.query.lng
-
+    if (lat === undefined || lng === undefined) {
+      return res.status(404).send('GeoLocation is needed to search nearby locals')
+    }
     const localType = req.query.type
 
-    city = req.query.city ? (city = req.query.city) : ''
-    offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
-    limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
-
-    if (!lat || !lng) {
-      Local.findAllLocalsByType(localType, offset, limit)
-        .then((locals) => {
-          res.status(200).json(locals)
-        })
-        .catch((err) => {
-          Log.error(err)
-          return res.status(500).json(err)
-        })
-    } else {
-      Local.findLocalGeo(lat, lng, localType, city, offset, limit)
-        .then((locals) => {
-          res.status(200).json(locals)
-        })
-        .catch((err) => {
-          Log.error(err)
-          return res.status(500).json(err)
-        })
-    }
+    const city = req.query.city ? req.query.city : null
+    const limit = parseInt(req.query.limit) ? req.query.limit : 10
+    const pagina = parseInt(req.query.pag) ? req.query.pag : 0
+    const maxDistance = parseInt(req.query.maxDistance) ? req.query.maxDistance : 100
+    Local.findLocalGeo(lat, lng, localType, city, pagina * limit, limit, maxDistance)
+      .then((locals) => {
+        res.status(200).json(locals)
+      })
+      .catch((err) => {
+        Log.error(err)
+        return res.status(500).json(err)
+      })
   },
   getLocalByID: (req, res) => {
     Local.findLocalById(req.params.id)
@@ -125,6 +114,14 @@ module.exports = {
   eraseLocal: (req, res) => {
     Local.erase(req.params.id)
       .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  listLocals: (req, res) => {
+    Local.list()
+      .then((locals) => res.status(200).json(locals))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
