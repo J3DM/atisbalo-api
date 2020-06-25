@@ -15,6 +15,9 @@ module.exports = {
       local_id: req.params.localId,
       user_id: req.user.id
     }
+    if (addFavoriteLocal.local_id === undefined || addFavoriteLocal.local_id == null) {
+      return res.status(404).json('Local not found with the provided id')
+    }
     UserFavoriteLocal.add(addFavoriteLocal)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
@@ -35,13 +38,17 @@ module.exports = {
       })
   },
   getUserFavoriteLocals: (req, res) => {
-    UserFavoriteLocal.getUsers(req.user.id)
+    const limit = parseInt(req.query.limit) ? req.query.limit : 30
+    const offset = parseInt(req.query.pag) * limit ? req.query.pag : 0
+
+    UserFavoriteLocal.getUsers(req.user.id, limit, offset)
       .then((results) => {
-        const result = []
-        results.forEach((favoriteLocal) => {
-          result.push(favoriteLocal.dataValues.local)
+        const pageResult = []
+        results.rows.forEach((favoriteLocal) => {
+          pageResult.push(favoriteLocal.dataValues.local)
         })
-        res.status(200).json(result)
+        results.rows = pageResult
+        res.status(200).json(results)
       })
       .catch((err) => {
         Log.error(err)
@@ -49,13 +56,18 @@ module.exports = {
       })
   },
   getUserFavoriteLocalsOffers: (req, res) => {
+    const limit = parseInt(req.query.limit) ? req.query.limit : 30
+    const offset = parseInt(req.query.pag) * limit ? req.query.pag : 0
     UserFavoriteLocal.getOffers(req.user.id)
       .then((results) => {
         const favoriteLocalOffers = []
         results.forEach((favoriteLocal) => {
-          favoriteLocal.local.offers.forEach((offer) => favoriteLocalOffers.push(offer))
+          favoriteLocal.dataValues.local.dataValues.offers.forEach((offer) => {
+            favoriteLocalOffers.push(offer)
+          })
         })
-        res.status(200).json(favoriteLocalOffers)
+        const page = favoriteLocalOffers.slice(parseInt(offset), (parseInt(offset) + parseInt(limit)))
+        res.status(200).json({ count: favoriteLocalOffers.length, rows: page })
       })
       .catch((err) => {
         Log.error(err)

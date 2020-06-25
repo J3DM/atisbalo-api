@@ -7,7 +7,7 @@ const userPassword = 'admin'
 var accessToken = ''
 var favoriteLocalId = ''
 var numberOfFavoriteLocalsInDatabase = null
-describe('GeoLocation Locals query', () => {
+describe('User Favotite Local queries', () => {
   it('Try to get the list of favourite locals without beeing logged in', async (done) => {
     const res = await app.apiServer.get('/api/user/favoriteLocals')
     expect(res.statusCode).toEqual(401)
@@ -22,13 +22,14 @@ describe('GeoLocation Locals query', () => {
     accessToken = res.body.access_token
     done()
   })
-  it('List favourite locals for the logged User', async (done) => {
+  it('Get favourite locals for the logged User', async (done) => {
     const res = await app.apiServer.get('/api/user/favoriteLocals').set('Authorization', accessToken)
     expect(res.statusCode).toEqual(200)
-    favoriteLocalId = res.body[0].id
+    favoriteLocalId = res.body.rows[0].id
     expect(favoriteLocalId).not.toBe('')
-    numberOfFavoriteLocalsInDatabase = res.body.length
+    numberOfFavoriteLocalsInDatabase = res.body.rows.length
     expect(favoriteLocalId).not.toBe(null)
+    expect(favoriteLocalId).not.toBe(undefined)
     done()
   })
   it('Remove favourite local for the logged User', async (done) => {
@@ -36,7 +37,7 @@ describe('GeoLocation Locals query', () => {
     expect(res.statusCode).toEqual(200)
     const resCheckOperation = await app.apiServer.get('/api/user/favoriteLocals').set('Authorization', accessToken)
     expect(resCheckOperation.statusCode).toEqual(200)
-    expect(resCheckOperation.body.length).toEqual(numberOfFavoriteLocalsInDatabase - 1)
+    expect(resCheckOperation.body.count).toEqual(numberOfFavoriteLocalsInDatabase - 1)
     done()
   })
   it('Add favourite local for the logged User', async (done) => {
@@ -44,13 +45,31 @@ describe('GeoLocation Locals query', () => {
     expect(res.statusCode).toEqual(200)
     const resCheckOperation = await app.apiServer.get('/api/user/favoriteLocals').set('Authorization', accessToken)
     expect(resCheckOperation.statusCode).toEqual(200)
-    expect(resCheckOperation.body.length).toEqual(numberOfFavoriteLocalsInDatabase)
+    expect(resCheckOperation.body.count).toEqual(numberOfFavoriteLocalsInDatabase)
     done()
   })
-  it('Get all favourtite locals offers for the logged User', async (done) => {
+  it('Get favourtite locals offers for the logged User', async (done) => {
     const res = await app.apiServer.get('/api/user/favoriteLocals/offers').set('Authorization', accessToken)
     expect(res.statusCode).toEqual(200)
-    res.body.forEach((offer) => {
+    res.body.rows.forEach((offer) => {
+      expect(offer).toHaveProperty('title')
+      expect(offer).toHaveProperty('description')
+      expect(offer).toHaveProperty('promotion')
+      expect(offer).toHaveProperty('local_id')
+    })
+    done()
+  })
+  it('Get favourite locals for the logged User with pagination', async (done) => {
+    const res = await app.apiServer.get('/api/user/favoriteLocals?pag=1&limit=1').set('Authorization', accessToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.rows.length).toEqual(1)
+    done()
+  })
+  it('Get favourtite locals offers for the logged User with pagination', async (done) => {
+    const res = await app.apiServer.get('/api/user/favoriteLocals/offers?pag=1&limit=1').set('Authorization', accessToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.rows.length).toEqual(1)
+    res.body.rows.forEach((offer) => {
       expect(offer).toHaveProperty('title')
       expect(offer).toHaveProperty('description')
       expect(offer).toHaveProperty('promotion')
