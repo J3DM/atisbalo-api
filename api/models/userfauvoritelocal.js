@@ -25,19 +25,19 @@ module.exports = (sequelize, DataTypes) => {
   UserFavoriteLocal.remove = (deleteFavoriteLocal) => {
     return UserFavoriteLocal.destroy({ where: deleteFavoriteLocal })
   }
-  UserFavoriteLocal.getUsers = (iuserId) => {
-    return UserFavoriteLocal.findAll({
+  UserFavoriteLocal.getUsers = (iuserId, limit, offset) => {
+    return UserFavoriteLocal.findAndCountAll({
       where: { user_id: iuserId },
       include: [
         {
           model: sequelize.models.Local,
           as: 'local',
           include: [{ model: sequelize.models.Address, as: 'address' }]
-          //, { model: sequelize.models.Offer, as: 'offers' }]
         }
       ],
-      // attributes: ['local']
-      attributes: []
+      attributes: [],
+      offset: parseInt(offset),
+      limit: parseInt(limit)
     })
   }
   UserFavoriteLocal.getOffers = (userId) => {
@@ -48,10 +48,10 @@ module.exports = (sequelize, DataTypes) => {
         {
           model: sequelize.models.Local,
           as: 'local',
-          include: [{ model: sequelize.models.Address, as: 'address' },
-            { model: sequelize.models.Offer, as: 'offers' /*, where:{active:true} */ }]
+          include: [{ model: sequelize.models.Offer, as: 'offers', where: { deleted: false/*, active:true */ } }]
         }
-      ]
+      ],
+      nest: true
     })
   }
   return UserFavoriteLocal
