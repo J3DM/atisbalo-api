@@ -60,9 +60,9 @@ module.exports = (sequelize, DataTypes) => {
       limit: limit
     })
   }
-  Offer.getFromLocalId = (idLocal, offset, limit) => {
+  Offer.getFromLocalId = (whereClause, offset, limit) => {
     return Offer.findAndCountAll({
-      where: { local_id: idLocal },
+      where: whereClause,
       offset: offset,
       limit: limit
     })

@@ -25,9 +25,21 @@ module.exports = {
       })
   },
   getLocalOffers: (req, res) => {
-    const limit = req.query.limit ? parseInt(req.query.limit) : 5
-    const offset = req.query.offset ? parseInt(req.query.offset) : 0
-    Offer.getFromLocalId(req.params.id, offset, limit)
+    const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 30
+    const offset = parseInt(req.query.offset) * limit ? parseInt(req.query.offset) : 0
+    const active = req.query.active
+    const whereClause = { local_id: req.params.id }
+    if (!req.params.id) {
+      return res.status(409).send('id parameter with the local id value is needed for this query')
+    }
+    if (active != null && active !== undefined) {
+      if (active === 'true' || active === '1') {
+        whereClause.active = true
+      } else {
+        whereClause.active = false
+      }
+    }
+    Offer.getFromLocalId(whereClause, offset, limit)
       .then((offers) => res.status(200).json(offers))
       .catch((err) => {
         Log.error(err)
@@ -35,8 +47,8 @@ module.exports = {
       })
   },
   getActiveLocalOffers: (req, res) => {
-    const limit = req.query.limit ? parseInt(req.query.limit) : 5
-    const offset = req.query.offset ? parseInt(req.query.offset) : 0
+    const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 30
+    const offset = parseInt(req.query.offset) * limit ? parseInt(req.query.offset) : 0
     const activeOfferDoc = {
       local_id: req.params.id,
       active: true,
@@ -51,13 +63,28 @@ module.exports = {
   },
   createLocalOffer: (req, res) => {
     const newOffer = {
-      title: req.body.name,
+      title: req.body.title,
       description: req.body.description,
       promotion: parseInt(req.body.promotion),
       startDate: Date.parse(req.body.startDate),
       endDate: Date.parse(req.body.endDate),
-      local_id: req.body.local_id,
+      local_id: req.body.localId,
       active: false
+    }
+    if (!req.body.title) {
+      return res.status(409).json('Title field is missing')
+    }
+    if (!req.body.description) {
+      return res.status(409).json('Description field is missing')
+    }
+    if (!req.body.startDate) {
+      return res.status(409).json('StartDate field is missing')
+    }
+    if (!req.body.endDate) {
+      return res.status(409).json('EndDate field is missing')
+    }
+    if (!req.body.localId) {
+      return res.status(409).json('LocalId field is missing')
     }
     if (newOffer.startDate < Date.now()) {
       newOffer.active = true
