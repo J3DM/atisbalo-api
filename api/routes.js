@@ -260,5 +260,10 @@ app.delete(
   AuthMiddlewares.verifyToken,
   UsersFavoriteLocalsController.removeFromFavoriteLocal
 )
+app.get(
+  '/user/favoriteLocals/offers',
+  AuthMiddlewares.verifyToken,
+  UsersFavoriteLocalsController.getUserFavoriteLocalsOffers
+)
 
 module.exports = app
