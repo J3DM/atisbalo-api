@@ -170,14 +170,14 @@ app.get('/offerimages', OfferImagesController.getAllOfferImages)
  */
 
 app.get('/offers', OffersController.getAllOffers)
-app.get('/offers/:id', OffersController.getLocalOffers)
+app.get('/offers/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.getLocalOffers)
 app.get('/offers/active/:id', OffersController.getActiveLocalOffers)
 app.get('/offer/:id', OffersController.getOffer)
-app.post('/offer', OffersController.createLocalOffer)
+app.post('/offer', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.createLocalOffer)
 app.put('/offer/:id/reactivate', OffersController.reactivateLocalOffer)
-app.put('/offer/:id', OffersController.updateLocalOffer)
-app.delete('/offer/:id', OffersController.removeLocalOffer)
-app.delete('/offer/:id/erase', OffersController.eraseLocalOffer)
+app.put('/offer/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.updateLocalOffer)
+app.delete('/offer/:id/:idLocal', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.removeLocalOffer)
+app.delete('/offer/:id/:idLocal/erase', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.eraseLocalOffer)
 
 /*
  Ratings
