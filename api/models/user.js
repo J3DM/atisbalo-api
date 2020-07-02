@@ -69,7 +69,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.findUserById = (id) => {
     return User.findByPk(id, {
-      include: ['favoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated'],
+      attributes: ['firstName', 'lastName', 'email', 'verified']
     })
   }
   User.create = (newUser) => {

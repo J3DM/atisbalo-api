@@ -1,0 +1,56 @@
+/* eslint-disable no-undef */
+const Helper = require('./helpers/helpers')
+const app = new Helper()
+
+const userEmail = 'admin620@gmail.com'
+const userPassword = 'admin'
+
+describe('User queries', () => {
+  it('Try get user data without beeing logged in', async (done) => {
+    const res = await app.apiServer.get('/api/user')
+    expect(res.statusCode).toEqual(401)
+    done()
+  })
+  it('Try to login without the required data 1/2', async (done) => {
+    const loginData = { email: userEmail }
+    const res = await app.apiServer.post('/api/login').send(loginData)
+    expect(res.statusCode).toEqual(400)
+    done()
+  })
+  it('Try to login without the required data 2/2', async (done) => {
+    const loginData = { password: userPassword }
+    const res = await app.apiServer.post('/api/login').send(loginData)
+    expect(res.statusCode).toEqual(400)
+    done()
+  })
+  it('Try to login with the wrong password', async (done) => {
+    const loginData = { email: userEmail, password: 'bla' }
+    const res = await app.apiServer.post('/api/login').send(loginData)
+    expect(res.statusCode).toEqual(401)
+    done()
+  })
+  it('Login with a user', async (done) => {
+    const loginData = { email: userEmail, password: userPassword }
+    const res = await app.apiServer.post('/api/login').send(loginData)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('access_token')
+    expect(res.body).toHaveProperty('refresh_token')
+    accessToken = res.body.access_token
+    done()
+  })
+  it('Get the user data', async (done) => {
+    const res = await app.apiServer.get('/api/user').set('Authorization', accessToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('favoriteLocals')
+    expect(res.body).toHaveProperty('localsAsociated')
+    expect(res.body).not.toHaveProperty('updatedAt')
+    expect(res.body).not.toHaveProperty('createdAt')
+    expect(res.body).not.toHaveProperty('deleted')
+    expect(res.body).not.toHaveProperty('provider')
+    expect(res.body).not.toHaveProperty('password')
+    expect(res.body).not.toHaveProperty('id')
+    expect(res.body.favoriteLocals.length).toBeGreaterThanOrEqual(0)
+    expect(res.body.localsAsociated.length).toBeGreaterThanOrEqual(0)
+    done()
+  })
+})
