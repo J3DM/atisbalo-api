@@ -4,6 +4,7 @@ const app = new Helper()
 
 const userEmail = 'admin620@gmail.com'
 const userPassword = 'admin'
+var userData = {}
 
 describe('User queries', () => {
   it('Try get user data without beeing logged in', async (done) => {
@@ -41,6 +42,7 @@ describe('User queries', () => {
   it('Get the user data', async (done) => {
     const res = await app.apiServer.get('/api/user').set('Authorization', accessToken)
     expect(res.statusCode).toEqual(200)
+    userData = res.body
     expect(res.body).toHaveProperty('favoriteLocals')
     expect(res.body).toHaveProperty('localsAsociated')
     expect(res.body).not.toHaveProperty('updatedAt')
@@ -51,6 +53,16 @@ describe('User queries', () => {
     expect(res.body).not.toHaveProperty('id')
     expect(res.body.favoriteLocals.length).toBeGreaterThanOrEqual(0)
     expect(res.body.localsAsociated.length).toBeGreaterThanOrEqual(0)
+    done()
+  })
+  it('Update the user data', async (done) => {
+    const res = await app.apiServer.put('/api/user').send({ firstName: 'Bla' }).set('Authorization', accessToken)
+    expect(res.statusCode).toEqual(200)
+    const resCheck = await app.apiServer.get('/api/user').set('Authorization', accessToken)
+    expect(resCheck.statusCode).toEqual(200)
+    expect(resCheck.body.firstName).toEqual('Bla')
+    const resUndo = await app.apiServer.put('/api/user').send({ firstName: userData.firstName }).set('Authorization', accessToken)
+    expect(resUndo.statusCode).toEqual(200)
     done()
   })
 })

@@ -98,5 +98,8 @@ module.exports = (sequelize, DataTypes) => {
   User.recover = (id) => {
     return User.update({ deleted: false }, { where: { id: id } })
   }
+  User.updateProfile = (updateData, id) => {
+    return User.update(updateData, { where: { id: id } })
+  }
   return User
 }
