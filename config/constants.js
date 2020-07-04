@@ -12,7 +12,9 @@ const APP_URL = process.env.APP_URL || 'localhost:3000'
 
 const NODE_ENV = process.env.NODE_ENV
 
-const REDIS_URL = process.env.REDIS_URL || 'redis'
+const REDIS_URL = process.env.REDIS_URL || 'localhost'
+const REDIS_PORT = process.env.REDIS_PORT || 6379
+
 
 if (NODE_ENV === 'docker') {
   process.env.NODE_ENV = 'development'
@@ -30,5 +32,6 @@ module.exports = {
   EXPIRATION_TOKEN,
   REDIS_URL,
   LOG_LEVEL,
-  APP_URL
+  APP_URL,
+  REDIS_PORT
 }
