@@ -5,6 +5,7 @@ const app = new Helper()
 const userEmail = 'admin620@gmail.com'
 const userPassword = 'admin'
 var userData = {}
+var refeshToken = ''
 
 describe('User queries', () => {
   it('Try get user data without beeing logged in', async (done) => {
@@ -37,6 +38,7 @@ describe('User queries', () => {
     expect(res.body).toHaveProperty('access_token')
     expect(res.body).toHaveProperty('refresh_token')
     accessToken = res.body.access_token
+    refeshToken = res.body.refesh_token
     done()
   })
   it('Get the user data', async (done) => {
@@ -78,6 +80,13 @@ describe('User queries', () => {
     const resCheck = await app.apiServer.get('/api/user').set('Authorization', accessToken)
     expect(resCheck.statusCode).toEqual(200)
     expect(resCheck.body.deleted).toEqual(false)
+    done()
+  })
+  it('Try to logdout without providing the refresh token', async (done) => {
+    const res = await app.apiServer.post('/api/logout').send({ refreshToken: refreshToken }).set('Authorization', accessToken)
+    expect(res.statusCode).toEqual(400)
+    const resCheck = await app.apiServer.get('/api/user').set('Authorization', accessToken)
+    expect(resCheck.statusCode).toEqual(200)
     done()
   })
 })
