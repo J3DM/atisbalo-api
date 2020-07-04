@@ -13,11 +13,11 @@ redisClient.on('error', function (err) {
 })
 
 module.exports = {
-  addRefreshToken: function (refreshToken, username, accessToken) {
+  addUserData: function (userId, refreshToken, accessToken) {
     return new Promise((resolve, reject) => {
       redisClient.HMSET(
-        refreshToken,
-        { username: username, accessToken: accessToken },
+        userId,
+        { refreshToken: refreshToken, accessToken: accessToken },
         (err, reply) => {
           if (err) {
             Log.error(err)
@@ -30,9 +30,11 @@ module.exports = {
     })
   },
 
-  updateRefreshToken: function (refreshToken, accessToken) {
+  updateUserData: function (userId, refreshToken, accessToken) {
     return new Promise((resolve, reject) => {
-      redisClient.hset(
+      redisClient.hmset(
+        userId,
+        'refreshToken',
         refreshToken,
         'accessToken',
         accessToken,
@@ -47,21 +49,34 @@ module.exports = {
     })
   },
 
-  removeRefreshToken: function (refreshToken) {
+  removeUserData: function (userId) {
     return new Promise((resolve, reject) => {
-      redisClient.del(refreshToken, (err, reply) => {
+      redisClient.del(userId, (err, reply) => {
         if (err) {
           Log.error(err)
           reject(err)
         }
+        console.log(reply)
         resolve(reply)
       })
     })
   },
 
-  existsRefreshToken: function (refreshToken) {
+  existsUserRefreshToken: function (userId, refreshToken) {
     return new Promise((resolve, reject) => {
-      redisClient.exists(refreshToken, (err, exist) => {
+      redisClient.hget(userId, 'refreshToken', (err, exist) => {
+        if (err) {
+          Log.error(err)
+          reject(err)
+        }
+        resolve(exist === refreshToken)
+      })
+    })
+  },
+
+  existsUserData: function (userId) {
+    return new Promise((resolve, reject) => {
+      redisClient.exists(userId, (err, exist) => {
         if (err) {
           Log.error(err)
           reject(err)

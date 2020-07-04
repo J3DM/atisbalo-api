@@ -25,7 +25,7 @@ module.exports = {
     let email
 
     if (!email) {
-      return res.status(500).json('Email required')
+      return res.status(400).json('Email required')
     }
     User.findOneByEmail(email)
       .then((user) => {
@@ -75,7 +75,7 @@ module.exports = {
       : (password = false)
 
     if (!password || !email) {
-      return res.status(500).json('Email and password required')
+      return res.status(400).json('Email and password required')
     }
     User.findOneByEmail(email)
       .then((user) => {
@@ -85,20 +85,33 @@ module.exports = {
         user = user.dataValues
         if (AuthService.validatePassword(user.password, password)) {
           const accessToken = AuthService.generateAccessToken(user)
-          const refreshToken = AuthService.generateRefreshToken(user.email)
-
-          Redis.addRefreshToken(refreshToken, user.email, accessToken)
-            .then((response) => {
-              res.status(200).json({
-                access_token: accessToken,
-                refresh_token: refreshToken,
-                id: user.id
+          const refreshToken = AuthService.generateRefreshToken(user.id)
+          const redisExistsUser = Redis.existsUserData(user.id)
+          if (redisExistsUser) {
+            Redis.updateUserData(user.id, refreshToken, accessToken)
+              .then((_response) => {
+                Log.info('Redis updated user ' + user.id)
               })
-            })
-            .catch((err) => {
-              Log.error(err)
-              res.status(500).json(err)
-            })
+              .catch((err) => {
+                Log.error(err)
+                res.status(500).json(err)
+              })
+          } else {
+            Redis.addUserData(user.id, refreshToken, accessToken)
+              .then((_response) => {
+                console.log(_response)
+                Log.info('Redis added new user ' + user.id)
+              })
+              .catch((err) => {
+                Log.error(err)
+                res.status(500).json(err)
+              })
+          }
+          res.status(200).json({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            id: user.id
+          })
         } else {
           res.status(401).json('Invalid Password')
         }
@@ -110,10 +123,13 @@ module.exports = {
   },
 
   logout: (req, res) => {
-    const refreshToken = req.body.refreshToken
-    Redis.existsRefreshToken(refreshToken).then((exists) => {
+    // const refreshToken = req.body.refreshToken ? req.body.refreshToken : false
+    // if (refreshToken === false) {
+    //  return res.status(400).send('Refresh token is needed so it can be removed')
+    // }
+    Redis.existsUserData(req.user.id).then((exists) => {
       if (exists) {
-        Redis.removeRefreshToken(refreshToken)
+        Redis.removeUserData(req.user.id)
         res.sendStatus(204)
       } else {
         Log.error('The refresh token does not exist')
@@ -127,15 +143,21 @@ module.exports = {
   },
 
   refresh: (req, res) => {
-    const refreshToken = req.body.refreshToken
-    Redis.existsRefreshToken(refreshToken)
+    const refreshToken = req.body.refreshToken ? req.body.refreshToken : false
+    if (refreshToken === false) {
+      return res.status(400).send('Refresh token is needed to log back in')
+    }
+    Redis.existsUserRefreshToken(req.user.id, refreshToken)
       .then((exists) => {
         if (exists) {
           AuthService.verifyRefreshToken(refreshToken)
-            .then((decoded) => {
-              const accessToken = AuthService.generateAccessToken(decoded)
-              Redis.updateRefreshToken(refreshToken, accessToken)
+            .then(async (decoded) => {
+              console.log('DECODED REFRESH TOKEN', decoded)
+              const user = await User.findUserById(decoded.user)
+              const accessToken = AuthService.generateAccessToken(user.dataValues)
+              Redis.updateUserData(req.user.id, refreshToken, accessToken)
                 .then((r) => {
+                  console.log('resultadoUpdate redis', r)
                   res.status(200).json({
                     access_token: accessToken,
                     refresh_token: refreshToken
