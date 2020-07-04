@@ -6,6 +6,12 @@ const userEmail = 'admin620@gmail.com'
 const userPassword = 'admin'
 var userData = {}
 var refreshToken = ''
+const newUserData = {
+  firstName: 'delete',
+  lastName: 'user',
+  email: 'user_delete@gmail.com',
+  password: 'delete'
+}
 
 describe('User queries', () => {
   it('Try get user data without beeing logged in', async (done) => {
@@ -105,6 +111,35 @@ describe('User queries', () => {
     expect(res.statusCode).toEqual(204)
     const resCheck = await app.apiServer.get('/api/user').set('Authorization', accessToken)
     expect(resCheck.statusCode).toEqual(401)
+    done()
+  })
+  it('Create a user to be deleted later', async (done) => {
+    const data = {
+      firstName: 'delete',
+      lastName: 'user',
+      email: 'user_delete@gmail.com',
+      password: 'delete'
+    }
+    const res = await app.apiServer.post('/api/user').send(data)
+    expect(res.statusCode).toEqual(200)
+    done()
+  })
+  it('Login with the newly created user', async (done) => {
+    const res = await app.apiServer.post('/api/login').send({ email: 'user_delete@gmail.com', password: 'delete' })
+    expect(res.statusCode).toEqual(200)
+    accessToken = res.body.access_token
+    done()
+  })
+  it('Erase the newly created user', async (done) => {
+    const res = await app.apiServer.delete('/api/user/erase').set('Authorization', accessToken)
+    expect(res.statusCode).toEqual(200)
+    accessToken = res.body.access_token
+    done()
+  })
+  it('Try to login with the deleted user credentials', async (done) => {
+    const res = await app.apiServer.post('/api/login').send({ email: 'user_delete@gmail.com', password: 'delete' })
+    expect(res.statusCode).toEqual(404)
+    accessToken = res.body.access_token
     done()
   })
 })

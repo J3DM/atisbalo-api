@@ -16,7 +16,6 @@ module.exports = {
     }
     const foundTagWithName = await Tag.findByName(newTag.name)
     if (foundTagWithName != null) {
-      console.log(foundTagWithName)
       return res
         .status(409)
         .json(`A tag allready exists with the name ${newTag.name}`)

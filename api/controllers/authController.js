@@ -80,7 +80,7 @@ module.exports = {
     User.findOneByEmail(email)
       .then((user) => {
         if (!user) {
-          return res.status(401).json('User not found')
+          return res.status(404).json('User not found')
         }
         user = user.dataValues
         if (AuthService.validatePassword(user.password, password)) {
