@@ -56,7 +56,6 @@ module.exports = {
           Log.error(err)
           reject(err)
         }
-        console.log(reply)
         resolve(reply)
       })
     })

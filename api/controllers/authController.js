@@ -99,7 +99,6 @@ module.exports = {
           } else {
             Redis.addUserData(user.id, refreshToken, accessToken)
               .then((_response) => {
-                console.log(_response)
                 Log.info('Redis added new user ' + user.id)
               })
               .catch((err) => {
@@ -152,12 +151,10 @@ module.exports = {
         if (exists) {
           AuthService.verifyRefreshToken(refreshToken)
             .then(async (decoded) => {
-              console.log('DECODED REFRESH TOKEN', decoded)
               const user = await User.findUserById(decoded.user)
               const accessToken = AuthService.generateAccessToken(user.dataValues)
               Redis.updateUserData(req.user.id, refreshToken, accessToken)
                 .then((r) => {
-                  console.log('resultadoUpdate redis', r)
                   res.status(200).json({
                     access_token: accessToken,
                     refresh_token: refreshToken
