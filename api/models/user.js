@@ -69,19 +69,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.findUserById = (id) => {
     return User.findByPk(id, {
-      include: ['favoriteLocals', 'localsAsociated'],
-      attributes: ['firstName', 'lastName', 'email', 'verified', 'deleted']
+      include: ['favoriteLocals', 'localsAsociated']
     })
   }
   User.create = (newUser) => {
     return User.build(newUser).save()
   }
   User.erase = async (id) => {
-    const users = await User.findAll({ where: { id: id } })
-    for (const user of users) {
-      user.destroy()
-    }
-    return true
+    return User.destroy({ where: { id: id } })
   }
   User.remove = (id) => {
     return User.update({ deleted: true }, { where: { id: id } })

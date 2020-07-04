@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
+/*
 const Multer = require('multer')
+
 const upload = Multer({
   storage: Multer.MemoryStorage,
   limits: {
@@ -8,7 +10,7 @@ const upload = Multer({
   }
 })
 // const multer = require('./middlewares/multer')
-/*
+
  Import Middlewares
  */
 
@@ -49,8 +51,8 @@ app.get(
 app.post('/recovery/password', AuthController.recoveryPassword)
 app.post('/register', AuthController.register)
 app.post('/login', AuthController.login)
-app.post('/logout', AuthController.logout)
-app.post('/token', AuthController.refresh)
+app.post('/logout', AuthMiddlewares.verifyToken, AuthController.logout)
+app.post('/token', AuthMiddlewares.verifyToken, AuthController.refresh)
 
 /*
  Addresses

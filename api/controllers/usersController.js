@@ -1,5 +1,6 @@
 const User = require('../models').User
 const { Log } = require('../helpers/log')
+const Redis = require('../helpers/redis')
 
 module.exports = {
   getAllUsers: (req, res) => {
@@ -25,6 +26,9 @@ module.exports = {
       email: req.body.email,
       password: req.body.password
     }
+    if (newUser.email === undefined || newUser.password === undefined) {
+      res.status(400).json('Email and password fields are obligatory')
+    }
     const storedUser = await User.findOneByEmail(newUser.email)
     if (storedUser != null) {
       return res
@@ -40,7 +44,8 @@ module.exports = {
   },
   eraseUser: (req, res) => {
     User.erase(req.user.id)
-      .then((result) => {
+      .then(async (result) => {
+        await Redis.removeUserData(req.user.id)
         res.status(200).json(result)
       })
       .catch((err) => {
