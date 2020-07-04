@@ -69,7 +69,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.findUserById = (id) => {
     return User.findByPk(id, {
-      include: ['favoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated'],
+      attributes: ['firstName', 'lastName', 'email', 'verified', 'deleted']
     })
   }
   User.create = (newUser) => {
@@ -96,6 +97,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.recover = (id) => {
     return User.update({ deleted: false }, { where: { id: id } })
+  }
+  User.updateProfile = (updateData, id) => {
+    return User.update(updateData, { where: { id: id } })
   }
   return User
 }

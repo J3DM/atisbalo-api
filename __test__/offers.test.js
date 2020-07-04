@@ -6,13 +6,14 @@ const userEmail = 'admin620@gmail.com'
 const userPassword = 'admin'
 var accessToken = ''
 const today = new Date()
+const tomorrow = new Date(new Date().setDate(today.getDate() + 1))
 const initialPromotion = 30
 const offerData = {
   title: 'Title Bla',
   description: 'Description Bla',
   promotion: initialPromotion,
   startDate: today,
-  endDate: (new Date()).setDate(today.getDate() + 1),
+  endDate: tomorrow,
   localId: 'test'
 }
 var localId = ''

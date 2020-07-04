@@ -59,10 +59,15 @@ module.exports = {
       })
   },
   updateUser: (req, res) => {
-    const updateUser = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      provider: req.body.provider
+    const updateUser = {}
+    if (req.body.firstName) {
+      updateUser.firstName = req.body.firstName
+    }
+    if (req.body.lastName) {
+      updateUser.lastName = req.body.lastName
+    }
+    if (req.body.provider) {
+      updateUser.provider = req.body.provider
     }
     User.updateProfile(updateUser, req.user.id)
       .then((user) => {
