@@ -33,9 +33,12 @@ module.exports = {
       return res.status(404).json('No user found with the provided email')
     }
     const newLocalAssociated = {
-      user_id: user.id,
-      local_id: req.body.localId,
-      rol_id: req.body.rolId
+      user_id: user.id ? user.id : false,
+      local_id: req.body.localId ? req.body.localId : false,
+      rol_id: req.body.rolId ? req.body.rolId : false
+    }
+    if (!newLocalAssociated.user_id || !newLocalAssociated.local_id || !newLocalAssociated.rol_id) {
+      return res.status(400).send('The required fields to create a user role are not present')
     }
     LocalAsociated.create(newLocalAssociated)
       .then((associated) => res.status(200).json(associated))
@@ -44,11 +47,20 @@ module.exports = {
         res.status(500).send(err)
       })
   },
-  updateLocalAsociated: (req, res) => {
+  updateLocalAsociated: async (req, res) => {
+    const user = await User.findOneByEmail(req.body.userEmail)
     const updateAssociated = {
-      rol_id: req.body.rolId
+      user_id: user.id ? user.id : false,
+      local_id: req.body.localId ? req.body.localId : false,
+      rol_id: req.body.rolId ? req.body.rolId : false
     }
-    LocalAsociated.updateData(req.params.id, updateAssociated)
+    if (!updateAssociated.user_id) {
+      updateAssociated.user_id = req.body.userId ? req.body.userId : false
+    }
+    if (!updateAssociated.user_id || !updateAssociated.local_id || !updateAssociated.rol_id) {
+      return res.status(400).send('The required fields to create a user role are not present')
+    }
+    LocalAsociated.updateData(updateAssociated)
       .then((associated) => res.status(200).json(associated))
       .catch((err) => {
         Log.error(err)

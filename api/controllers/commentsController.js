@@ -12,7 +12,10 @@ module.exports = {
       })
   },
   getLocalComments: (req, res) => {
-    Comment.findLocals(req.params.id)
+    const limit = parseInt(req.query.limit) ? req.query.limit : 10
+    const pagina = parseInt(req.query.pag) ? req.query.pag : 0
+
+    Comment.findLocals(req.params.idLocal, limit * pagina, limit)
       .then((comments) => res.status(200).json(comments))
       .catch((err) => {
         Log.error(err)

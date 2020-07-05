@@ -200,6 +200,7 @@ module.exports = (sequelize, DataTypes) => {
         'deleted',
         'createdAt',
         'updatedAt',
+        'local_logo',
         [
           sequelize.literal(
             '6371000 * acos(cos(radians(' +

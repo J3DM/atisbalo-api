@@ -49,8 +49,15 @@ module.exports = (sequelize, DataTypes) => {
     Comment.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
     Comment.belongsTo(models.Local, { foreignKey: 'local_id', as: 'local' })
   }
-  Comment.findLocals = (localId) => {
-    return Comment.findAll({ where: { local_id: localId } })
+  Comment.findLocals = (localId, offset, limit) => {
+    return Comment.findAndCountAll(
+      {
+        where: { local_id: localId },
+        offset: offset,
+        limit: parseInt(limit),
+        order: [['createdAt', 'DESC']]
+      }
+    )
   }
   Comment.findById = (id) => {
     return Comment.findByPk(id)

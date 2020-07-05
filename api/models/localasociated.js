@@ -44,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
   LocalAsociated.erase = (id) => {
     return LocalAsociated.destroy({ where: { id: id } })
   }
-  LocalAsociated.updateData = (id, updateData) => {
-    return LocalAsociated.update(updateData, { where: { id: id } })
+  LocalAsociated.updateData = (updateData) => {
+    return LocalAsociated.update(updateData, { where: { local_id: updateData.local_id, user_id: updateData.user_id } })
   }
   LocalAsociated.removeUserAssociations = (id) => {
     Log.info('Triggered update on LocalsAssociated table for user_id ' + id)
