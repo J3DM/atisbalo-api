@@ -36,7 +36,7 @@ describe('Offers queries', () => {
   })
   it('Try to create an offer for a local that you do not have permissions', async (done) => {
     const res = await app.apiServer.post('/api/offer').send(offerData).set('Authorization', accessToken)
-    expect(res.statusCode).toEqual(403)
+    expect(res.statusCode).toEqual(401)
     done()
   })
   it('Get one local that the user has prileges to', async (done) => {
