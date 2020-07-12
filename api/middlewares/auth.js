@@ -44,6 +44,7 @@ module.exports = {
           return res.status(401).json('')
         }
         req.user = decoded.user
+        next()
       })
       .catch((err) => {
         return res.status(401).json(err)

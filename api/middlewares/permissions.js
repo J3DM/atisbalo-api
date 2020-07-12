@@ -4,9 +4,9 @@ const LocalAsociated = require('../models').LocalAsociated
 module.exports = {
   verifyOwner: (req, res, next) => {
     const allowedRoles = ['owner', '4c1e8e00-8061-4657-b1e5-8112de5834de']
-    var localId = req.params.idLocal
+    var localId = req.params.idLocal ? req.params.idLocal : req.body.localId ? req.body.localId : req.params.id
     if (localId === undefined) {
-      localId = req.body.localId
+      return res.status(400).json('local_id query parameter or localId body parameter are requiered')
     }
     LocalAsociated.hasRoles(req.user.id, localId, allowedRoles)
       .then((result) => {
@@ -23,10 +23,7 @@ module.exports = {
   },
   verifyManager: (req, res, next) => {
     const allowedRoles = ['owner', 'admin', '4c1e8e00-8061-4657-b1e5-8112de5834de', 'df009b9d-bf01-4796-9f8c-498f75dfd89a']
-    var localId = req.params.idLocal
-    if (localId === undefined) {
-      localId = req.body.localId
-    }
+    var localId = req.params.idLocal ? req.params.idLocal : req.body.localId ? req.body.localId : req.params.id
     if (localId === undefined) {
       return res.status(400).json('local_id query parameter or localId body parameter are requiered')
     }
@@ -45,9 +42,9 @@ module.exports = {
   },
   verifyEmployee: (req, res, next) => {
     const allowedRoles = ['owner', 'admin', 'worker', '4c1e8e00-8061-4657-b1e5-8112de5834de', 'df009b9d-bf01-4796-9f8c-498f75dfd89a', '034a23be-1ab8-4689-8a29-19cc2de24bb3']
-    var localId = req.params.idLocal
+    var localId = req.params.idLocal ? req.params.idLocal : req.body.localId ? req.body.localId : req.params.id
     if (localId === undefined) {
-      localId = req.body.localId
+      return res.status(400).json('local_id query parameter or localId body parameter are requiered')
     }
     LocalAsociated.hasRoles(req.user.id, localId, allowedRoles)
       .then((result) => {
