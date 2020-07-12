@@ -47,13 +47,13 @@ module.exports = {
     if (lat === undefined || lng === undefined) {
       return res.status(404).send('GeoLocation is needed to search nearby locals')
     }
-    const localType = req.query.type
-
+    const localType = req.query.type ? req.query.type : null
+    const activeOffers = req.query.activeOffers === 'true' ? req.query.activeOffers : null
     const city = req.query.city ? req.query.city : null
     const limit = parseInt(req.query.limit) ? req.query.limit : 10
     const pagina = parseInt(req.query.pag) ? req.query.pag : 0
     const maxDistance = parseInt(req.query.maxDistance) ? req.query.maxDistance : 100
-    Local.findLocalGeo(lat, lng, localType, city, pagina * limit, limit, maxDistance)
+    Local.findLocalGeo(lat, lng, localType, city, pagina * limit, limit, activeOffers, maxDistance)
       .then((locals) => {
         res.status(200).json(locals)
       })

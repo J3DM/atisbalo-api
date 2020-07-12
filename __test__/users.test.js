@@ -5,6 +5,7 @@ const app = new Helper()
 const userEmail = 'admin620@gmail.com'
 const userPassword = 'admin'
 var userData = {}
+var accessToken = ''
 var refreshToken = ''
 const newUserData = {
   firstName: 'delete',

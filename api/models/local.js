@@ -166,26 +166,30 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
-  Local.findLocalGeo = (lat, lng, type, city, offset, limit, maxDistance) => {
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit, activeOffers, maxDistance) => {
     // TODO ADD LIMIT TO THE NUMBER OF LOCALS THAT WILL BE SELECTED FOR THE GEOLOCATION QUERY -> PASS LOCATIONS CITY
+    const offerInclude = {
+      model: sequelize.models.Offer,
+      as: 'offers',
+      where: { deleted: false },
+      attributes: ['id']
+    }
+    if (activeOffers === true) {
+      offerInclude.require = true
+    }
     const includes = [
       'localType',
       'address',
       'images',
       'tags',
       'rating',
-      {
-        model: sequelize.models.Offer,
-        as: 'offers',
-        where: { deleted: false },
-        attributes: ['id']
-      }
+      offerInclude
     ]
     if (type) {
       includes.push({
         model: sequelize.models.LocalType,
         as: 'localType',
-        where: { deleted: false, name: type }
+        where: { deleted: false, id: type }
       })
     }
     if (city) {

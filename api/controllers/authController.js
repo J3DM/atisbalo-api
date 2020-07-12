@@ -1,6 +1,7 @@
 const Redis = require('../helpers/redis')
 const AuthService = require('../services/auth')
-const User = require('../models').User
+const db = require('../models/index')
+const User = db.sequelize.models.User
 const {
   sendMailVerification,
   sendMailRecoveryPassword
