@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       name: DataTypes.STRING,
+      slug: DataTypes.STRING,
       deleted: DataTypes.BOOLEAN
     },
     {}
