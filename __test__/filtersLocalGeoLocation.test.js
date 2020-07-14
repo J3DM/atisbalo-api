@@ -38,4 +38,25 @@ describe('Filters for find locals geoLocation query ', () => {
     })
     done()
   })
+  it('GeoLocation query with for locals that are full', async (done) => {
+    const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&haveRoom=' + true)
+    expect(res.statusCode).toEqual(200)
+    res.body.rows.forEach(local => {
+      expect(local.capacity).toEqual(local.occupation)
+    })
+    done()
+  })
+  it('GeoLocation query with for locals that are not full', async (done) => {
+    const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&haveRoom=' + false)
+    expect(res.statusCode).toEqual(200)
+    res.body.rows.forEach(local => {
+      expect(local.capacity).toBeGreaterThan(local.occupation)
+    })
+    done()
+  })
+  it('GeoLocation query with for locals that have posted an offer in the last hour', async (done) => {
+    const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&newOffers=' + 2)
+    expect(res.statusCode).toEqual(200)
+    done()
+  })
 })

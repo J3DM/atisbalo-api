@@ -18,7 +18,6 @@ describe('GeoLocation Locals query', () => {
     const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng)
     expect(res.statusCode).toEqual(200)
     pos = 0
-    console.log(res.body)
     res.body.rows.forEach(local => {
       expect(localIds.includes(local.id)).toEqual(false)
       localIds.push(local.id)
@@ -31,7 +30,6 @@ describe('GeoLocation Locals query', () => {
   it('Search locals nearby location ' + lat + ', ' + lng + ' giving a page', async (done) => {
     const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&pag=' + 1)
     expect(res.statusCode).toEqual(200)
-    console.log(res.body)
     expect(res.body.rows.length).toEqual(10)
     res.body.rows.forEach(local => {
       expect(localIds.includes(local.id)).toEqual(false)
@@ -43,7 +41,6 @@ describe('GeoLocation Locals query', () => {
   it('Search locals nearby location ' + lat + ', ' + lng + ' giving a page', async (done) => {
     const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&pag=' + 2)
     expect(res.statusCode).toEqual(200)
-    console.log(res.body)
     expect(res.body.rows.length).toEqual(10)
     res.body.rows.forEach(local => {
       expect(localIds.includes(local.id)).toEqual(false)

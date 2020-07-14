@@ -166,7 +166,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
-  Local.findLocalGeo = (lat, lng, type, city, offset, limit, activeOffers, maxDistance) => {
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit, activeOffers, maxDistance, full, newOffers) => {
     // TODO ADD LIMIT TO THE NUMBER OF LOCALS THAT WILL BE SELECTED FOR THE GEOLOCATION QUERY -> PASS LOCATIONS CITY
     const offerInclude = {
       model: sequelize.models.Offer,
@@ -176,6 +176,9 @@ module.exports = (sequelize, DataTypes) => {
     }
     if (activeOffers === true) {
       offerInclude.require = true
+    }
+    if (typeof newOffers === typeof 'true' && /^([0-9].)$/.test(newOffers)) {
+      offerInclude.where.startDate = { [Op.gt]: new Date(new Date() - (parseInt(newOffers) * 3600000)) }
     }
     const includes = [
       'localType',
@@ -205,6 +208,11 @@ module.exports = (sequelize, DataTypes) => {
     const whereClause = {
       deleted: false
     }
+    if (full === 'false') {
+      whereClause.capacity = { [Op.gt]: [sequelize.col('Local.occupation')] }
+    } else if (full === 'true') {
+      whereClause.capacity = { [Op.eq]: [sequelize.col('Local.occupation')] }
+    }
     return Local.findAndCountAll({
       attributes: [
         'id',
@@ -212,7 +220,7 @@ module.exports = (sequelize, DataTypes) => {
         'capacity',
         'telephone',
         'description',
-        'capacity',
+        'occupation',
         'identifier',
         'deleted',
         'createdAt',
