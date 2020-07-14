@@ -28,5 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   LocalType.filterSearch = (filterDoc) => {
     return LocalType.findAll({ where: filterDoc })
   }
+  LocalType.paginate = (filterDoc, offset, limit) => {
+    return LocalType.findAndCountAll({ where: filterDoc, limit: limit, offset: offset })
+  }
   return LocalType
 }
