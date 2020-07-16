@@ -59,5 +59,15 @@ module.exports = {
         Log.error(err)
         res.status(500).send(err)
       })
+  },
+  getRoles: (req, res) => {
+    const limit = req.query.limit ? parseInt(req.query.limit) : 10
+    const offset = req.query.pag ? parseInt(req.query.pag) * limit : 0
+    Rol.paginate({ deleted: false }, offset * limit, limit)
+      .then((objects) => res.status(200).json(objects))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).send(err)
+      })
   }
 }

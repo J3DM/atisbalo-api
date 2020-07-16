@@ -32,5 +32,8 @@ module.exports = (sequelize, DataTypes) => {
       where: { id: id }
     })
   }
+  Rol.paginate = (filterDoc, offset, limit) => {
+    return Rol.findAndCountAll({ where: filterDoc, limit: limit, offset: offset })
+  }
   return Rol
 }
