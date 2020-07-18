@@ -9,15 +9,15 @@ var localTypeId
 
 describe('Filters for find locals geoLocation query ', () => {
   it('Get local types', async (done) => {
-    const res = await app.apiServer.get('/api/localTypes')
+    const res = await app.apiServer.get('/api/localTypes/list')
     expect(res.statusCode).toEqual(200)
-    done()
     res.body.forEach(localType => {
       if (localType.name === 'Salón de belleza') {
         localTypeId = localType.id
       }
     })
     expect(localTypeId).not.toEqual(undefined)
+    done()
   })
   it('GeoLocation query with localType', async (done) => {
     const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&type=' + localTypeId)
