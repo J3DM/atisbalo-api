@@ -39,10 +39,6 @@ services:
       - '3306'
     volumes:
       - data:/var/lib/mysql
-    command: sh -c "
-            mysql -u admin -p admin
-            SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
-            exit"
   redis:
     image: 'redis:4-alpine'
 #    restart: 'always'
