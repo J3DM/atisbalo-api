@@ -265,7 +265,7 @@ module.exports = (sequelize, DataTypes) => {
       subQuery: false,
       offset: offset,
       limit: parseInt(limit),
-      group: ['identifier']
+      group: ['id']
       //, logging: console.log
     })
   }

@@ -77,12 +77,13 @@ describe('User Permissions', () => {
     done()
   })
   it('Get available roles', async (done) => {
-    const res = await app.apiServer.get('/api/roles')
+    const res = await app.apiServer.get('/api/roles/list')
+    console.log(res.body)
     expect(res.statusCode).toEqual(200)
-    res.body.rows.forEach(role => {
-      if (role.name === 'Admin') {
+    res.body.forEach(role => {
+      if (role.name === 'Manager') {
         idRoleAdmin = role.id
-      } else if (role.name === 'Worker') {
+      } else if (role.name === 'Employee') {
         idRoleWorker = role.id
       }
     })

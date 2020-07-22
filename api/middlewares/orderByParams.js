@@ -9,6 +9,10 @@ module.exports = {
         req.maxDistance = /^([0-9].)$/.test(req.query[propName]) ? parseInt(req.query[propName]) : 0
       } else if (propName === 'orderRatingService') {
         orderArray.push(['rating', 'service', req.query[propName]])
+      } else if (propName === 'orderRatingAttention') {
+        orderArray.push(['rating', 'attention', req.query[propName]])
+      } else if (propName === 'orderRatingVeracity') {
+        orderArray.push(['rating', 'veracity', req.query[propName]])
       }
     }
     req.orderArray = orderArray

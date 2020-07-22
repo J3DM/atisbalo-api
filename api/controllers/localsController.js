@@ -56,7 +56,6 @@ module.exports = {
     const maxDistance = req.maxDistance ? req.maxDistance : 1000
     const newOffers = req.query.newOffers ? req.query.newOffers : null
     const orderArray = req.orderArray ? req.orderArray : []
-    console.log('controller', orderArray)
     Local.findLocalGeo(lat, lng, localType, city, pagina * limit, limit, activeOffers, maxDistance, areFull, newOffers, orderArray)
       .then((locals) => {
         res.status(200).json(locals)
