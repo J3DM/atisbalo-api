@@ -187,7 +187,7 @@ module.exports = (sequelize, DataTypes) => {
       model: sequelize.models.Offer,
       as: 'offers',
       where: { deleted: false },
-      attributes: ['id']
+      attributes: []
     }
     if (activeOffers === true) {
       offerInclude.require = true
@@ -202,7 +202,6 @@ module.exports = (sequelize, DataTypes) => {
         require: true
       },
       'address',
-      'images',
       'tags',
       'rating',
       offerInclude
@@ -256,7 +255,8 @@ module.exports = (sequelize, DataTypes) => {
               ')) * sin(radians(lat)))'
           ),
           'distance'
-        ]
+        ],
+        [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
       ],
       include: includes,
       where: whereClause,
@@ -265,7 +265,7 @@ module.exports = (sequelize, DataTypes) => {
       subQuery: false,
       offset: offset,
       limit: parseInt(limit),
-      group: ['id']
+      group: ['id', 'offers.local_id']
       //, logging: console.log
     })
   }

@@ -78,7 +78,6 @@ describe('User Permissions', () => {
   })
   it('Get available roles', async (done) => {
     const res = await app.apiServer.get('/api/roles/list')
-    console.log(res.body)
     expect(res.statusCode).toEqual(200)
     res.body.forEach(role => {
       if (role.name === 'Manager') {

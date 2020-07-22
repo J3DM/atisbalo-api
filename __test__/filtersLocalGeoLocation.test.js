@@ -24,7 +24,7 @@ describe('Filters for find locals geoLocation query ', () => {
     expect(res.statusCode).toEqual(200)
     expect(res.body.rows.length).toEqual(10)
     res.body.rows.forEach(local => {
-      expect(local.offers.length).toBeGreaterThanOrEqual(0)
+      expect(local.offerCount).toBeGreaterThanOrEqual(0)
       expect(local.localType.id).toEqual(localTypeId)
     })
     done()
@@ -34,7 +34,7 @@ describe('Filters for find locals geoLocation query ', () => {
     expect(res.body.rows.length).toEqual(10)
     expect(res.statusCode).toEqual(200)
     res.body.rows.forEach(local => {
-      expect(local.offers.length).toBeGreaterThanOrEqual(1)
+      expect(local.offerCount).toBeGreaterThanOrEqual(1)
     })
     done()
   })

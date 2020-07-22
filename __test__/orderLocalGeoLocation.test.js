@@ -234,4 +234,38 @@ describe('Order geoLocation query', () => {
       lastVeracityRating = local.rating.veracity
     })
   })
+  it('Order by number of offers DESCENDING', async () => {
+    const res = await app.apiServer.get('/api/locals?city=Vigo&lat=' + lat + '&lng=' + lng + '&orderOffers=DESC')
+    expect(res.status).toEqual(200)
+    var lastOfferCount
+    res.body.rows.forEach(local => {
+      if (lastOfferCount === undefined) {
+        lastOfferCount = local.offerCount
+      }
+      expect(local.offerCount).toBeGreaterThanOrEqual(lastOfferCount)
+      lastOfferCount = local.offerCount
+    })
+    const resPag2 = await app.apiServer.get('/api/locals?city=Vigo&lat=' + lat + '&lng=' + lng + '&orderOffers=DESC&pag=2')
+    resPag2.body.rows.forEach(local => {
+      expect(local.offerCount).toBeGreaterThanOrEqual(lastOfferCount)
+      lastOfferCount = local.offerCount
+    })
+  })
+  it('Order by number of offers ASCENDING', async () => {
+    const res = await app.apiServer.get('/api/locals?city=Vigo&lat=' + lat + '&lng=' + lng + '&orderOffers=ASC')
+    expect(res.status).toEqual(200)
+    var lastOfferCount
+    res.body.rows.forEach(local => {
+      if (lastOfferCount === undefined) {
+        lastOfferCount = local.offerCount
+      }
+      expect(local.offerCount).toBeGreaterThanOrEqual(lastOfferCount)
+      lastOfferCount = local.offerCount
+    })
+    const resPag2 = await app.apiServer.get('/api/locals?city=Vigo&lat=' + lat + '&lng=' + lng + '&orderOffers=ASC&pag=2')
+    resPag2.body.rows.forEach(local => {
+      expect(local.offerCount).toBeGreaterThanOrEqual(lastOfferCount)
+      lastOfferCount = local.offerCount
+    })
+  })
 })

@@ -13,6 +13,8 @@ module.exports = {
         orderArray.push(['rating', 'attention', req.query[propName]])
       } else if (propName === 'orderRatingVeracity') {
         orderArray.push(['rating', 'veracity', req.query[propName]])
+      } else if (propName === 'orderOffers') {
+        orderArray.push(['offerCount', req.query[propName]])
       }
     }
     req.orderArray = orderArray
