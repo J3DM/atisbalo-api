@@ -43,7 +43,7 @@ services:
 
   redis:
     image: 'redis:4-alpine'
-    restart: 'always'
+#    restart: 'always'
     command: redis-server
     ports:
       - '6379:6379'

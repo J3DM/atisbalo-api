@@ -2,6 +2,7 @@ const pattern = new RegExp(
   '^({{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}}{0,1})$'
 )
 const Sequelize = require('sequelize')
+const { sequelize } = require('.')
 module.exports = (sequelize, DataTypes) => {
   const Op = Sequelize.Op
   const Local = sequelize.define(
@@ -166,13 +167,27 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
-  Local.findLocalGeo = (lat, lng, type, city, offset, limit, activeOffers, maxDistance, full, newOffers) => {
+  Local.findLocalGeo = (lat, lng, type, city, offset, limit, activeOffers, maxDistance, full, newOffers, orderArray) => {
     // TODO ADD LIMIT TO THE NUMBER OF LOCALS THAT WILL BE SELECTED FOR THE GEOLOCATION QUERY -> PASS LOCATIONS CITY
+    const orderBy = []
+    orderArray.forEach(element => {
+      if (element[0] === 'DISTANCE') {
+        orderBy.push([sequelize.col('distance'), element[1]])
+      } else if (element[0] === 'rating') {
+        orderBy.push([{
+          model: Local.getModel(element[0]),
+          as: 'rating'
+        }, element[1], element[2]])
+      }
+    })
+    if (orderArray.length === 0) {
+      orderBy.push([sequelize.col('distance'), 'ASC'])
+    }
     const offerInclude = {
       model: sequelize.models.Offer,
       as: 'offers',
       where: { deleted: false },
-      attributes: ['id']
+      attributes: []
     }
     if (activeOffers === true) {
       offerInclude.require = true
@@ -181,9 +196,12 @@ module.exports = (sequelize, DataTypes) => {
       offerInclude.where.startDate = { [Op.gt]: new Date(new Date() - (parseInt(newOffers) * 3600000)) }
     }
     const includes = [
-      'localType',
+      {
+        model: sequelize.models.LocalType,
+        as: 'localType',
+        require: true
+      },
       'address',
-      'images',
       'tags',
       'rating',
       offerInclude
@@ -237,15 +255,18 @@ module.exports = (sequelize, DataTypes) => {
               ')) * sin(radians(lat)))'
           ),
           'distance'
-        ]
+        ],
+        [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
       ],
       include: includes,
       where: whereClause,
+      order: orderBy,
+      distinct: true,
+      subQuery: false,
       offset: offset,
       limit: parseInt(limit),
-      order: sequelize.col('distance'),
-      distinct: true
-      // subQuery: false
+      group: ['id', 'offers.local_id']
+      //, logging: console.log
     })
   }
   Local.updateData = (id, updateData) => {
@@ -275,5 +296,11 @@ module.exports = (sequelize, DataTypes) => {
       include: ['offers', 'localType', 'address', 'images', 'tags', 'rating', 'userFavoriteLocal']
     })
   }
+  Local.getModel = (model) => {
+    if (model === 'rating') {
+      return sequelize.models.Rating
+    }
+  }
+
   return Local
 }

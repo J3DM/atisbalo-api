@@ -40,6 +40,7 @@ const UsersFavoriteLocalsController = require('./controllers/usersFavoriteLocals
 const AuthController = require('./controllers/authController')
 const AuthMiddlewares = require('./middlewares/auth')
 const LocalPermissionMiddlewares = require('./middlewares/permissions')
+const OrderByMiddleware = require('./middlewares/orderByParams')
 /*
 Auth
 */
@@ -134,7 +135,7 @@ app.delete('/localsassociated/:idLocal/:id', AuthMiddlewares.verifyToken, LocalP
  */
 app.get('/listLocals', LocalController.listLocals)
 app.post('/locals', AuthMiddlewares.verifyToken, LocalController.createLocal)
-app.get('/locals', LocalController.getLocalsGeo)
+app.get('/locals', OrderByMiddleware.getGeoLocationOrderByParameters, LocalController.getLocalsGeo)
 app.get('/local/private/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyEmployee, LocalController.getLocalPrivateData)
 app.get('/local/:id', LocalController.getLocalByID)
 app.put('/local/:id', LocalController.updateLocal)
@@ -154,7 +155,8 @@ app.put('/localtags/:id', LocalTagsController.updateLocalTags)
  LocalType
  */
 app.post('/localtype', LocalTypeController.createLocalType)
-app.get('/localtypes', LocalTypeController.getAllLocalTypes)
+app.get('/localtypes/list', LocalTypeController.getAllLocalTypes)
+app.get('/localtypes', LocalTypeController.getLocalTypes)
 app.get('/localtypes/active', LocalTypeController.getActiveLocalTypes)
 app.get('/localtype/:id', LocalTypeController.getLocalType)
 app.put('/localtype/:id', LocalTypeController.updateLocalType)
@@ -191,7 +193,8 @@ app.get('/ratings', RatingsController.getAllRatings)
  Roles
  */
 
-app.get('/roles', RolesController.getAllRoles)
+app.get('/roles/list', RolesController.getAllRoles)
+app.get('/roles', RolesController.getRoles)
 app.get('/role/:id', RolesController.getRole)
 app.post('/role', RolesController.createRole)
 app.put('/role/:id', RolesController.updateRole)

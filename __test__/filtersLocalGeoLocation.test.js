@@ -9,22 +9,22 @@ var localTypeId
 
 describe('Filters for find locals geoLocation query ', () => {
   it('Get local types', async (done) => {
-    const res = await app.apiServer.get('/api/localTypes')
+    const res = await app.apiServer.get('/api/localTypes/list')
     expect(res.statusCode).toEqual(200)
-    done()
     res.body.forEach(localType => {
       if (localType.name === 'Salón de belleza') {
         localTypeId = localType.id
       }
     })
     expect(localTypeId).not.toEqual(undefined)
+    done()
   })
   it('GeoLocation query with localType', async (done) => {
     const res = await app.apiServer.get('/api/locals?lat=' + lat + '&lng=' + lng + '&type=' + localTypeId)
     expect(res.statusCode).toEqual(200)
     expect(res.body.rows.length).toEqual(10)
     res.body.rows.forEach(local => {
-      expect(local.offers.length).toBeGreaterThanOrEqual(0)
+      expect(local.offerCount).toBeGreaterThanOrEqual(0)
       expect(local.localType.id).toEqual(localTypeId)
     })
     done()
@@ -34,7 +34,7 @@ describe('Filters for find locals geoLocation query ', () => {
     expect(res.body.rows.length).toEqual(10)
     expect(res.statusCode).toEqual(200)
     res.body.rows.forEach(local => {
-      expect(local.offers.length).toBeGreaterThanOrEqual(1)
+      expect(local.offerCount).toBeGreaterThanOrEqual(1)
     })
     done()
   })

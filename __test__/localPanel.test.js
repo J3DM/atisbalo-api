@@ -18,7 +18,7 @@ describe('Local Panel Queries', () => {
       expect(local).toHaveProperty('address.city')
       expect(local).toHaveProperty('address.complete')
       expect(local).toHaveProperty('rating')
-      expect(local).toHaveProperty('offers')
+      expect(local).toHaveProperty('offerCount')
     })
     localId = res.body.rows[0].id
     expect(localId).not.toEqual('')
