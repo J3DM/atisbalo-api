@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         afterBulkUpdate: async (local) => {
           if (local.fields.includes('deleted')) {
             if (local.attributes.deleted) {
-              sequelize.models.LocalAsociated.removeLocalqueAssociations(local.where.id)
+              sequelize.models.LocalAsociated.removeLocalAssociations(local.where.id)
             } else {
               sequelize.models.LocalAsociated.reactivateLocalAssociations(local.where.id)
             }
