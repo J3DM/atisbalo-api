@@ -140,10 +140,18 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
   Local.findLocalById = (id) => {
-    if (pattern.test(id)) {
+    if (!pattern.test(id)) {
       return Local.findOne({
-        where: { id: id, deleted: false },
-        include: [
+        where: {
+          identifier: id
+        },
+        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+      })
+    } else {
+      return Local.findOne({
+        where: { id: id },
+        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+        /*include: [
           {
             model: sequelize.models.Offer,
             as: 'offers',
@@ -156,14 +164,7 @@ module.exports = (sequelize, DataTypes) => {
             as: 'images',
             where: { deleted: false },
             attributes: ['id']
-          }, 'tags', 'rating']
-      })
-    } else {
-      return Local.findOne({
-        where: {
-          identifier: id
-        },
-        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+          }, 'tags', 'rating'],*/
       })
     }
   }

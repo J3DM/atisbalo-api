@@ -138,10 +138,10 @@ app.post('/locals', AuthMiddlewares.verifyToken, LocalController.createLocal)
 app.get('/locals', OrderByMiddleware.getGeoLocationOrderByParameters, LocalController.getLocalsGeo)
 app.get('/local/private/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyEmployee, LocalController.getLocalPrivateData)
 app.get('/local/:id', LocalController.getLocalByID)
-app.put('/local/:id', LocalController.updateLocal)
-app.put('/local/:id/reactivate', LocalController.reactivateLocal)
-app.delete('/local/:id', LocalController.removeLocal)
-app.delete('/local/:id/erase', LocalController.eraseLocal)
+app.put('/local/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.updateLocal)
+app.put('/local/:id/reactivate', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.reactivateLocal)
+app.delete('/local/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.removeLocal)
+app.delete('/local/:id/erase', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.eraseLocal)
 
 /*
  LocalTags

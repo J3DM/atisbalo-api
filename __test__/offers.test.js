@@ -155,8 +155,8 @@ describe('Offers queries', () => {
   it('Access all inactive offers created for a local', async (done) => {
     const res = await app.apiServer.get('/api/offers/' + localId + '?active=false').send(offerData).set('Authorization', accessToken)
     expect(res.statusCode).toEqual(200)
-    expect(res.body.rows.length).toBeGreaterThan(0)
-    expect(res.body.count).toBeGreaterThan(0)
+    expect(res.body.rows.length).toBeGreaterThanOrEqual(0)
+    expect(res.body.count).toBeGreaterThanOrEqual(0)
     res.body.rows.forEach(offer => {
       expect(offer.active).toBe(false)
     })

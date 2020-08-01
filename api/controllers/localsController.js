@@ -19,7 +19,6 @@ module.exports = {
         telephone: newLocal.telephone
       }
     })
-    Log.error(localStored)
     if (localStored.length !== 0) {
       Log.error(
         `The place with the telephone ${newLocal.telephone} already exists`
@@ -34,7 +33,7 @@ module.exports = {
       .save()
       .then(async (local) => {
         await LocalAsociated.create({ user_id: req.user.id, local_id: local.id, rol_id: 'owner' })
-        res.status(200).json(local)
+        res.status(200).json(local.dataValues)
       })
       .catch((err) => {
         Log.error(err)
