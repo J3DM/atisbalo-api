@@ -10,5 +10,4 @@ EXPOSE 3000
 
 COPY . .
 
-
 CMD [ "node", "./api/server.js" ]
