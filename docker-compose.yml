@@ -3,7 +3,6 @@ services:
   api:
     build: .
     container_name: atisbalo-api
-    # command: sh -c "npx sequelize db:migrate && npm run dev"
     ports:
       - 3000:3000
     environment:
@@ -16,6 +15,7 @@ services:
       - DATABASE_DIALECT=mysql
       - PORT=3000
       - REDIS_URL=redis
+      - REDIS_PORT=6379
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -25,6 +25,7 @@ services:
     depends_on:
       - mysql
       - redis
+
   mysql:
     image: mysql:5.7
     container_name: atisbalo-db
@@ -39,9 +40,10 @@ services:
       - '3306'
     volumes:
       - data:/var/lib/mysql
+
   redis:
     image: 'redis:4-alpine'
-    restart: 'always'
+#    restart: 'always'
     command: redis-server
     ports:
       - '6379:6379'

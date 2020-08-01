@@ -1,4 +1,6 @@
 const Local = require('../models').Local
+const LocalAsociated = require('../models').LocalAsociated
+
 const { Log } = require('../helpers/log')
 module.exports = {
   createLocal: async (req, res) => {
@@ -30,43 +32,38 @@ module.exports = {
     }
     Local.build(newLocal)
       .save()
-      .then((local) => res.status(200).json(local))
+      .then(async (local) => {
+        await LocalAsociated.create({ user_id: req.user.id, local_id: local.id, rol_id: 'owner' })
+        res.status(200).json(local)
+      })
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
   },
   getLocalsGeo: async (req, res) => {
-    let offset, limit, city
-
     const lat = req.query.lat
     const lng = req.query.lng
-
-    const localType = req.query.type
-
-    city = req.query.city ? (city = req.query.city) : ''
-    offset = req.query.offset ? (offset = req.query.offset) : (offset = 0)
-    limit = req.query.limit ? (limit = req.query.offset) : (limit = 5)
-
-    if (!lat || !lng) {
-      Local.findAllLocalsByType(localType, offset, limit)
-        .then((locals) => {
-          res.status(200).json(locals)
-        })
-        .catch((err) => {
-          Log.error(err)
-          return res.status(500).json(err)
-        })
-    } else {
-      Local.findLocalGeo(lat, lng, localType, city, offset, limit)
-        .then((locals) => {
-          res.status(200).json(locals)
-        })
-        .catch((err) => {
-          Log.error(err)
-          return res.status(500).json(err)
-        })
+    if (lat === undefined || lng === undefined) {
+      return res.status(404).send('GeoLocation is needed to search nearby locals')
     }
+    const areFull = req.query.haveRoom ? req.query.haveRoom : null
+    const localType = req.query.type ? req.query.type : null
+    const activeOffers = req.query.activeOffers === 'true' ? req.query.activeOffers : null
+    const city = req.query.city ? req.query.city : null
+    const limit = parseInt(req.query.limit) ? req.query.limit : 10
+    const pagina = parseInt(req.query.pag) ? req.query.pag : 0
+    const maxDistance = req.maxDistance ? req.maxDistance : 1000
+    const newOffers = req.query.newOffers ? req.query.newOffers : null
+    const orderArray = req.orderArray ? req.orderArray : []
+    Local.findLocalGeo(lat, lng, localType, city, pagina * limit, limit, activeOffers, maxDistance, areFull, newOffers, orderArray)
+      .then((locals) => {
+        res.status(200).json(locals)
+      })
+      .catch((err) => {
+        Log.error(err)
+        return res.status(500).json(err)
+      })
   },
   getLocalByID: (req, res) => {
     Local.findLocalById(req.params.id)
@@ -78,6 +75,71 @@ module.exports = {
         }
         res.status(200).json(local)
       })
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  getLocalPrivateData: (req, res) => {
+    Local.findLocalByIdWithPrivateData(req.params.id)
+      .then((local) => {
+        if (!local) {
+          return res
+            .status(404)
+            .json(`Local whit id ${req.params.id} not found`)
+        }
+        res.status(200).json(local)
+      })
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  updateLocal: (req, res) => {
+    const updateLocal = {
+      name: req.body.name,
+      telephone: req.body.telephone,
+      description: req.body.description,
+      capacity: req.body.capacity,
+      occupation: req.body.occupation,
+      // Añadir midelware para normalizar el identificador
+      // lat y lng no son obligatorias, actualizar al crear su direccion
+      localtype_id: req.body.localtype_id
+    }
+    Local.updateData(req.params.id, updateLocal)
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  reactivateLocal: (req, res) => {
+    Local.updateData(req.params.id, { deleted: false })
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  removeLocal: (req, res) => {
+    Local.updateData(req.params.id, { deleted: true })
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  eraseLocal: (req, res) => {
+    Local.erase(req.params.id)
+      .then((result) => res.status(200).json(result))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+  },
+  listLocals: (req, res) => {
+    Local.list()
+      .then((locals) => res.status(200).json(locals))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)

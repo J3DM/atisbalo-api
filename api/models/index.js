@@ -5,22 +5,27 @@ const basename = path.basename(__filename)
 const db = {}
 const {
   DATABASE_NAME,
-  USERNAME,
-  PASSWORD,
-  HOST,
+  DATABASE_HOST,
+  DATABASE_PASSWORD,
+  DATABASE_USERNAME,
   DIALECT
 } = require('../../config/constants')
-const sequelize = new Sequelize(DATABASE_NAME, USERNAME, PASSWORD, {
-  host: HOST,
-  dialect: DIALECT,
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-  logging: false
-})
+const sequelize = new Sequelize(
+  DATABASE_NAME,
+  DATABASE_USERNAME,
+  DATABASE_PASSWORD,
+  {
+    host: DATABASE_HOST,
+    dialect: DIALECT,
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    logging: false
+  }
+)
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -28,7 +33,7 @@ fs.readdirSync(__dirname)
     )
   })
   .forEach((file) => {
-    const model = sequelize.import(path.join(__dirname, file))
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize)
     db[model.name] = model
   })
 

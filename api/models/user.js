@@ -1,5 +1,4 @@
-var bcrypt = require('bcrypt')
-
+const AuthService = require('../services/auth')
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -13,15 +12,26 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      verified: DataTypes.BOOLEAN,
+      verified: { type: DataTypes.BOOLEAN, defaultValue: false },
       provider: DataTypes.STRING,
-      deleted: DataTypes.BOOLEAN
+      deleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {
       hooks: {
-        beforeCreate: (user) => {
-          const salt = bcrypt.genSaltSync()
-          user.password = bcrypt.hashSync(user.password, salt)
+        beforeCreate: async (user) => {
+          user.password = AuthService.encrypt(user.password)
+        },
+        afterCreate: (user) => {
+          // TODO send email for verification
+        },
+        afterBulkUpdate: async (user) => {
+          if (user.fields.includes('deleted')) {
+            if (user.attributes.deleted) {
+              sequelize.models.LocalAsociated.removeUserAssociations(user.where.id)
+            } else {
+              sequelize.models.LocalAsociated.reactivateUserAssociations(user.where.id)
+            }
+          }
         }
       }
     }
@@ -30,34 +40,61 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Comment, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'comments'
     })
-    User.hasMany(models.UserFauvoriteLocal, {
+    User.hasMany(models.UserFavoriteLocal, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
-      as: 'fauvoriteLocals'
+      hooks: true,
+      as: 'favoriteLocals'
     })
     User.hasMany(models.LocalAsociated, {
       foreignKey: 'user_id',
       onDelete: 'cascade',
+      hooks: true,
       as: 'localsAsociated'
     })
   }
   User.findOneByEmail = (email) => {
     return User.findOne({
       where: { email: email },
-      include: ['fauvoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated']
     })
   }
   User.getAllUsers = () => {
     return User.findAll({
-      include: ['fauvoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated']
     })
   }
-  User.getUserById = (id) => {
+  User.findUserById = (id) => {
     return User.findByPk(id, {
-      include: ['fauvoriteLocals', 'localsAsociated']
+      include: ['favoriteLocals', 'localsAsociated']
     })
+  }
+  User.create = (newUser) => {
+    return User.build(newUser).save()
+  }
+  User.erase = async (id) => {
+    return User.destroy({ where: { id: id } })
+  }
+  User.remove = (id) => {
+    return User.update({ deleted: true }, { where: { id: id } })
+  }
+  User.changePassword = (userData, id) => {
+    userData.password = AuthService.encrypt(userData.password)
+    return User.update(userData, { where: { id: id } })
+  }
+  User.updateUserById = (id, update) => {
+    return User.update(update, {
+      where: { id: id }
+    })
+  }
+  User.recover = (id) => {
+    return User.update({ deleted: false }, { where: { id: id } })
+  }
+  User.updateProfile = (updateData, id) => {
+    return User.update(updateData, { where: { id: id } })
   }
   return User
 }
