@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         afterBulkUpdate: async (local) => {
           if (local.fields.includes('deleted')) {
             if (local.attributes.deleted) {
-              sequelize.models.LocalAsociated.removeLocalqueAssociations(local.where.id)
+              sequelize.models.LocalAsociated.removeLocalAssociations(local.where.id)
             } else {
               sequelize.models.LocalAsociated.reactivateLocalAssociations(local.where.id)
             }
@@ -112,6 +112,12 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true,
       as: 'tags'
     })
+    Local.hasMany(models.LocalActivity, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      hooks: true,
+      as: 'activity'
+    })
   }
   Local.findAllLocalsByType = (type, offset, limit) => {
     let includes
@@ -140,30 +146,55 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
   Local.findLocalById = (id) => {
-    if (pattern.test(id)) {
-      return Local.findOne({
-        where: { id: id, deleted: false },
-        include: [
-          {
-            model: sequelize.models.Offer,
-            as: 'offers',
-            where: { deleted: false },
-            attributes: ['id']
-          },
-          'localType', 'address',
-          {
-            model: sequelize.models.LocalImage,
-            as: 'images',
-            where: { deleted: false },
-            attributes: ['id']
-          }, 'tags', 'rating']
-      })
-    } else {
+    if (!pattern.test(id)) {
       return Local.findOne({
         where: {
           identifier: id
         },
-        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+        include: [
+          {
+            model: sequelize.models.Offer,
+            as: 'offers',
+            attributes: ['id']
+          },
+          'localType',
+          'address',
+          {
+            model: sequelize.models.LocalImage,
+            as: 'images',
+            attributes: ['url']
+          },
+          'tags',
+          'rating'],
+        attributes: [
+          'id', 'name', 'capacity', 'telephone', 'description', 'occupation',
+          'identifier', 'deleted', 'createdAt', 'updatedAt', 'local_logo',
+          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
+        ]
+      })
+    } else {
+      return Local.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: sequelize.models.Offer,
+            as: 'offers',
+            attributes: ['id']
+          },
+          'localType',
+          'address',
+          {
+            model: sequelize.models.LocalImage,
+            as: 'images',
+            attributes: ['url']
+          },
+          'tags',
+          'rating'],
+        attributes: [
+          'id', 'name', 'capacity', 'telephone', 'description', 'occupation',
+          'identifier', 'deleted', 'createdAt', 'updatedAt', 'local_logo',
+          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
+        ]
       })
     }
   }
@@ -293,7 +324,7 @@ module.exports = (sequelize, DataTypes) => {
       where: {
         id: id
       },
-      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating', 'userFavoriteLocal']
+      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating', 'userFavoriteLocal', 'activity']
     })
   }
   Local.getModel = (model) => {

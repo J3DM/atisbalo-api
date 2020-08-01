@@ -63,9 +63,13 @@ module.exports = (sequelize, DataTypes) => {
     Log.info('Triggered update on LocalsAssociated table for local_id ' + id)
     return LocalAsociated.update({ deleted: false }, { where: { local_id: id } })
   }
-  LocalAsociated.hasRoles = (userId, localId, allowedRoles) => {
+  LocalAsociated.hasRoles = (userId, localId, allowedRoles, ownerOnly=false) => {
     Log.info('Checking that the user ' + userId + ' has one of the roles ' + allowedRoles + ' for the local ' + localId)
-    return LocalAsociated.findAll({ where: { user_id: userId, local_id: localId, rol_id: { [Sequelize.Op.in]: allowedRoles }, deleted: false } })
+    const whereDoc = { user_id: userId, local_id: localId, rol_id: { [Sequelize.Op.in]: allowedRoles } }
+    if (!ownerOnly) {
+      whereDoc.deleted = false
+    }
+    return LocalAsociated.findAll({ where: whereDoc })
   }
   return LocalAsociated
 }

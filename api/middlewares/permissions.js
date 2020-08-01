@@ -8,7 +8,7 @@ module.exports = {
     if (localId === undefined) {
       return res.status(400).json('local_id query parameter or localId body parameter are requiered')
     }
-    LocalAsociated.hasRoles(req.user.id, localId, allowedRoles)
+    LocalAsociated.hasRoles(req.user.id, localId, allowedRoles, true)
       .then((result) => {
         Log.info('Can the logged user perform operation? ' + (result.length > 0 ? 'YES' : 'NO'))
         if (result.length === 0) {

@@ -29,7 +29,6 @@ describe('User Permissions', () => {
         localId = associated.local_id
       }
     })
-    console.log(localId)
     expect(localId).not.toEqual('')
     expect(localId).not.toEqual(undefined)
     done()
