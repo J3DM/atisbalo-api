@@ -23,8 +23,9 @@ const updateData = {
   occupation: undefined,
   localtype_id: undefined
 }
+var activityId
 
-describe('Admin Local queries', () => {
+describe('Disable and enable a Local', () => {
   it('Login with a user that has a local', async (done) => {
     const res = await app.apiServer.post('/api/login').send({ email: userEmail, password: userPassword })
     expect(res.statusCode).toEqual(200)
@@ -39,6 +40,7 @@ describe('Admin Local queries', () => {
     res.body.localsAsociated.forEach(associated => {
       if (associated.rol_id === '4c1e8e00-8061-4657-b1e5-8112de5834de' || associated.rol_id === 'owner') {
         localId = associated.local_id
+        activityId = localId
       }
     })
     expect(localId).not.toEqual('')
@@ -65,6 +67,8 @@ describe('Admin Local queries', () => {
     expect(res.statusCode).toEqual(200)
     done()
   })
+})
+describe('Update local data', () => {
   it('Try to change local data', async (done) => {
     const res = await app.apiServer.get('/api/local/' + localId)
     expect(res.statusCode).toEqual(200)
@@ -95,7 +99,8 @@ describe('Admin Local queries', () => {
     expect(res.body.telephone).toEqual(oldTelephone)
     done()
   })
-
+})
+describe('Delete a local data', () => {
   it('Create a local', async (done) => {
     const res = await app.apiServer.post('/api/locals').send(newLocalData).set('Authorization', userToken)
     expect(res.statusCode).toEqual(200)
@@ -106,6 +111,19 @@ describe('Admin Local queries', () => {
   it('Delete a local', async (done) => {
     const resDelete = await app.apiServer.delete('/api/local/' + localId + '/erase').set('Authorization', userToken)
     expect(resDelete.statusCode).toEqual(200)
+    done()
+  })
+})
+describe('Local activity list', () => {
+  it('Try to access the activity of a local', async (done) => {
+    const res = await app.apiServer.get('/api/local/private/' + activityId)
+    expect(res.statusCode).toEqual(401)
+    done()
+  })
+  it('Access the local activity', async (done) => {
+    const res = await app.apiServer.get('/api/local/private/' + activityId).set('Authorization', userToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('activity')
     done()
   })
 })

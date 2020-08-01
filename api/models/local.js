@@ -112,6 +112,12 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true,
       as: 'tags'
     })
+    Local.hasMany(models.LocalActivity, {
+      foreignKey: 'local_id',
+      onDelete: 'cascade',
+      hooks: true,
+      as: 'activity'
+    })
   }
   Local.findAllLocalsByType = (type, offset, limit) => {
     let includes
@@ -145,26 +151,50 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           identifier: id
         },
-        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
+        include: [
+          {
+            model: sequelize.models.Offer,
+            as: 'offers',
+            attributes: ['id']
+          },
+          'localType',
+          'address',
+          {
+            model: sequelize.models.LocalImage,
+            as: 'images',
+            attributes: ['url']
+          },
+          'tags',
+          'rating'],
+        attributes: [
+          'id', 'name', 'capacity', 'telephone', 'description', 'occupation',
+          'identifier', 'deleted', 'createdAt', 'updatedAt', 'local_logo',
+          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
+        ]
       })
     } else {
       return Local.findOne({
         where: { id: id },
-        include: ['offers', 'localType', 'address', 'images', 'tags', 'rating']
-        /*include: [
+        include: [
           {
             model: sequelize.models.Offer,
             as: 'offers',
-            where: { deleted: false },
             attributes: ['id']
           },
-          'localType', 'address',
+          'localType',
+          'address',
           {
             model: sequelize.models.LocalImage,
             as: 'images',
-            where: { deleted: false },
-            attributes: ['id']
-          }, 'tags', 'rating'],*/
+            attributes: ['url']
+          },
+          'tags',
+          'rating'],
+        attributes: [
+          'id', 'name', 'capacity', 'telephone', 'description', 'occupation',
+          'identifier', 'deleted', 'createdAt', 'updatedAt', 'local_logo',
+          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
+        ]
       })
     }
   }
@@ -294,7 +324,7 @@ module.exports = (sequelize, DataTypes) => {
       where: {
         id: id
       },
-      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating', 'userFavoriteLocal']
+      include: ['offers', 'localType', 'address', 'images', 'tags', 'rating', 'userFavoriteLocal', 'activity']
     })
   }
   Local.getModel = (model) => {
