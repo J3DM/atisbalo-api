@@ -25,7 +25,7 @@ jobs:
     - name: Run a one-line script
       run: npm i
     - name: Run a one-line script
-      run: cp -R . /atisbalo/api/
+      run: cp -R . /home/staging/atisbalo/api/
     # Runs a set of commands using the runners shell
     #- name: Run a multi-line script
      # run: |
