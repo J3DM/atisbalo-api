@@ -58,5 +58,26 @@ module.exports = {
       .catch((err) => {
         return res.status(400).json(err)
       })
+  },
+  verifyInviterIsManager: (req, res, next) => {
+    const allowedRoles = ['owner', 'admin', '4c1e8e00-8061-4657-b1e5-8112de5834de', 'df009b9d-bf01-4796-9f8c-498f75dfd89a']
+    var userId = req.params.idUser
+    var localId = req.params.localId
+    if (localId === undefined || userId === undefined) {
+      return res.status(400).json('The user id and the local id are needed to perform this operation')
+    }
+    LocalAsociated.hasRoles(userId, localId, allowedRoles)
+      .then((result) => {
+        Log.info('Can the logged user perform operation? ' + (result.length > 0 ? 'YES' : 'NO'))
+        if (result.length === 0) {
+          return res.status(401).json('You are not authorized for doing this operation')
+        } else {
+          req.inviterHadRoles = true
+        }
+        next()
+      })
+      .catch((err) => {
+        return res.status(500).json(err)
+      })
   }
 }
