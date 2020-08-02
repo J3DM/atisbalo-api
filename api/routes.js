@@ -218,6 +218,7 @@ app.put('/tag/:id/reactivate', TagsController.activateTag)
  Users
  */
 app.get('/users', UsersController.getAllUsers)
+app.post('/user/invited/:idUser/local/:localId', LocalPermissionMiddlewares.verifyInviterIsManager, UsersController.createUserWithPermissions)
 app.post('/user', UsersController.createUser)
 app.put('/user', AuthMiddlewares.verifyToken, UsersController.updateUser)
 app.put(

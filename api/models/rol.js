@@ -35,5 +35,14 @@ module.exports = (sequelize, DataTypes) => {
   Rol.paginate = (filterDoc, offset, limit) => {
     return Rol.findAndCountAll({ where: filterDoc, limit: limit, offset: offset })
   }
+  Rol.employee = () => {
+    return Rol.findOne({ where: { name: 'Employee' } })
+  }
+  Rol.manager = () => {
+    return Rol.findOne({ where: { name: 'Manager' } })
+  }
+  Rol.owner = () => {
+    return Rol.findOne({ where: { name: 'Owner' } })
+  }
   return Rol
 }

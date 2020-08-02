@@ -1,6 +1,8 @@
 const User = require('../models').User
 const { Log } = require('../helpers/log')
 const Redis = require('../helpers/redis')
+const LocalAsociated = require('../models').LocalAsociated
+const Rol = require('../models').Rol
 
 module.exports = {
   getAllUsers: (req, res) => {
@@ -144,5 +146,42 @@ module.exports = {
         Log.error(err)
         res.status(500).json(err)
       })
+  },
+  createUserWithPermissions: async (req, res) => {
+    const inviterHasRolesForLocal = req.inviterHadRoles
+    if (inviterHasRolesForLocal) {
+      const newUser = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password
+      }
+      if (newUser.email === undefined || newUser.password === undefined) {
+        res.status(400).json('Email and password fields are obligatory')
+      }
+      const storedUser = await User.findOneByEmail(newUser.email)
+      if (storedUser != null) {
+        return res
+          .status(409)
+          .json(`An user already exists with the email ${newUser.email}`)
+      }
+      var createdUser
+      User.create(newUser)
+        .then(async (user) => {
+          createdUser = user
+          const employeeData = await Rol.employee()
+          const userAssociatedData = {
+            user_id: createdUser.id,
+            local_id: req.params.localId,
+            rol_id: employeeData.id
+          }
+          LocalAsociated.create(userAssociatedData)
+        })
+        .then(_result => res.status(200).json(createdUser))
+        .catch((err) => {
+          Log.error(err)
+          res.status(500).json(err)
+        })
+    }
   }
 }
