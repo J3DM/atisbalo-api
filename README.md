@@ -42,3 +42,91 @@
     - Actualizamos nuestra rama de develop con el comando `git pull`
     - Hacemos el merge en develop de la rama que queremos mergear con el comando `git merge nombreDeRama`
     - Subimos ese merge al repositorio con el comando `git push`
+
+# Staging
+ssh-add atbl_staging_id_rsa
+94.237.48.228
+Atisbalo@Row2
+
+sudo apt update
+sudo apt upgrade
+sudo apt install nginx
+
+## Node
+curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt install nodejs
+sudo rm nodesource_setup.sh
+
+## Mysql
+sudo apt install mysql-server
+sudo mysql_secure_installation
+sudo mysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Atisbalo@Row2.Staging.Mysql';
+
+### CREDENTIALS
+root
+Password --> Atisbalo@Row2.Staging.Mysql
+
+## Redis
+sudo apt update
+sudo apt install redis-server
+sudo vim /etc/redis/redis.conf
+
+ - Modify
+ --> supervised systemd
+
+
+## Redis
+    port: 6399
+## Mysql
+    port: 3399
+
+
+## service api
+/lib/systemd/system/atblapi.service 
+```
+[Unit]
+Description= Atisbalo Staging
+Documentation=https://staging.atisbalo.com
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/node /atisbalo/atisbalo-api/api/server.js
+Restart=on-always
+RestartSec=10
+Environment="DATABASE_NAME=stisbalo"
+Environment="USERNAME=root"
+Environment="PASSWORD=Atisbalo@Row2.Staging.Mysql"
+Environment="HOST=localhost"
+Environment="LOG_LEVEL=A"
+Environment="ACCESS_TOKEN=jkapHEihDRioBJ78TOJ579fhxU8IBBvc"
+Environment="REFRESH_TOKEN=pGNqduRFkB4K9C2vijOmUDa2kPtUhArN"
+Environment='NODE_ENV=Development"
+Environment="REDIS_URL=localhost"
+Environment="REDIS_PORT=6379"
+
+[Install]
+WantedBy=multi-user.target
+```
+systemctl start atblapi
+systemctl enable atblapi
+## SSL
+
+
+## nginx
+/etc/nginx/sites-available/staging.atisbalo.com
+
+'''
+server{
+	server_name staging.atisbalo.com;
+        location /api {
+                proxy_pass http://127.0.0.1:3000;
+        }
+}
+'''
+
+
+https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-es
