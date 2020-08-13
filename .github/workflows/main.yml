@@ -27,12 +27,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Npm install
-      run: sudo npm installs --production
+      run: npm i --production
     - name: Stop Service
-      run: sudo systemctl stop atblapi
+      run: systemctl stop atblapi
     - name: Clean folder
       run: rm -r /home/staging/atisbalo/api/*
     - name: Copy files 
       run: cp -R ./ /home/staging/atisbalo/api/
     - name: Start Service
-      run: sudo systemctl start atblapi
+      run: systemctl start atblapi
