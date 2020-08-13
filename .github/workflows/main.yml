@@ -21,6 +21,7 @@ jobs:
       run: npm i
   test:
     runs-on: [self-hosted, staging]
+    needs: install
     steps:
     - uses: mattallty/jest-github-action@v1
       env:
@@ -29,6 +30,7 @@ jobs:
         test-command: "npm run test" 
   build:
     runs-on: [self-hosted, staging]
+    needs: test
     steps:
     - uses: actions/checkout@v2
     - name: Remove node_modules
