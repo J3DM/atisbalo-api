@@ -29,7 +29,7 @@ jobs:
     - name: Npm install
       run: npm install --production
     - name: Stop Service
-      run: sudo systemctl start atblapi
+      run: sudo systemctl stop atblapi
     - name: Copy files 
       run: cp -R . /home/staging/atisbalo/api/
     - name: Start Service
