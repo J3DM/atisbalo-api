@@ -31,7 +31,7 @@ jobs:
     - name: Stop Service
       run: sudo systemctl stop atblapi
     - name: Clean folder
-      run: rm -r /home/staging/atisbalo/api/*
+      run: rm -rf /home/staging/atisbalo/api/ && /home/staging/atisbalo/api/
     - name: Copy files 
       run: cp -r ./ /home/staging/atisbalo/api/
     - name: Start Service

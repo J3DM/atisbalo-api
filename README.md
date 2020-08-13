@@ -94,17 +94,21 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/bin/node /atisbalo/atisbalo-api/api/server.js
-Restart=on-always
+ExecStart=/usr/bin/node /home/staging/atisbalo/api/api/server.js
+Restart=always
 RestartSec=10
-Environment="DATABASE_NAME=stisbalo"
-Environment="USERNAME=root"
-Environment="PASSWORD=Atisbalo@Row2.Staging.Mysql"
-Environment="HOST=localhost"
+Environment="DATABASE_NAME=atisbalo"
+Environment="DATABASE_USERNAME=root"
+Environment="DATABASE_PASSWORD=Atisbalo@Row2.Staging.Mysql"
+Environment="DATABASE_HOST=localhost"
 Environment="LOG_LEVEL=A"
+Environment="DIALECT=mysql"
+Environment="DIALECT=mysql"
+Environment="LOG_LEVEL=A"
+Environment="EXPIRATION_TOKEN=48h"
 Environment="ACCESS_TOKEN=jkapHEihDRioBJ78TOJ579fhxU8IBBvc"
 Environment="REFRESH_TOKEN=pGNqduRFkB4K9C2vijOmUDa2kPtUhArN"
-Environment='NODE_ENV=Development"
+Environment="NODE_ENV=Development"
 Environment="REDIS_URL=localhost"
 Environment="REDIS_PORT=6379"
 
