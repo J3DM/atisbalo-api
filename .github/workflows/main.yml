@@ -26,8 +26,6 @@ jobs:
     needs: test
     steps:
     - uses: actions/checkout@v2
-    - name: Remove node_modules
-      run: rm -R node_modules
     - name: Npm install
       run: npm install --production
     - name: Stop Service

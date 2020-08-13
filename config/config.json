@@ -23,11 +23,11 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
-  "production": {
+  "staging": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "password": "Atisbalo@Row2.Staging.Mysql",
+    "database": "atisbalo",
+    "host": "194.237.48.204",
     "dialect": "mysql",
     "operatorsAliases": false
   }

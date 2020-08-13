@@ -7,7 +7,7 @@
     "dev": "nodemon ./api/server.js",
     "start": "node ./api/server.js",
     "test": "jest --detectOpenHandles",
-    "migrate:aws": "NODE_ENV=aws sequelize db:migrate",
+    "migrate:staging": "NODE_ENV=staging sequelize db:migrate",
     "migrate": "sequelize db:migrate",
     "db:init": "sequelize db:drop --env development && sequelize db:create --env development && sequelize db:migrate --env development && nodemon ./api/server.js"
   },
