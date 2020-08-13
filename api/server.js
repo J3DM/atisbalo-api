@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 const { Log } = require('./helpers/log')
-
+const { PORT }= require('../config/constants')
 var app = require('../app')
 var http = require('http')
 
@@ -66,7 +66,7 @@ const onListening = () => {
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000')
+var port = normalizePort(PORT)
 app.set('port', port)
 
 /**
