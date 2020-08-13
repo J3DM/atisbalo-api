@@ -19,7 +19,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Npm install
       run: npm i
-    - name: Stop Service
   test:
     runs-on: [self-hosted, staging]
     steps:
