@@ -1,30 +1,30 @@
 version: '3.7'
 services:
-  api:
-    build: .
-    container_name: atisbalo-api
-    ports:
-      - 3000:3000
-    environment:
-      - ORIGIN=*
-      - NODE_ENV=docker
-      - DATABASE_HOST=mysql
-      - DATABASE_NAME=atisbalo
-      - DATABASE_USERNAME=admin
-      - DATABASE_PASSWORD=admin
-      - DATABASE_DIALECT=mysql
-      - PORT=3000
-      - REDIS_URL=redis
-      - REDIS_PORT=6379
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    links:
-      - mysql
-      - redis
-    depends_on:
-      - mysql
-      - redis
+  # api:
+  #   build: .
+  #   container_name: atisbalo-api
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     - ORIGIN=*
+  #     - NODE_ENV=docker
+  #     - DATABASE_HOST=mysql
+  #     - DATABASE_NAME=atisbalo
+  #     - DATABASE_USERNAME=admin
+  #     - DATABASE_PASSWORD=Atisbalo@Row2.Staging.Mysql
+  #     - DATABASE_DIALECT=mysql
+  #     - PORT=3000
+  #     - REDIS_URL=redis
+  #     - REDIS_PORT=6379
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   links:
+  #     - mysql
+  #     - redis
+  #   depends_on:
+  #     - mysql
+  #     - redis
 
   mysql:
     image: mysql:5.7
@@ -33,7 +33,7 @@ services:
       MYSQL_DATABASE: 'atisbalo'
       MYSQL_USER: 'admin'
       MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 'Atisbalo@Row2.Staging.Mysql'
     ports:
       - '3306:3306'
     expose:

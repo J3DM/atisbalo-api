@@ -3,6 +3,7 @@ const app = require('../../app')
 class Helper {
   constructor (model) {
     this.apiServer = supertest(app)
+    afterAll(() => setTimeout(() => process.exit(0), 1000))
   }
 }
 
