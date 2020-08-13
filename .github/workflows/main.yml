@@ -26,11 +26,13 @@ jobs:
     needs: test
     steps:
     - uses: actions/checkout@v2
+    - name: whoami
+      run: whoami
     - name: Npm install
-      run: npm install --production
+      run: sudo npm install --production
     - name: Stop Service
       run: sudo systemctl stop atblapi
     - name: Copy files 
-      run: cp -R . /home/staging/atisbalo/api/
+      run: sudo cp -R . /home/staging/atisbalo/api/
     - name: Start Service
       run: sudo systemctl start atblapi
