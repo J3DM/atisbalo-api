@@ -63,15 +63,7 @@ const Log = {
   }
 }
 
-const morganChalk = morgan(function (tokens, req, res) {
-  return [
-    chalk.magenta.bold(timestamp()),
-    chalk.blue.bold(tokens.method(req, res)),
-    chalk.green.bold(tokens.status(req, res)),
-    chalk.white(tokens.url(req, res)),
-    chalk.yellow(tokens['response-time'](req, res) + ' ms')
-  ].join(' ')
-})
+
 
 const timestamp = () => {
   return '[' + moment().format('MMMM Do YYYY, h:mm:ss a') + ']'
@@ -80,6 +72,7 @@ const timestamp = () => {
 Log.info(`Loggger started with level ${level}`)
 
 module.exports = {
-  morganChalk,
-  Log
+  morgan,
+  Log,
+  log_file
 }
