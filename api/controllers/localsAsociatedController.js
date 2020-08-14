@@ -27,7 +27,7 @@ module.exports = {
         res.status(500).send(err)
       })
   },
-  createLocalAsociated: async (req, res) => {
+  createLocalAsociated: async (req, res, next) => {
     const user = await User.findOneByEmail(req.body.userEmail)
     if (!user) {
       return res.status(404).json('No user found with the provided email')
@@ -40,14 +40,20 @@ module.exports = {
     if (!newLocalAssociated.user_id || !newLocalAssociated.local_id || !newLocalAssociated.rol_id) {
       return res.status(400).send('The required fields to create a user role are not present')
     }
+    req.localActivity = {
+      action: 'create rol',
+      user: req.user.firstName,
+      local_id: req.body.localId
+    }
     LocalAsociated.create(newLocalAssociated)
       .then((associated) => res.status(200).json(associated))
       .catch((err) => {
         Log.error(err)
         res.status(500).send(err)
       })
+    next()
   },
-  updateLocalAsociated: async (req, res) => {
+  updateLocalAsociated: async (req, res, next) => {
     const user = await User.findOneByEmail(req.body.userEmail)
     const updateAssociated = {
       user_id: user.id ? user.id : false,
@@ -60,19 +66,31 @@ module.exports = {
     if (!updateAssociated.user_id || !updateAssociated.local_id || !updateAssociated.rol_id) {
       return res.status(400).send('The required fields to create a user role are not present')
     }
+    req.localActivity = {
+      action: 'update rol',
+      user: req.user.firstName,
+      local_id: req.body.localId
+    }
     LocalAsociated.updateData(updateAssociated)
       .then((associated) => res.status(200).json(associated))
       .catch((err) => {
         Log.error(err)
         res.status(500).send(err)
       })
+    next()
   },
-  eraseLocalAsociated: (req, res) => {
+  eraseLocalAsociated: (req, res, next) => {
+    req.localActivity = {
+      action: 'update rol',
+      user: req.user.firstName,
+      local_id: req.params.idLocal
+    }
     LocalAsociated.erase(req.params.id)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).send(err)
       })
+    next()
   }
 }

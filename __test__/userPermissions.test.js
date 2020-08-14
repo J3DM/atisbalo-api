@@ -155,7 +155,7 @@ describe('Grant, Edit and remove Roles for the created user', () => {
     done()
   })
 })
-describe('Create a new user with roles for a local', async () => {
+describe('Create a new user with roles for a local', () => {
   it('Creating a new user', async (done) => {
     const res = await app.apiServer.post('/api/user/invited/' + ownerId + '/local/' + inviteLocalId).send(newUserData)
     expect(res.statusCode).toEqual(200)

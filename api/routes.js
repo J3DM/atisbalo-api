@@ -41,6 +41,8 @@ const AuthController = require('./controllers/authController')
 const AuthMiddlewares = require('./middlewares/auth')
 const LocalPermissionMiddlewares = require('./middlewares/permissions')
 const OrderByMiddleware = require('./middlewares/orderByParams')
+const LocalActivityMiddleware = require('./middlewares/localActivity')
+const localActivity = require('./middlewares/localActivity')
 /*
 Auth
 */
@@ -126,22 +128,25 @@ app.get('/localowns', LocalOwnsController.getAllLocalOwns)
 app.get('/localassociateds/:idLocal', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalsAsociatedController.getLocalsAsociateds)
 app.get('/localassociateds', LocalsAsociatedController.getAllLocalsAsociated)
 app.get('/localsforassociated', AuthMiddlewares.verifyToken, LocalsAsociatedController.getLocalsForAsociated)
-app.post('/localsassociated', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalsAsociatedController.createLocalAsociated)
-app.put('/localsassociated', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalsAsociatedController.updateLocalAsociated)
-app.delete('/localsassociated/:idLocal/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalsAsociatedController.eraseLocalAsociated)
+app.post('/localsassociated', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalsAsociatedController.createLocalAsociated, LocalActivityMiddleware.addLocalActivity, LocalActivityMiddleware.addLocalActivity)
+app.put('/localsassociated', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalsAsociatedController.updateLocalAsociated, LocalActivityMiddleware.addLocalActivity, LocalActivityMiddleware.addLocalActivity)
+app.delete('/localsassociated/:idLocal/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalsAsociatedController.eraseLocalAsociated, LocalActivityMiddleware.addLocalActivity, LocalActivityMiddleware.addLocalActivity)
 
 /*
  LocalController
  */
 app.get('/listLocals', LocalController.listLocals)
-app.post('/locals', AuthMiddlewares.verifyToken, LocalController.createLocal)
+app.post('/locals', AuthMiddlewares.verifyToken, LocalController.createLocal, LocalActivityMiddleware.addLocalActivity)
 app.get('/locals', OrderByMiddleware.getGeoLocationOrderByParameters, LocalController.getLocalsGeo)
 app.get('/local/private/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyEmployee, LocalController.getLocalPrivateData)
 app.get('/local/:id', LocalController.getLocalByID)
-app.put('/local/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.updateLocal)
-app.put('/local/:id/reactivate', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.reactivateLocal)
-app.delete('/local/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.removeLocal)
+app.put('/local/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.updateLocal, LocalActivityMiddleware.addLocalActivity)
+app.put('/local/:id/reactivate', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.reactivateLocal, LocalActivityMiddleware.addLocalActivity)
+app.delete('/local/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.removeLocal, LocalActivityMiddleware.addLocalActivity)
 app.delete('/local/:id/erase', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalController.eraseLocal)
+app.post('/local/occupation/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyEmployee, LocalController.addOccupation, LocalActivityMiddleware.addLocalActivity)
+app.delete('/local/occupation/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyEmployee, LocalController.removeOccupation, LocalActivityMiddleware.addLocalActivity)
+app.put('/local/status/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalController.openClose, LocalActivityMiddleware.addLocalActivity)
 
 /*
  LocalTags
@@ -178,11 +183,11 @@ app.get('/offers', OffersController.getAllOffers)
 app.get('/offers/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.getLocalOffers)
 app.get('/offers/active/:id', OffersController.getActiveLocalOffers)
 app.get('/offer/:id', OffersController.getOffer)
-app.post('/offer', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.createLocalOffer)
-app.put('/offer/:id/reactivate', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.reactivateLocalOffer)
-app.put('/offer/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.updateLocalOffer)
-app.delete('/offer/:id/:idLocal', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.removeLocalOffer)
-app.delete('/offer/:id/:idLocal/erase', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.eraseLocalOffer)
+app.post('/offer', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.createLocalOffer, LocalActivityMiddleware.addLocalActivity)
+app.put('/offer/:id/reactivate', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.reactivateLocalOffer, LocalActivityMiddleware.addLocalActivity)
+app.put('/offer/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.updateLocalOffer, LocalActivityMiddleware.addLocalActivity)
+app.delete('/offer/:id/:idLocal', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.removeLocalOffer, LocalActivityMiddleware.addLocalActivity)
+app.delete('/offer/:id/:idLocal/erase', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, OffersController.eraseLocalOffer, LocalActivityMiddleware.addLocalActivity)
 
 /*
  Ratings
@@ -218,7 +223,7 @@ app.put('/tag/:id/reactivate', TagsController.activateTag)
  Users
  */
 app.get('/users', UsersController.getAllUsers)
-app.post('/user/invited/:idUser/local/:localId', LocalPermissionMiddlewares.verifyInviterIsManager, UsersController.createUserWithPermissions)
+app.post('/user/invited/:idUser/local/:localId', LocalPermissionMiddlewares.verifyInviterIsManager, UsersController.createUserWithPermissions, LocalActivityMiddleware.addLocalActivity)
 app.post('/user', UsersController.createUser)
 app.put('/user', AuthMiddlewares.verifyToken, UsersController.updateUser)
 app.put(
@@ -272,5 +277,7 @@ app.get(
   AuthMiddlewares.verifyToken,
   UsersFavoriteLocalsController.getUserFavoriteLocalsOffers
 )
+
+app.post('/purchase/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalDocumentsController.purchase, LocalActivityMiddleware.addLocalActivity)
 
 module.exports = app

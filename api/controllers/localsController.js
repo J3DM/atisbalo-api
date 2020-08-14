@@ -33,6 +33,11 @@ module.exports = {
       .save()
       .then(async (local) => {
         await LocalAsociated.create({ user_id: req.user.id, local_id: local.id, rol_id: 'owner' })
+        req.localActivity = {
+          action: 'create local',
+          user: req.user.firstName,
+          local_id: local.id
+        }
         res.status(200).json(local.dataValues)
       })
       .catch((err) => {
@@ -94,7 +99,7 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  updateLocal: (req, res) => {
+  updateLocal: (req, res, next) => {
     const updateLocal = {
       name: req.body.name,
       telephone: req.body.telephone,
@@ -105,28 +110,46 @@ module.exports = {
       // lat y lng no son obligatorias, actualizar al crear su direccion
       localtype_id: req.body.localtype_id
     }
+    req.localActivity = {
+      action: 'update local',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Local.updateData(req.params.id, updateLocal)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
-  reactivateLocal: (req, res) => {
+  reactivateLocal: (req, res, next) => {
+    req.localActivity = {
+      action: 'reactivate local',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Local.updateData(req.params.id, { deleted: false })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
-  removeLocal: (req, res) => {
+  removeLocal: (req, res, next) => {
+    req.localActivity = {
+      action: 'deactivate local',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Local.updateData(req.params.id, { deleted: true })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
   eraseLocal: (req, res) => {
     Local.erase(req.params.id)
@@ -143,5 +166,58 @@ module.exports = {
         Log.error(err)
         res.status(500).json(err)
       })
+  },
+  addOccupation: (req, res, next) => {
+    req.localActivity = {
+      action: 'increase occupation',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
+    Local.increaseOccupation(req.params.id)
+      .then((updateLocal) => res.status(200).json(updateLocal))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+    next()
+  },
+  removeOccupation: (req, res, next) => {
+    req.localActivity = {
+      action: 'decrease occupation',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
+    Local.decreaseOccupation(req.params.id)
+      .then((updateLocal) => res.status(200).json(updateLocal))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+    next()
+  },
+  openClose: (req, res, next) => {
+    req.localActivity = {
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
+    const updateStatusDoc = {
+      capacity: req.body.capacity ? parseInt(req.body.capacity) : 0,
+      occupation: 0
+    }
+    if (req.body.status === 'open') {
+      updateStatusDoc.is_open = true
+      req.localActivity.action = 'open local'
+      updateStatusDoc.occupation = req.body.occupation
+    } else if (req.body.status === 'close') {
+      req.localActivity.action = 'close local'
+      updateStatusDoc.is_open = false
+    }
+    Local.updateData(req.params.id, updateStatusDoc)
+      .then((updateLocal) => res.status(200).json(updateLocal))
+      .catch((err) => {
+        Log.error(err)
+        res.status(500).json(err)
+      })
+    next()
   }
 }

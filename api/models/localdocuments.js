@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       CIF: DataTypes.STRING,
-      deleted: DataTypes.BOOLEAN
+      deleted: DataTypes.BOOLEAN,
+      atisbalitos: DataTypes.INTEGER
     },
     {}
   )
@@ -21,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'local_id',
       as: 'local'
     })
+  }
+  LocalDocuments.updateAtisbalitos = (id, quantity) => {
+    console.log(quantity, typeof quantity)
+    LocalDocuments.increment('atisbalitos', { by: quantity, where: { id: id } })
   }
   return LocalDocuments
 }

@@ -61,7 +61,7 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  createLocalOffer: (req, res) => {
+  createLocalOffer: (req, res, next) => {
     const newOffer = {
       title: req.body.title,
       description: req.body.description,
@@ -94,14 +94,20 @@ module.exports = {
         .status(409)
         .json('End date can not be earlier than the start date')
     }
+    req.localActivity = {
+      action: 'create offer',
+      user: req.user.firstName,
+      local_id: newOffer.local_id
+    }
     Offer.create(newOffer)
       .then((offer) => res.status(200).json(offer))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
-  updateLocalOffer: (req, res) => {
+  updateLocalOffer: (req, res, next) => {
     const updateOffer = {
       title: req.body.name,
       description: req.body.description,
@@ -119,36 +125,60 @@ module.exports = {
         .status(409)
         .json('End date can not be earlier than the start date')
     }
+    req.localActivity = {
+      action: 'update offer',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Offer.udpateData(req.params.id, updateOffer)
       .then((offer) => res.status(200).json(offer))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
-  removeLocalOffer: (req, res) => {
+  removeLocalOffer: (req, res, next) => {
+    req.localActivity = {
+      action: 'remove offer',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Offer.udpateData(req.params.id, { deleted: true })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
-  reactivateLocalOffer: (req, res) => {
+  reactivateLocalOffer: (req, res, next) => {
+    req.localActivity = {
+      action: 'reactivate offer',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Offer.udpateData(req.params.id, { deleted: false })
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
-  eraseLocalOffer: (req, res) => {
+  eraseLocalOffer: (req, res, next) => {
+    req.localActivity = {
+      action: 'delete offer',
+      user: req.user.firstName,
+      local_id: req.params.id
+    }
     Offer.erase(req.params.id)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         Log.error(err)
         res.status(500).json(err)
       })
+    next()
   },
   getOffer: (req, res) => {
     Offer.findById(req.params.id)

@@ -17,5 +17,8 @@ module.exports = (sequelize, DataTypes) => {
   LocalActivity.list = (localId) => {
     return LocalActivity.findAll({ local_id: localId, deleted: false })
   }
+  LocalActivity.create = (activityDoc) => {
+    return LocalActivity.build(activityDoc).save()
+  }
   return LocalActivity
 }

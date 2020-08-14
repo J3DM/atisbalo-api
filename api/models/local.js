@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       identifier: DataTypes.STRING,
       deleted: DataTypes.BOOLEAN,
       lng: DataTypes.FLOAT,
-      lat: DataTypes.FLOAT
+      lat: DataTypes.FLOAT,
+      is_open: DataTypes.BOOLEAN
     },
     {
       hooks: {
@@ -331,6 +332,12 @@ module.exports = (sequelize, DataTypes) => {
     if (model === 'rating') {
       return sequelize.models.Rating
     }
+  }
+  Local.increaseOccupation = (id) => {
+    return Local.increment({ occupation: 1 }, { where: { id: id } })
+  }
+  Local.decreaseOccupation = (id) => {
+    return Local.decrement({ occupation: 1 }, { where: { id: id } })
   }
 
   return Local
