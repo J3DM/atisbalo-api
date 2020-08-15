@@ -31,6 +31,9 @@ describe('Open local and update ocupation', () => {
   it('open the local', async (done) => {
     const res = await app.apiServer.put('/api/local/status/' + localId).send({ capacity: 30, status: 'open' }).set('Authorization', userToken)
     expect(res.statusCode).toEqual(200)
+    const resCheck = await app.apiServer.get('/api/local/' + localId)
+    expect(resCheck.statusCode).toEqual(200)
+    expect(resCheck.body.is_open).toEqual(true)
     done()
   })
   it('check the capacity has updated', async (done) => {
@@ -53,11 +56,17 @@ describe('Open local and update ocupation', () => {
   it('check out 1 customers', async (done) => {
     const res = await app.apiServer.delete('/api/local/occupation/' + localId).set('Authorization', userToken)
     expect(res.statusCode).toEqual(200)
+    const resCheck = await app.apiServer.get('/api/local/' + localId)
+    expect(resCheck.statusCode).toEqual(200)
+    expect(resCheck.body.occupation).toEqual(0)
     done()
   })
   it('close the local', async (done) => {
-    const res = await app.apiServer.put('/api/local/status/' + localId).send({ capacity: 30, status: 'close' }).set('Authorization', userToken)
+    const res = await app.apiServer.put('/api/local/status/' + localId).send({ capacity: 24, status: 'close' }).set('Authorization', userToken)
     expect(res.statusCode).toEqual(200)
+    const resCheck = await app.apiServer.get('/api/local/' + localId)
+    expect(resCheck.statusCode).toEqual(200)
+    expect(resCheck.body.is_open).toEqual(false)
     done()
   })
   it('checking local activity', async (done) => {
@@ -67,11 +76,27 @@ describe('Open local and update ocupation', () => {
     done()
   })
 })
+var atisbalitos
 describe('Purchase atisbalitos for a local', () => {
-  it('close the local', async (done) => {
+  it('simulate purchase atisbalitos', async (done) => {
     const res = await app.apiServer.post('/api/purchase/' + localId).send({ quantity: 30 }).set('Authorization', userToken)
-    console.log(res.body)
     expect(res.statusCode).toEqual(200)
+    const resCheck = await app.apiServer.get('/api/localdocument/' + localId).set('Authorization', userToken)
+    expect(resCheck.statusCode).toEqual(200)
+    expect(resCheck.body).toHaveProperty('atisbalitos')
+    expect(resCheck.body.atisbalitos).toBeGreaterThan(0)
+    atisbalitos = resCheck.body.atisbalitos
+    done()
+  })
+  it('simulate expend atisbalitos', async (done) => {
+    const startDate = new Date()
+    const endDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    const res = await app.apiServer.post('/api/expend/' + localId).send({ startDate: startDate, endDate: endDate }).set('Authorization', userToken)
+    expect(res.statusCode).toEqual(200)
+    const resCheck = await app.apiServer.get('/api/localdocument/' + localId).set('Authorization', userToken)
+    expect(resCheck.statusCode).toEqual(200)
+    expect(resCheck.body).toHaveProperty('atisbalitos')
+    expect(resCheck.body.atisbalitos).toBeLessThan(atisbalitos)
     done()
   })
 })

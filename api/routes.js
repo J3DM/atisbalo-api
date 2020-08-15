@@ -109,6 +109,7 @@ app.get('/documents', DocumentsController.getAllDocuments)
  */
 
 app.get('/localdocuments', LocalDocumentsController.getAllLocalDocuments)
+app.get('/localdocument/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyOwner, LocalDocumentsController.getDocument)
 
 /*
  LocalImages
@@ -278,6 +279,10 @@ app.get(
   UsersFavoriteLocalsController.getUserFavoriteLocalsOffers
 )
 
+/*
+Purchase and expend atisbalitos
+*/
 app.post('/purchase/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalDocumentsController.purchase, LocalActivityMiddleware.addLocalActivity)
+app.post('/expend/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalDocumentsController.expend, LocalActivityMiddleware.addLocalActivity)
 
 module.exports = app

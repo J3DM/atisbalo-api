@@ -23,9 +23,14 @@ module.exports = (sequelize, DataTypes) => {
       as: 'local'
     })
   }
-  LocalDocuments.updateAtisbalitos = (id, quantity) => {
-    console.log(quantity, typeof quantity)
-    LocalDocuments.increment('atisbalitos', { by: quantity, where: { id: id } })
+  LocalDocuments.incrementAtisbalitos = (idLocal, quantity) => {
+    return LocalDocuments.increment({ atisbalitos: quantity }, { where: { local_id: idLocal } })
+  }
+  LocalDocuments.decrementAtisbalitos = (idLocal, quantity) => {
+    return LocalDocuments.decrement({ atisbalitos: quantity }, { where: { local_id: idLocal } })
+  }
+  LocalDocuments.getDocument = (idLocal) => {
+    return LocalDocuments.findOne({ where: { local_id: idLocal } })
   }
   return LocalDocuments
 }
