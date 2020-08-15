@@ -17,5 +17,12 @@ module.exports = (sequelize, DataTypes) => {
   LocalActivity.list = (localId) => {
     return LocalActivity.findAll({ local_id: localId, deleted: false })
   }
+  LocalActivity.create = (activityDoc) => {
+    return LocalActivity.build(activityDoc).save()
+  }
+  LocalActivity.get = (filterDoc, limit, offset) => {
+    console.log(filterDoc)
+    return LocalActivity.findAndCountAll({ where: filterDoc, limit: limit, offset: offset })
+  }
   return LocalActivity
 }

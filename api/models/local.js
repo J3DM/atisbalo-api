@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       identifier: DataTypes.STRING,
       deleted: DataTypes.BOOLEAN,
       lng: DataTypes.FLOAT,
-      lat: DataTypes.FLOAT
+      lat: DataTypes.FLOAT,
+      is_open: DataTypes.BOOLEAN
     },
     {
       hooks: {
@@ -169,7 +170,8 @@ module.exports = (sequelize, DataTypes) => {
         attributes: [
           'id', 'name', 'capacity', 'telephone', 'description', 'occupation',
           'identifier', 'deleted', 'createdAt', 'updatedAt', 'local_logo',
-          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
+          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount'],
+          'is_open'
         ]
       })
     } else {
@@ -193,7 +195,8 @@ module.exports = (sequelize, DataTypes) => {
         attributes: [
           'id', 'name', 'capacity', 'telephone', 'description', 'occupation',
           'identifier', 'deleted', 'createdAt', 'updatedAt', 'local_logo',
-          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount']
+          [Sequelize.fn('COUNT', Sequelize.col('offers.local_id')), 'offerCount'],
+          'is_open'
         ]
       })
     }
@@ -275,6 +278,7 @@ module.exports = (sequelize, DataTypes) => {
         'createdAt',
         'updatedAt',
         'local_logo',
+        'is_open',
         [
           sequelize.literal(
             '6371000 * acos(cos(radians(' +
@@ -331,6 +335,12 @@ module.exports = (sequelize, DataTypes) => {
     if (model === 'rating') {
       return sequelize.models.Rating
     }
+  }
+  Local.increaseOccupation = (id) => {
+    return Local.increment({ occupation: 1 }, { where: { id: id } })
+  }
+  Local.decreaseOccupation = (id) => {
+    return Local.decrement({ occupation: 1 }, { where: { id: id } })
   }
 
   return Local

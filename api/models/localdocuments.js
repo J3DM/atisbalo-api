@@ -1,4 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
+  const { Op } = require('sequelize');
   const LocalDocuments = sequelize.define(
     'LocalDocuments',
     {
@@ -8,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       CIF: DataTypes.STRING,
-      deleted: DataTypes.BOOLEAN
+      deleted: DataTypes.BOOLEAN,
+      atisbalitos: DataTypes.INTEGER
     },
     {}
   )
@@ -21,6 +23,22 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'local_id',
       as: 'local'
     })
+  }
+  LocalDocuments.incrementAtisbalitos = (idLocal, quantity) => {
+    return LocalDocuments.increment({ atisbalitos: quantity }, { where: { local_id: idLocal } })
+  }
+  LocalDocuments.decrementAtisbalitos = (idLocal, quantity) => {
+    return LocalDocuments.decrement({ atisbalitos: quantity }, { where: { local_id: idLocal } })
+  }
+  LocalDocuments.getDocument = (idLocal) => {
+    return LocalDocuments.findOne({ where: { local_id: idLocal } })
+  }
+  LocalDocuments.hasEnoughtCurrency = (idLocal, quantity) => {
+    return LocalDocuments.findOne({ where: { local_id: idLocal, atisbalitos: { [Op.gte]: quantity } } })
+  }
+  LocalDocuments.getCurrency = (idLocal) => {
+    console.log(`getting the currency for ${idLocal}`)
+    return LocalDocuments.findOne({ where: { local_id: idLocal }, attributes: ['atisbalitos'] })
   }
   return LocalDocuments
 }
