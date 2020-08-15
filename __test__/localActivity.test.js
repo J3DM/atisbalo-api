@@ -108,3 +108,38 @@ describe('Purchase atisbalitos for a local', () => {
     done()
   })
 })
+describe('Check local activity', () => {
+  it('Try to list the most recent activity', async (done) => {
+    const res = await app.apiServer.get('/api/localActivity/' + localId)
+    expect(res.statusCode).toEqual(401)
+    done()
+  })
+  it('List the most recent activity', async (done) => {
+    const res = await app.apiServer.get('/api/localActivity/' + localId).set('Authorization', userToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('count')
+    expect(res.body).toHaveProperty('rows')
+    done()
+  })
+  it('List the most recent activity', async (done) => {
+    const res = await app.apiServer.get('/api/localActivity/' + localId + '?page=2').set('Authorization', userToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('count')
+    expect(res.body).toHaveProperty('rows')
+    done()
+  })
+  it('List the create offer activity', async (done) => {
+    const res = await app.apiServer.get('/api/localActivity/' + localId + '?limit=5&name=create offer').set('Authorization', userToken)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('count')
+    expect(res.body).toHaveProperty('rows')
+    res.body.rows.forEach(activity => {
+      expect(activity).toHaveProperty('action')
+      expect(activity).toHaveProperty('user')
+      expect(activity).toHaveProperty('local_id')
+      console.log(activity.action)
+      expect(activity.action).toEqual('create offer')
+    })
+    done()
+  })
+})

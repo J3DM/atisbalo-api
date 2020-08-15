@@ -43,6 +43,7 @@ const LocalPermissionMiddlewares = require('./middlewares/permissions')
 const OrderByMiddleware = require('./middlewares/orderByParams')
 const LocalActivityMiddleware = require('./middlewares/localActivity')
 const AtisbalitosMiddleware = require('./middlewares/atisbalitos')
+const LocalActivityController = require('./controllers/localActivityController')
 /*
 Auth
 */
@@ -284,5 +285,10 @@ Purchase and expend atisbalitos
 */
 app.post('/purchase/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, LocalDocumentsController.purchase, LocalActivityMiddleware.addLocalActivity)
 app.post('/expend/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyManager, AtisbalitosMiddleware.hasEnoughtCurrency, LocalDocumentsController.expend, LocalActivityMiddleware.addLocalActivity)
+
+/*
+Check localActivity
+*/
+app.get('/localActivity/:id', AuthMiddlewares.verifyToken, LocalPermissionMiddlewares.verifyEmployee, LocalActivityController.getLocalActivity)
 
 module.exports = app
