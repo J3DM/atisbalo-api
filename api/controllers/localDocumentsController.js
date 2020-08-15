@@ -43,18 +43,7 @@ module.exports = {
       })
   },
   expend: (req, res, next) => {
-    const startDate = req.body.startDate ? new Date(req.body.startDate) : false
-    const endDate = req.body.endDate ? new Date(req.body.endDate) : false
-    if (!startDate) {
-      return res.status(404).json('Start date is required')
-    }
-    if (!endDate) {
-      return res.status(404).json('End date is required')
-    }
-    if (endDate < startDate) {
-      return res.status(404).json('The end date has to be greater than the start date')
-    }
-    const advertUpTime = Math.floor((endDate - startDate) / 3600000)
+    const advertUpTime = req.advertUpTime
     req.localActivity = {
       action: 'expend atisbalitos',
       user: req.user.firstName,

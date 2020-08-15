@@ -1,4 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
+  const { Op } = require('sequelize');
   const LocalDocuments = sequelize.define(
     'LocalDocuments',
     {
@@ -31,6 +32,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   LocalDocuments.getDocument = (idLocal) => {
     return LocalDocuments.findOne({ where: { local_id: idLocal } })
+  }
+  LocalDocuments.hasEnoughtCurrency = (idLocal, quantity) => {
+    return LocalDocuments.findOne({ where: { local_id: idLocal, atisbalitos: { [Op.gte]: quantity } } })
+  }
+  LocalDocuments.getCurrency = (idLocal) => {
+    console.log(`getting the currency for ${idLocal}`)
+    return LocalDocuments.findOne({ where: { local_id: idLocal }, attributes: ['atisbalitos'] })
   }
   return LocalDocuments
 }

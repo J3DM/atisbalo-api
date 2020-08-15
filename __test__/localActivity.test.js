@@ -88,6 +88,14 @@ describe('Purchase atisbalitos for a local', () => {
     atisbalitos = resCheck.body.atisbalitos
     done()
   })
+  it('simulate expend more atisbalitos that you have', async (done) => {
+    const startDate = new Date()
+    const endDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * 365)
+    const res = await app.apiServer.post('/api/expend/' + localId).send({ startDate: startDate, endDate: endDate }).set('Authorization', userToken)
+    expect(res.statusCode).toEqual(400)
+    console.log(res.body)
+    done()
+  })
   it('simulate expend atisbalitos', async (done) => {
     const startDate = new Date()
     const endDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
