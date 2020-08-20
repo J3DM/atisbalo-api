@@ -30,6 +30,15 @@ describe('User Favotite Local queries', () => {
     numberOfFavoriteLocalsInDatabase = res.body.rows.length
     expect(favoriteLocalId).not.toBe(null)
     expect(favoriteLocalId).not.toBe(undefined)
+    res.body.rows.forEach(local => {
+      expect(local).toHaveProperty('address')
+      expect(local).toHaveProperty('name')
+      expect(local).toHaveProperty('telephone')
+      expect(local).toHaveProperty('capacity')
+      expect(local).toHaveProperty('occupation')
+      expect(local).toHaveProperty('is_open')
+      expect(local).toHaveProperty('address')
+    })
     done()
   })
   it('Remove favourite local for the logged User', async (done) => {
