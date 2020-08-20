@@ -6,7 +6,7 @@ const level = LOG_LEVEL.toUpperCase()
 const fs = require('fs');
 const util = require('util');
 
-const log_file = fs.createWriteStream('/var/log/atbl/'+moment().format('MMMM-Do-YYYY')+'.atbl.api.log', {flags : 'w'});
+const log_file = fs.createWriteStream('./'+moment().format('MMMM-Do-YYYY')+'.atbl.api.log', {flags : 'w'});
 const log_stdout = console.log;
 
 const Log = {
